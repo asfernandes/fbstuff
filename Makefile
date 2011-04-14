@@ -1,4 +1,4 @@
-MODULES	:= perf
+MODULES	:= perf test test/v3api
 
 TARGET	:= release
 
@@ -18,7 +18,7 @@ OBJ_DIRS := $(addprefix $(OBJ_DIR)/,$(MODULES))
 SRCS := $(foreach sdir,$(SRC_DIRS),$(wildcard $(sdir)/*.cpp))
 OBJS := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRCS))
 
-CXX_FLAGS := -ggdb -MMD -MP
+CXX_FLAGS := -ggdb -MMD -MP -DBOOST_TEST_DYN_LINK
 
 ifeq ($(TARGET),release)
 	CXX_FLAGS += -O3
@@ -33,7 +33,9 @@ endef
 
 .PHONY: all mkdirs clean
 
-all: mkdirs $(BIN_DIR)/fbinsert
+all: mkdirs \
+	$(BIN_DIR)/fbinsert \
+	$(BIN_DIR)/fbtest
 
 mkdirs: $(OBJ_DIRS) $(BIN_DIR)
 
@@ -49,3 +51,10 @@ $(foreach bdir,$(OBJ_DIRS),$(eval $(call compile,$(bdir))))
 
 $(BIN_DIR)/fbinsert: $(OBJ_DIR)/perf/fbinsert.o
 	$(LD) $^ -o $@ -lboost_program_options -lboost_thread -lfbclient
+
+$(BIN_DIR)/fbtest: \
+	$(OBJ_DIR)/test/FbTest.o \
+	$(OBJ_DIR)/test/v3api/V3Util.o \
+	$(OBJ_DIR)/test/v3api/DescribeTest.o \
+
+	$(LD) $^ -o $@ -lboost_unit_test_framework -lfbclient
