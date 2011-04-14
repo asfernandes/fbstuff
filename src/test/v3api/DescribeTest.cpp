@@ -45,7 +45,11 @@ BOOST_AUTO_TEST_CASE(describe)
 	BOOST_CHECK(status->isSuccess());
 	BOOST_REQUIRE(transaction);
 
+	// Test with and without metadata prefetch.
+	for (unsigned i = 0; i < 2; ++i)
 	{
+		bool prefetch = (i == 0);
+
 		IStatement* stmt = attachment->allocateStatement(status);
 		BOOST_CHECK(status->isSuccess());
 		BOOST_REQUIRE(stmt);
@@ -54,7 +58,7 @@ BOOST_AUTO_TEST_CASE(describe)
 			"select rdb$relation_id relid, rdb$character_set_name csname"
 			"  from rdb$database"
 			"  where rdb$relation_id < ?",
-			3, IStatement::PREPARE_PREFETCH_ALL);
+			FbTest::DIALECT, (prefetch ? IStatement::PREPARE_PREFETCH_ALL : 0));
 		BOOST_CHECK(status->isSuccess());
 
 		unsigned type = stmt->getType(status);
