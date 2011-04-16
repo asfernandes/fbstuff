@@ -20,8 +20,10 @@
 #include "../FbTest.h"
 #include <Interface.h>
 #include <ProviderInterface.h>
+#include <string>
 #include <vector>
 #include <ibase.h>
+#include <boost/assert.hpp>
 
 namespace V3Util
 {
@@ -30,6 +32,10 @@ namespace V3Util
 
 extern Firebird::IMaster* master;
 extern Firebird::IProvider* dispatcher;
+
+//--------------------------------------
+
+class MessageImpl;
 
 class OffsetBase
 {
@@ -47,6 +53,145 @@ public:
 template <class T>
 class Offset : public OffsetBase
 {
+};
+
+template <>
+class Offset<void*> : public OffsetBase
+{
+public:
+	Offset(MessageImpl& message, const Firebird::IParametersMetadata* aParams);
+
+	unsigned align(unsigned size, unsigned aIndex)
+	{
+		index = aIndex;
+
+		Firebird::IStatus* status = master->getStatus();
+
+		switch ((type = params->getType(status, index)))
+		{
+			case SQL_SHORT:
+				size = FB_ALIGN(size, sizeof(ISC_SHORT));
+				break;
+
+			case SQL_LONG:
+				size = FB_ALIGN(size, sizeof(ISC_LONG));
+				break;
+
+			case SQL_INT64:
+				size = FB_ALIGN(size, sizeof(ISC_INT64));
+				break;
+
+			case SQL_FLOAT:
+				size = FB_ALIGN(size, sizeof(float));
+				break;
+
+			case SQL_DOUBLE:
+				size = FB_ALIGN(size, sizeof(double));
+				break;
+
+			case SQL_BLOB:
+				size = FB_ALIGN(size, sizeof(ISC_QUAD));
+				break;
+
+			case SQL_TEXT:
+			case SQL_VARYING:
+				size = FB_ALIGN(size, sizeof(ISC_USHORT));
+				break;
+
+			default:
+				BOOST_VERIFY(false);
+				break;
+		}
+
+		status->dispose();
+
+		return size;
+	}
+
+	unsigned addBlr(std::vector<ISC_UCHAR>& blr)
+	{
+		Firebird::IStatus* status = master->getStatus();
+		unsigned ret;
+
+		switch (type)
+		{
+			case SQL_SHORT:
+			{
+				unsigned scale = params->getScale(status, index);
+				blr.push_back(blr_short);
+				blr.push_back(scale);
+				ret = sizeof(ISC_SHORT);
+				break;
+			}
+
+			case SQL_LONG:
+			{
+				unsigned scale = params->getScale(status, index);
+				blr.push_back(blr_long);
+				blr.push_back(scale);
+				ret = sizeof(ISC_LONG);
+				break;
+			}
+
+			case SQL_INT64:
+			{
+				unsigned scale = params->getScale(status, index);
+				blr.push_back(blr_int64);
+				blr.push_back(scale);
+				ret = sizeof(ISC_INT64);
+				break;
+			}
+
+			case SQL_FLOAT:
+				blr.push_back(blr_float);
+				ret = sizeof(float);
+				break;
+
+			case SQL_DOUBLE:
+				blr.push_back(blr_double);
+				ret = sizeof(double);
+				break;
+
+			case SQL_BLOB:
+				blr.push_back(blr_blob2);
+				blr.push_back(0);
+				blr.push_back(0);
+				blr.push_back(0);
+				blr.push_back(0);
+				ret = sizeof(ISC_QUAD);
+				break;
+
+			case SQL_TEXT:
+			case SQL_VARYING:
+			{
+				unsigned length = params->getLength(status, index);
+				blr.push_back(blr_varying);
+				blr.push_back(length & 0xFF);
+				blr.push_back((length >> 8) & 0xFF);
+				ret = sizeof(ISC_USHORT) + length;
+				break;
+			}
+
+			default:
+				BOOST_VERIFY(false);
+				ret = 0;
+				break;
+		}
+
+		status->dispose();
+
+		return ret;
+	}
+
+	unsigned getType() const
+	{
+		return type;
+	}
+
+private:
+	const Firebird::IParametersMetadata* params;
+	unsigned type;
+	unsigned index;
 };
 
 class MessageImpl : public Firebird::FbMessage
@@ -81,7 +226,7 @@ public:
 		if (blr)
 			return;	// return an error, this is already constructed message
 
-		bufferLength = offset.align(bufferLength);
+		bufferLength = offset.align(bufferLength, items / 2);
 		offset.pos = bufferLength;
 		bufferLength += offset.addBlr(blrArray);
 
@@ -129,6 +274,11 @@ public:
 		return *(T*) (buffer + index.pos);
 	}
 
+	void* operator [](const Offset<void*>& index)
+	{
+		return buffer + index.pos;
+	}
+
 public:
 	std::vector<ISC_UCHAR> blrArray;
 	unsigned items;
@@ -144,7 +294,7 @@ public:
 		message.add(*this);
 	}
 
-	unsigned align(unsigned size)
+	unsigned align(unsigned size, unsigned /*index*/)
 	{
 		return FB_ALIGN(size, sizeof(ISC_SHORT));
 	}
@@ -170,7 +320,7 @@ public:
 		message.add(*this);
 	}
 
-	unsigned align(unsigned size)
+	unsigned align(unsigned size, unsigned /*index*/)
 	{
 		return FB_ALIGN(size, sizeof(ISC_LONG));
 	}
@@ -196,7 +346,7 @@ public:
 		message.add(*this);
 	}
 
-	unsigned align(unsigned size)
+	unsigned align(unsigned size, unsigned /*index*/)
 	{
 		return FB_ALIGN(size, sizeof(ISC_INT64));
 	}
@@ -221,7 +371,7 @@ public:
 		message.add(*this);
 	}
 
-	unsigned align(unsigned size)
+	unsigned align(unsigned size, unsigned /*index*/)
 	{
 		return FB_ALIGN(size, sizeof(float));
 	}
@@ -242,7 +392,7 @@ public:
 		message.add(*this);
 	}
 
-	unsigned align(unsigned size)
+	unsigned align(unsigned size, unsigned /*index*/)
 	{
 		return FB_ALIGN(size, sizeof(double));
 	}
@@ -263,7 +413,7 @@ public:
 		message.add(*this);
 	}
 
-	unsigned align(unsigned size)
+	unsigned align(unsigned size, unsigned /*index*/)
 	{
 		return FB_ALIGN(size, sizeof(ISC_QUAD));
 	}
@@ -300,7 +450,7 @@ public:
 		message.add(*this);
 	}
 
-	unsigned align(unsigned size)
+	unsigned align(unsigned size, unsigned /*index*/)
 	{
 		return FB_ALIGN(size, sizeof(ISC_USHORT));
 	}
@@ -317,7 +467,21 @@ private:
 	ISC_USHORT length;
 };
 
-//// TODO: date, time, timestamp
+//// TODO: boolean, date, time, timestamp
+
+//--------------------------------------
+
+inline Offset<void*>::Offset(MessageImpl& message, const Firebird::IParametersMetadata* aParams)
+	: params(aParams),
+	  type(0)
+{
+	message.add(*this);
+}
+
+//--------------------------------------
+
+std::string valueToString(Firebird::IAttachment* attachment, Firebird::ITransaction* transaction,
+	MessageImpl& message, Offset<void*>& field);
 
 //------------------------------------------------------------------------------
 
