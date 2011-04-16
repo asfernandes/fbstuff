@@ -19,11 +19,13 @@
 
 #include "V3Util.h"
 #include <string>
+#include <vector>
 #include <boost/test/unit_test.hpp>
 
 using namespace V3Util;
 using namespace Firebird;
 using std::string;
+using std::vector;
 
 //------------------------------------------------------------------------------
 
@@ -89,10 +91,18 @@ BOOST_AUTO_TEST_CASE(dynamicMessage)
 		BOOST_CHECK(status->isSuccess());
 		inMessage.finish();
 
+		const IParametersMetadata* outParams = stmt->getOutputParameters(status);
+		BOOST_CHECK(status->isSuccess());
+
+		unsigned outParamsCount = outParams->getCount(status);
+		BOOST_CHECK(status->isSuccess());
+
 		MessageImpl outMessage;
-		Offset<void*> relationId(outMessage, stmt->getOutputParameters(status));
-		Offset<void*> relationName(outMessage, stmt->getOutputParameters(status));
-		Offset<void*> description(outMessage, stmt->getOutputParameters(status));
+		vector<Offset<void*> > outFields;
+
+		for (unsigned i = 0; i < outParamsCount; ++i)
+			outFields.push_back(Offset<void*>(outMessage, outParams));
+
 		outMessage.finish();
 
 		BOOST_CHECK(systemFlagParam.getType() == SQL_SHORT);
@@ -113,10 +123,15 @@ BOOST_AUTO_TEST_CASE(dynamicMessage)
 		{
 			BOOST_CHECK(status->isSuccess());
 
-			string msg =
-				valueToString(attachment, transaction, outMessage, relationId) + " | " +
-				valueToString(attachment, transaction, outMessage, relationName) + " | " +
-				valueToString(attachment, transaction, outMessage, description);
+			string msg;
+
+			for (unsigned i = 0; i < outParamsCount; ++i)
+			{
+				if (!msg.empty())
+					msg += " | ";
+
+				msg += valueToString(attachment, transaction, outMessage, outFields[i]);
+			}
 
 			BOOST_CHECK_EQUAL(msg, MSGS[pos]);
 			++pos;
