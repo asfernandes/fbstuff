@@ -56,6 +56,7 @@ $(BIN_DIR)/fbtest: \
 	$(OBJ_DIR)/test/FbTest.o \
 	$(OBJ_DIR)/test/v3api/V3Util.o \
 	$(OBJ_DIR)/test/v3api/DescribeTest.o \
+	$(OBJ_DIR)/test/v3api/DynamicMessageTest.o \
 	$(OBJ_DIR)/test/v3api/StaticMessageTest.o \
 
 	$(LD) $^ -o $@ -lboost_unit_test_framework -lfbclient
