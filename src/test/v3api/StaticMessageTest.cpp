@@ -19,11 +19,13 @@
 
 #include "V3Util.h"
 #include <string>
+#include <boost/lexical_cast.hpp>
 #include <boost/test/unit_test.hpp>
 
 using namespace V3Util;
 using namespace Firebird;
 using std::string;
+using boost::lexical_cast;
 
 //------------------------------------------------------------------------------
 
@@ -99,6 +101,12 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 		stmt->execute(status, transaction, 0, &inMessage, NULL);
 		BOOST_CHECK(status->isSuccess());
 
+		static const char* const MSGS[] = {
+			"128 | EMPLOYEE                        | Employees",
+			"129 | CUSTOMER                        | Customers",
+			"130 | SALES                           | "
+		};
+		int pos = 0;
 		int ret;
 
 		while ((ret = stmt->fetch(status, &outMessage)) != 100)
@@ -123,9 +131,13 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 				BOOST_CHECK(status->isSuccess());
 			}
 
-			BOOST_TEST_MESSAGE(outMessage[relationId] << " | " <<
-				outMessage[relationName].asStdString() << " | " <<
-				descriptionStr);
+			string msg =
+				lexical_cast<string>(outMessage[relationId]) + " | " +
+				outMessage[relationName].asStdString() + " | " +
+				descriptionStr;
+
+			BOOST_CHECK_EQUAL(msg, MSGS[pos]);
+			++pos;
 		}
 
 		stmt->free(status, DSQL_drop);
