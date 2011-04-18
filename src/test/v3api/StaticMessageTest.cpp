@@ -39,7 +39,8 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 	IStatus* status = master->getStatus();
 	IAttachment* attachment = NULL;
 
-	dispatcher->createDatabase(status, &attachment, 0, location.c_str(), 0, NULL);
+	dispatcher->createDatabase(status, &attachment, 0, location.c_str(),
+		sizeof(FbTest::ASCII_DPB), FbTest::ASCII_DPB);
 	BOOST_CHECK(status->isSuccess());
 	BOOST_REQUIRE(attachment);
 
