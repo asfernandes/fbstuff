@@ -79,66 +79,158 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 		BOOST_CHECK(status->isSuccess());
 		BOOST_REQUIRE(stmt);
 
-		stmt->prepare(status, transaction, 0,
-			"select rdb$relation_id, rdb$relation_name, rdb$description"
-			"  from rdb$relations"
-			"  where rdb$system_flag = ?"
-			"  order by rdb$relation_id",
-			FbTest::DIALECT, 0);
-		BOOST_CHECK(status->isSuccess());
-
-		MessageImpl inMessage;
-		Offset<ISC_SHORT> systemFlagParam(inMessage);
-		inMessage.finish();
-
-		MessageImpl outMessage;
-		Offset<ISC_SHORT> relationId(outMessage);
-		Offset<FbString> relationName(outMessage, 31 * 3);
-		Offset<ISC_QUAD> description(outMessage);
-		outMessage.finish();
-
-		inMessage[systemFlagParam] = 0;
-
-		stmt->execute(status, transaction, 0, &inMessage, NULL);
-		BOOST_CHECK(status->isSuccess());
-
 		static const char* const MSGS[] = {
 			"128 | EMPLOYEE                        | Employees",
 			"129 | CUSTOMER                        | Customers",
 			"130 | SALES                           | "
 		};
-		int pos = 0;
-		int ret;
 
-		while ((ret = stmt->fetch(status, &outMessage)) != 100)
+		// Retrieve data with they datatype.
 		{
+			stmt->prepare(status, transaction, 0,
+				"select rdb$relation_id, rdb$relation_name, rdb$description"
+				"  from rdb$relations"
+				"  where rdb$system_flag = ?"
+				"  order by rdb$relation_id",
+				FbTest::DIALECT, 0);
 			BOOST_CHECK(status->isSuccess());
 
-			string descriptionStr;
+			MessageImpl inMessage;
+			Offset<ISC_SHORT> systemFlagParam(inMessage);
+			inMessage.finish();
 
-			if (!outMessage.isNull(description))
+			MessageImpl outMessage;
+			Offset<ISC_SHORT> relationId(outMessage);
+			Offset<FbString> relationName(outMessage, 31);
+			Offset<ISC_QUAD> description(outMessage);
+			outMessage.finish();
+
+			inMessage[systemFlagParam] = 0;
+
+			stmt->execute(status, transaction, 0, &inMessage, NULL);
+			BOOST_CHECK(status->isSuccess());
+
+			int pos = 0;
+			int ret;
+
+			while ((ret = stmt->fetch(status, &outMessage)) != 100)
+			{
+				BOOST_CHECK(status->isSuccess());
+
+				string descriptionStr;
+
+				if (!outMessage.isNull(description))
+				{
+					IBlob* blob = attachment->openBlob(status, transaction,
+						&outMessage[description], 0, NULL);
+					BOOST_CHECK(status->isSuccess());
+
+					char blobBuffer[2];	// intentionaly test very small buffer
+					unsigned blobLen;
+
+					while ((blobLen = blob->getSegment(status, sizeof(blobBuffer), blobBuffer)) != 0)
+						descriptionStr.append(blobBuffer, blobLen);
+
+					blob->close(status);
+					BOOST_CHECK(status->isSuccess());
+				}
+
+				string msg =
+					lexical_cast<string>(outMessage[relationId]) + " | " +
+					outMessage[relationName].asStdString() + " | " +
+					descriptionStr;
+
+				BOOST_CHECK_EQUAL(msg, MSGS[pos]);
+				++pos;
+			}
+
+			BOOST_CHECK_EQUAL(pos, 3);
+
+			stmt->free(status, DSQL_unprepare);
+			BOOST_CHECK(status->isSuccess());
+		}
+
+		// Retrieve data as strings.
+		{
+			// Also make the input parameter a blob.
+			stmt->prepare(status, transaction, 0,
+				"select rdb$relation_id, rdb$relation_name, rdb$description"
+				"  from rdb$relations"
+				"  where cast(rdb$system_flag as blob sub_type text) = ?"
+				"  order by rdb$relation_id",
+				FbTest::DIALECT, 0);
+			BOOST_CHECK(status->isSuccess());
+
+			MessageImpl inMessage;
+			Offset<FbString> systemFlagParam(inMessage, 1);
+			inMessage.finish();
+
+			MessageImpl outMessage;
+			Offset<FbString> relationId(outMessage, 10);
+			Offset<FbString> relationName(outMessage, 31);
+			Offset<FbString> description(outMessage, 100);
+			outMessage.finish();
+
+			strcpy(inMessage[systemFlagParam].str, "0");
+			inMessage[systemFlagParam].length = 1;
+
+			stmt->execute(status, transaction, 0, &inMessage, NULL);
+			BOOST_CHECK(status->isSuccess());
+
+			int pos = 0;
+			int ret;
+
+			while ((ret = stmt->fetch(status, &outMessage)) != 100)
+			{
+				BOOST_CHECK(status->isSuccess());
+
+				string msg =
+					outMessage[relationId].asStdString() + " | " +
+					outMessage[relationName].asStdString() + " | " +
+					outMessage[description].asStdString();
+
+				BOOST_CHECK_EQUAL(msg, MSGS[pos]);
+				++pos;
+			}
+
+			BOOST_CHECK_EQUAL(pos, 3);
+
+			stmt->free(status, DSQL_unprepare);
+			BOOST_CHECK(status->isSuccess());
+		}
+
+		// Try to retrieve a number as a blob in execute.
+		{
+			stmt->prepare(status, transaction, 0, "insert into employee values (11) returning id",
+				FbTest::DIALECT, 0);
+			BOOST_CHECK(status->isSuccess());
+
+			MessageImpl outMessage;
+			Offset<ISC_QUAD> idAsBlob(outMessage);
+			outMessage.finish();
+
+			stmt->execute(status, transaction, 0, NULL, &outMessage);
+			BOOST_CHECK(status->isSuccess());
+
+			string msg;
+
+			if (!outMessage.isNull(idAsBlob))
 			{
 				IBlob* blob = attachment->openBlob(status, transaction,
-					&outMessage[description], 0, NULL);
+					&outMessage[idAsBlob], 0, NULL);
 				BOOST_CHECK(status->isSuccess());
 
 				char blobBuffer[2];	// intentionaly test very small buffer
 				unsigned blobLen;
 
 				while ((blobLen = blob->getSegment(status, sizeof(blobBuffer), blobBuffer)) != 0)
-					descriptionStr.append(blobBuffer, blobLen);
+					msg.append(blobBuffer, blobLen);
 
 				blob->close(status);
 				BOOST_CHECK(status->isSuccess());
 			}
 
-			string msg =
-				lexical_cast<string>(outMessage[relationId]) + " | " +
-				outMessage[relationName].asStdString() + " | " +
-				descriptionStr;
-
-			BOOST_CHECK_EQUAL(msg, MSGS[pos]);
-			++pos;
+			BOOST_CHECK_EQUAL(msg, "11");
 		}
 
 		stmt->free(status, DSQL_drop);
