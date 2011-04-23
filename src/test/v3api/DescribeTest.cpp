@@ -45,6 +45,9 @@ BOOST_AUTO_TEST_CASE(describe)
 	BOOST_CHECK(status->isSuccess());
 	BOOST_REQUIRE(transaction);
 
+	unsigned major;
+	getEngineVersion(attachment, &major);
+
 	// Test with and without metadata prefetch.
 	for (unsigned i = 0; i < 2; ++i)
 	{
@@ -67,7 +70,7 @@ BOOST_AUTO_TEST_CASE(describe)
 		string legacyPlan = stmt->getPlan(status, false);
 		BOOST_CHECK(status->isSuccess());
 
-		string detailedPlan = stmt->getPlan(status, true);
+		string detailedPlan = major >= 3 ? stmt->getPlan(status, true) : "";
 		BOOST_CHECK(status->isSuccess());
 
 		const IParametersMetadata* inputParams = stmt->getInputParameters(status);
@@ -83,10 +86,13 @@ BOOST_AUTO_TEST_CASE(describe)
 		BOOST_CHECK_EQUAL(legacyPlan,
 			"\nPLAN (RDB$DATABASE NATURAL)");
 
-		BOOST_CHECK_EQUAL(detailedPlan,
-			"\nSelect Expression\n"
-			"    -> Filter\n"
-			"        -> Table \"RDB$DATABASE\" Full Scan");
+		if (major >= 3)
+		{
+			BOOST_CHECK_EQUAL(detailedPlan,
+				"\nSelect Expression\n"
+				"    -> Filter\n"
+				"        -> Table \"RDB$DATABASE\" Full Scan");
+		}
 
 		struct FieldInfo
 		{

@@ -150,8 +150,14 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 			BOOST_CHECK(status->isSuccess());
 		}
 
-		// Retrieve data as strings.
+		unsigned major, minor, revision;
+		getEngineVersion(attachment, &major, &minor, &revision);
+		unsigned version = major * 100u + minor * 10u + revision;
+
+		if (version >= 251)
 		{
+			// Retrieve data as strings.
+
 			// Also make the input parameter a blob.
 			stmt->prepare(status, transaction, 0,
 				"select rdb$relation_id, rdb$relation_name, rdb$description"
@@ -199,8 +205,10 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 			BOOST_CHECK(status->isSuccess());
 		}
 
-		// Try to retrieve a number as a blob in execute.
+		if (version >= 251)
 		{
+			// Try to retrieve a number as a blob in execute.
+
 			stmt->prepare(status, transaction, 0, "insert into employee values (11) returning id",
 				FbTest::DIALECT, 0);
 			BOOST_CHECK(status->isSuccess());

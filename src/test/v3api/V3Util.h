@@ -480,6 +480,8 @@ inline Offset<void*>::Offset(MessageImpl& message, const Firebird::IParametersMe
 
 //--------------------------------------
 
+void getEngineVersion(Firebird::IAttachment* attachment, unsigned* major, unsigned* minor = NULL,
+	unsigned* revision = NULL);
 std::string valueToString(Firebird::IAttachment* attachment, Firebird::ITransaction* transaction,
 	MessageImpl& message, Offset<void*>& field);
 

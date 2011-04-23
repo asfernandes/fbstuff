@@ -57,6 +57,10 @@ BOOST_AUTO_TEST_CASE(affectedRecords)
 			"create table t1 (n integer)", FbTest::DIALECT, 0, NULL, NULL);
 		BOOST_CHECK(status->isSuccess());
 
+		attachment->execute(status, transaction, 0,
+			"create generator g1", FbTest::DIALECT, 0, NULL, NULL);
+		BOOST_CHECK(status->isSuccess());
+
 		transaction->commitRetaining(status);
 		BOOST_CHECK(status->isSuccess());
 	}
@@ -127,9 +131,15 @@ BOOST_AUTO_TEST_CASE(affectedRecords)
 	}
 
 	{
+		attachment->execute(status, transaction, 0,
+			"update t1 set n = gen_id(g1, 1)", FbTest::DIALECT, 0, NULL, NULL);
+		BOOST_CHECK(status->isSuccess());
+	}
+
+	{
 		stmt->prepare(status, transaction, 0,
 			"merge into t0"
-			"  using (select row_number() over () n from t1) t1"
+			"  using (select n from t1) t1"
 			"    on (t0.n = t1.n)"
 			"  when matched then update set n = t1.n"
 			"  when not matched then insert values (n)",
@@ -147,7 +157,7 @@ BOOST_AUTO_TEST_CASE(affectedRecords)
 	{
 		stmt->prepare(status, transaction, 0,
 			"merge into t0"
-			"  using (select row_number() over () + 2 n from t1) t1"
+			"  using (select n + 2 n from t1) t1"
 			"    on (t0.n = t1.n)"
 			"  when matched then update set n = t1.n"
 			"  when not matched then insert values (n)",
@@ -165,7 +175,7 @@ BOOST_AUTO_TEST_CASE(affectedRecords)
 	{
 		stmt->prepare(status, transaction, 0,
 			"merge into t0"
-			"  using (select row_number() over () + 2 + 4 n from t1) t1"
+			"  using (select n + 2 + 4 n from t1) t1"
 			"    on (t0.n = t1.n)"
 			"  when not matched then insert values (n)",
 			FbTest::DIALECT, IStatement::PREPARE_PREFETCH_AFFECTED_RECORDS);

@@ -35,6 +35,44 @@ IProvider* dispatcher = master->getDispatcher();
 
 //--------------------------------------
 
+void getEngineVersion(Firebird::IAttachment* attachment, unsigned* major, unsigned* minor,
+	unsigned* revision)
+{
+	static const UCHAR ITEMS[] = {isc_info_firebird_version};
+	UCHAR buffer[512];
+	IStatus* status = master->getStatus();
+
+	attachment->getInfo(status, sizeof(ITEMS), ITEMS, sizeof(buffer), buffer);
+	BOOST_VERIFY(status->isSuccess());
+
+	if (buffer[0] == isc_info_firebird_version)
+	{
+		const UCHAR* p = buffer + 5;
+
+		if (major)
+			*major = p[4] - '0';
+
+		if (minor)
+			*minor = p[6] - '0';
+
+		if (revision)
+			*revision = p[8] - '0';
+	}
+	else
+	{
+		if (major)
+			*major = 0;
+
+		if (minor)
+			*minor = 0;
+
+		if (revision)
+			*revision = 0;
+	}
+
+	status->dispose();
+}
+
 string valueToString(IAttachment* attachment, ITransaction* transaction,
 	MessageImpl& message, Offset<void*>& field)
 {
