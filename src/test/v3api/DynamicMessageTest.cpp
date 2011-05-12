@@ -37,14 +37,13 @@ BOOST_AUTO_TEST_CASE(dynamicMessage)
 	const string location = FbTest::getLocation("dynamicMessage.fdb");
 
 	IStatus* status = master->getStatus();
-	IAttachment* attachment = NULL;
 
-	dispatcher->createDatabase(status, &attachment, 0, location.c_str(),
+	IAttachment* attachment = dispatcher->createDatabase(status, location.c_str(),
 		sizeof(FbTest::ASCII_DPB), FbTest::ASCII_DPB);
 	BOOST_CHECK(status->isSuccess());
 	BOOST_REQUIRE(attachment);
 
-	ITransaction* transaction = attachment->startTransaction(status, 0, NULL, 0);
+	ITransaction* transaction = attachment->startTransaction(status, 0, NULL);
 	BOOST_CHECK(status->isSuccess());
 	BOOST_REQUIRE(transaction);
 
