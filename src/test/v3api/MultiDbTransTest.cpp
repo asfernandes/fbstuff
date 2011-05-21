@@ -49,17 +49,36 @@ BOOST_AUTO_TEST_CASE(multiDbTrans)
 
 	IDtc* dtc = master->getDtc();
 
-	DtcStart transactionParameters[] = {
-		{attachment1, 0, NULL},
-		{attachment2, 0, NULL}
-	};
-
-	ITransaction* transaction = dtc->start(status,
-		sizeof(transactionParameters) / sizeof(transactionParameters[0]), transactionParameters);
-	BOOST_CHECK(status->isSuccess());
-	BOOST_REQUIRE(transaction);
-
+	for (unsigned i = 0; i < 2; ++i)
 	{
+		ITransaction* transaction;
+
+		if (i == 0)
+		{
+			DtcStart transactionParameters[] = {
+				{attachment1, 0, NULL},
+				{attachment2, 0, NULL}
+			};
+
+			transaction = dtc->start(status,
+				sizeof(transactionParameters) / sizeof(transactionParameters[0]), transactionParameters);
+		}
+		else
+		{
+			ITransaction* transaction1 = attachment1->startTransaction(status, 0, NULL);
+			BOOST_CHECK(status->isSuccess());
+			BOOST_REQUIRE(transaction1);
+
+			ITransaction* transaction2 = attachment2->startTransaction(status, 0, NULL);
+			BOOST_CHECK(status->isSuccess());
+			BOOST_REQUIRE(transaction2);
+
+			transaction = dtc->join(status, transaction1, transaction2);
+		}
+
+		BOOST_CHECK(status->isSuccess());
+		BOOST_REQUIRE(transaction);
+
 		// Lets try to create the same table in the two databases, using the same transaction.
 		const char* const CMD = "create table employee (id integer)";
 
@@ -68,10 +87,14 @@ BOOST_AUTO_TEST_CASE(multiDbTrans)
 
 		attachment2->execute(status, transaction, 0, CMD, FbTest::DIALECT, 0, NULL, NULL);
 		BOOST_CHECK(status->isSuccess());
-	}
 
-	transaction->commit(status);
-	BOOST_CHECK(status->isSuccess());
+		if (i == 0)
+			transaction->rollback(status);
+		else
+			transaction->commit(status);
+
+		BOOST_CHECK(status->isSuccess());
+	}
 
 	attachment2->drop(status);
 	BOOST_CHECK(status->isSuccess());
