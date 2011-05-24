@@ -56,8 +56,8 @@ BOOST_AUTO_TEST_CASE(multiDbTrans)
 		if (i == 0)
 		{
 			DtcStart transactionParameters[] = {
-				{attachment1, 0, NULL},
-				{attachment2, 0, NULL}
+				{attachment1, NULL, 0},
+				{attachment2, NULL, 0}
 			};
 
 			transaction = dtc->start(status,
@@ -87,6 +87,51 @@ BOOST_AUTO_TEST_CASE(multiDbTrans)
 
 		attachment2->execute(status, transaction, 0, CMD, FbTest::DIALECT, 0, NULL, NULL);
 		BOOST_CHECK(status->isSuccess());
+
+		{
+			IStatement* stmt = attachment2->allocateStatement(status);
+			BOOST_CHECK(status->isSuccess());
+			BOOST_REQUIRE(stmt);
+
+			stmt->prepare(status, transaction, 0,
+				"select cast('123' as blob)"
+				"  from rdb$database",
+				FbTest::DIALECT, 0);
+			BOOST_CHECK(status->isSuccess());
+
+			MessageImpl outMessage;
+			Offset<ISC_QUAD> blobField(outMessage);
+			outMessage.finish();
+
+			stmt->execute(status, transaction, 0, NULL, NULL);
+			BOOST_CHECK(status->isSuccess());
+
+			BOOST_REQUIRE(stmt->fetch(status, &outMessage) != 100);
+			BOOST_CHECK(status->isSuccess());
+
+			string blobStr;
+
+			if (!outMessage.isNull(blobField))
+			{
+				IBlob* blob = attachment2->openBlob(status, transaction,
+					&outMessage[blobField], 0, NULL);
+				BOOST_CHECK(status->isSuccess());
+
+				char blobBuffer[10];
+				unsigned blobLen;
+
+				while ((blobLen = blob->getSegment(status, sizeof(blobBuffer), blobBuffer)) != 0)
+					blobStr.append(blobBuffer, blobLen);
+
+				blob->close(status);
+				BOOST_CHECK(status->isSuccess());
+			}
+
+			BOOST_CHECK_EQUAL(blobStr, "123");
+
+			stmt->free(status, DSQL_drop);
+			BOOST_CHECK(status->isSuccess());
+		}
 
 		if (i == 0)
 			transaction->rollback(status);
