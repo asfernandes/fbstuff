@@ -18,8 +18,8 @@
  */
 
 #include "../FbTest.h"
-#include <Interface.h>
-#include <ProviderInterface.h>
+#include <firebird/Interface.h>
+#include <firebird/Provider.h>
 #include <string>
 #include <vector>
 #include <ibase.h>
