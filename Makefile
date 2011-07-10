@@ -1,4 +1,4 @@
-MODULES	:= perf test test/v3api
+MODULES	:= perf perf/udr test test/v3api
 
 TARGET	:= release
 
@@ -8,9 +8,11 @@ LD	:= $(CXX)
 SRC_DIR		:= src
 BUILD_DIR	:= build
 OUT_DIR		:= output
+SHRLIB_EXT	:= so
 
 OBJ_DIR := $(BUILD_DIR)/$(TARGET)
 BIN_DIR := $(OUT_DIR)/$(TARGET)/bin
+LIB_DIR := $(OUT_DIR)/$(TARGET)/lib
 
 SRC_DIRS := $(addprefix $(SRC_DIR)/,$(MODULES))
 OBJ_DIRS := $(addprefix $(OBJ_DIR)/,$(MODULES))
@@ -18,7 +20,7 @@ OBJ_DIRS := $(addprefix $(OBJ_DIR)/,$(MODULES))
 SRCS := $(foreach sdir,$(SRC_DIRS),$(wildcard $(sdir)/*.cpp))
 OBJS := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRCS))
 
-CXX_FLAGS := -ggdb -MMD -MP -DBOOST_TEST_DYN_LINK
+CXX_FLAGS := -ggdb -fPIC -MMD -MP -DBOOST_TEST_DYN_LINK
 
 ifeq ($(TARGET),release)
 	CXX_FLAGS += -O3
@@ -35,11 +37,12 @@ endef
 
 all: mkdirs \
 	$(BIN_DIR)/fbinsert \
-	$(BIN_DIR)/fbtest
+	$(BIN_DIR)/fbtest	\
+	$(LIB_DIR)/libperfudr.$(SHRLIB_EXT) \
 
-mkdirs: $(OBJ_DIRS) $(BIN_DIR)
+mkdirs: $(OBJ_DIRS) $(BIN_DIR) $(LIB_DIR)
 
-$(OBJ_DIRS) $(BIN_DIR):
+$(OBJ_DIRS) $(BIN_DIR) $(LIB_DIR):
 	@mkdir -p $@
 
 clean:
@@ -63,3 +66,6 @@ $(BIN_DIR)/fbtest: \
 	$(OBJ_DIR)/test/v3api/StaticMessageTest.o \
 
 	$(LD) $^ -o $@ -lboost_unit_test_framework -lboost_thread -lfbclient
+
+$(LIB_DIR)/libperfudr.$(SHRLIB_EXT): $(OBJ_DIR)/perf/udr/Message.o
+	$(LD) -shared $^ -o $@ -lfbclient -ludr_engine
