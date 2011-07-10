@@ -94,15 +94,23 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 				FbTest::DIALECT, 0);
 			BOOST_CHECK(status->isSuccess());
 
-			MessageImpl inMessage;
-			Offset<ISC_SHORT> systemFlagParam(inMessage);
-			inMessage.finish();
+			const IParametersMetadata* inParams = stmt->getInputParameters(status);
+			BOOST_CHECK(status->isSuccess());
 
-			MessageImpl outMessage;
+			MessageImpl inMessage(inParams->getCount(status));
+			BOOST_CHECK(status->isSuccess());
+
+			Offset<ISC_SHORT> systemFlagParam(inMessage);
+
+			const IParametersMetadata* outParams = stmt->getOutputParameters(status);
+			BOOST_CHECK(status->isSuccess());
+
+			MessageImpl outMessage(outParams->getCount(status));
+			BOOST_CHECK(status->isSuccess());
+
 			Offset<ISC_SHORT> relationId(outMessage);
 			Offset<FbString> relationName(outMessage, 31);
 			Offset<ISC_QUAD> description(outMessage);
-			outMessage.finish();
 
 			inMessage[systemFlagParam] = 0;
 
@@ -166,15 +174,23 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 				FbTest::DIALECT, 0);
 			BOOST_CHECK(status->isSuccess());
 
-			MessageImpl inMessage;
-			Offset<FbString> systemFlagParam(inMessage, 1);
-			inMessage.finish();
+			const IParametersMetadata* inParams = stmt->getInputParameters(status);
+			BOOST_CHECK(status->isSuccess());
 
-			MessageImpl outMessage;
+			MessageImpl inMessage(inParams->getCount(status));
+			BOOST_CHECK(status->isSuccess());
+
+			Offset<FbString> systemFlagParam(inMessage, 1);
+
+			const IParametersMetadata* outParams = stmt->getOutputParameters(status);
+			BOOST_CHECK(status->isSuccess());
+
+			MessageImpl outMessage(outParams->getCount(status));
+			BOOST_CHECK(status->isSuccess());
+
 			Offset<FbString> relationId(outMessage, 10);
 			Offset<FbString> relationName(outMessage, 31);
 			Offset<FbString> description(outMessage, 100);
-			outMessage.finish();
 
 			strcpy(inMessage[systemFlagParam].str, "0");
 			inMessage[systemFlagParam].length = 1;
@@ -212,9 +228,13 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 				FbTest::DIALECT, 0);
 			BOOST_CHECK(status->isSuccess());
 
-			MessageImpl outMessage;
+			const IParametersMetadata* outParams = stmt->getOutputParameters(status);
+			BOOST_CHECK(status->isSuccess());
+
+			MessageImpl outMessage(outParams->getCount(status));
+			BOOST_CHECK(status->isSuccess());
+
 			Offset<ISC_QUAD> idAsBlob(outMessage);
-			outMessage.finish();
 
 			stmt->execute(status, transaction, 0, NULL, &outMessage);
 			BOOST_CHECK(status->isSuccess());

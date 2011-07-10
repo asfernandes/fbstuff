@@ -152,14 +152,14 @@ BOOST_AUTO_TEST_CASE(describe)
 			};
 
 			FieldInfo inputInfo[] = {
-				{"", "", "", "", SQL_SHORT, true, 0, sizeof(SSHORT), 0}
+				{"", "", "", "", SQL_SHORT, true, 0, sizeof(ISC_SHORT), 0}
 			};
 
 			FieldInfo::test(status, inputParams, sizeof(inputInfo) / sizeof(inputInfo[0]), inputInfo);
 
 			FieldInfo outputInfo[] = {
 				{"RDB$RELATION_ID",        "RDB$DATABASE", "SYSDBA", "RELID",  SQL_SHORT, true,
-					0,                 sizeof(SSHORT),   0},
+					0,                 sizeof(ISC_SHORT),   0},
 				{"RDB$CHARACTER_SET_NAME", "RDB$DATABASE", "SYSDBA", "CSNAME", SQL_TEXT,  true,
 					testSubType[test], testLength[test], 0}
 			};

@@ -22,6 +22,7 @@
 #include <firebird/Provider.h>
 #include <string>
 #include <vector>
+#include <string.h>
 #include <ibase.h>
 #include <boost/assert.hpp>
 
@@ -34,6 +35,11 @@ extern Firebird::IMaster* master;
 extern Firebird::IProvider* dispatcher;
 
 //--------------------------------------
+
+static inline size_t ALIGN(size_t n, size_t b)
+{
+	return ((n + b - 1) & ~(b - 1));
+}
 
 class MessageImpl;
 
@@ -70,32 +76,32 @@ public:
 		switch ((type = params->getType(status, index)))
 		{
 			case SQL_SHORT:
-				size = FB_ALIGN(size, sizeof(ISC_SHORT));
+				size = ALIGN(size, sizeof(ISC_SHORT));
 				break;
 
 			case SQL_LONG:
-				size = FB_ALIGN(size, sizeof(ISC_LONG));
+				size = ALIGN(size, sizeof(ISC_LONG));
 				break;
 
 			case SQL_INT64:
-				size = FB_ALIGN(size, sizeof(ISC_INT64));
+				size = ALIGN(size, sizeof(ISC_INT64));
 				break;
 
 			case SQL_FLOAT:
-				size = FB_ALIGN(size, sizeof(float));
+				size = ALIGN(size, sizeof(float));
 				break;
 
 			case SQL_DOUBLE:
-				size = FB_ALIGN(size, sizeof(double));
+				size = ALIGN(size, sizeof(double));
 				break;
 
 			case SQL_BLOB:
-				size = FB_ALIGN(size, sizeof(ISC_QUAD));
+				size = ALIGN(size, sizeof(ISC_QUAD));
 				break;
 
 			case SQL_TEXT:
 			case SQL_VARYING:
-				size = FB_ALIGN(size, sizeof(ISC_USHORT));
+				size = ALIGN(size, sizeof(ISC_USHORT));
 				break;
 
 			default:
@@ -108,7 +114,7 @@ public:
 		return size;
 	}
 
-	unsigned addBlr(std::vector<ISC_UCHAR>& blr)
+	unsigned addBlr(ISC_UCHAR*& blr)
 	{
 		Firebird::IStatus* status = master->getStatus();
 		unsigned ret;
@@ -118,8 +124,8 @@ public:
 			case SQL_SHORT:
 			{
 				unsigned scale = params->getScale(status, index);
-				blr.push_back(blr_short);
-				blr.push_back(scale);
+				*blr++ = blr_short;
+				*blr++ = scale;
 				ret = sizeof(ISC_SHORT);
 				break;
 			}
@@ -127,8 +133,8 @@ public:
 			case SQL_LONG:
 			{
 				unsigned scale = params->getScale(status, index);
-				blr.push_back(blr_long);
-				blr.push_back(scale);
+				*blr++ = blr_long;
+				*blr++ = scale;
 				ret = sizeof(ISC_LONG);
 				break;
 			}
@@ -136,28 +142,28 @@ public:
 			case SQL_INT64:
 			{
 				unsigned scale = params->getScale(status, index);
-				blr.push_back(blr_int64);
-				blr.push_back(scale);
+				*blr++ = blr_int64;
+				*blr++ = scale;
 				ret = sizeof(ISC_INT64);
 				break;
 			}
 
 			case SQL_FLOAT:
-				blr.push_back(blr_float);
+				*blr++ = blr_float;
 				ret = sizeof(float);
 				break;
 
 			case SQL_DOUBLE:
-				blr.push_back(blr_double);
+				*blr++ = blr_double;
 				ret = sizeof(double);
 				break;
 
 			case SQL_BLOB:
-				blr.push_back(blr_blob2);
-				blr.push_back(0);
-				blr.push_back(0);
-				blr.push_back(0);
-				blr.push_back(0);
+				*blr++ = blr_blob2;
+				*blr++ = 0;
+				*blr++ = 0;
+				*blr++ = 0;
+				*blr++ = 0;
 				ret = sizeof(ISC_QUAD);
 				break;
 
@@ -165,9 +171,9 @@ public:
 			case SQL_VARYING:
 			{
 				unsigned length = params->getLength(status, index);
-				blr.push_back(blr_varying);
-				blr.push_back(length & 0xFF);
-				blr.push_back((length >> 8) & 0xFF);
+				*blr++ = blr_varying;
+				*blr++ = length & 0xFF;
+				*blr++ = (length >> 8) & 0xFF;
 				ret = sizeof(ISC_USHORT) + length;
 				break;
 			}
@@ -197,66 +203,67 @@ private:
 class MessageImpl : public Firebird::FbMessage
 {
 public:
-	MessageImpl()
-		: items(0)
+	MessageImpl(unsigned aItemCount)
+		: itemCount(aItemCount * 2),
+		  items(0)
 	{
-		blrLength = 0;
-		blr = NULL;
-		bufferLength = 0;
-		buffer = NULL;
-
 		static const ISC_UCHAR HEADER[] = {
 			blr_version5,
 			blr_begin,
 			blr_message, 0, 0, 0
 		};
 
-		blrArray.insert(blrArray.end(), HEADER, HEADER + sizeof(HEADER));
+		blrLength = 0;
+		blr = blrPos = new ISC_UCHAR[sizeof(HEADER) + 10 * itemCount + 2];
+		bufferLength = 0;
+		buffer = NULL;
+
+		memcpy(blrPos, HEADER, sizeof(HEADER));
+		blrPos += sizeof(HEADER);
 	}
 
 	~MessageImpl()
 	{
 		if (buffer)
 			delete [] buffer;
+
+		if (blr)
+			delete [] blr;
 	}
 
 	template <typename T>
 	void add(Offset<T>& offset)
 	{
-		if (blr)
+		if (items >= itemCount)
 			return;	// return an error, this is already constructed message
 
 		bufferLength = offset.align(bufferLength, items / 2);
 		offset.pos = bufferLength;
-		bufferLength += offset.addBlr(blrArray);
+		bufferLength += offset.addBlr(blrPos);
 
-		bufferLength = FB_ALIGN(bufferLength, sizeof(ISC_SHORT));
+		bufferLength = ALIGN(bufferLength, sizeof(ISC_SHORT));
 		offset.nullPos = bufferLength;
 		bufferLength += sizeof(ISC_SHORT);
 
-		blrArray.push_back(blr_short);
-		blrArray.push_back(0);
+		*blrPos++ = blr_short;
+		*blrPos++ = 0;
 
 		items += 2;
-	}
 
-	unsigned finish()
-	{
-		if (blr)
-			return bufferLength;
+		if (items == itemCount)
+		{
+			*blrPos++ = blr_end;
+			*blrPos++ = blr_eoc;
 
-		blrArray.push_back(blr_end);
-		blrArray.push_back(blr_eoc);
-		blrArray[4] = items & 0xFF;
-		blrArray[5] = (items >> 8) & 0xFF;
+			blrLength = blrPos - blr;
 
-		blrLength = (unsigned) blrArray.size();
-		blr = &blrArray.front();
+			ISC_UCHAR* blrStart = blrPos - blrLength;
+			blrStart[4] = items & 0xFF;
+			blrStart[5] = (items >> 8) & 0xFF;
 
-		buffer = new ISC_UCHAR[bufferLength];
-		memset(buffer, 0, bufferLength);
-
-		return bufferLength;
+			buffer = new ISC_UCHAR[bufferLength];
+			memset(buffer, 0, bufferLength);
+		}
 	}
 
 	bool isNull(const OffsetBase& index)
@@ -280,8 +287,9 @@ public:
 	}
 
 public:
-	std::vector<ISC_UCHAR> blrArray;
+	unsigned itemCount;
 	unsigned items;
+	ISC_UCHAR* blrPos;
 };
 
 template <>
@@ -296,13 +304,13 @@ public:
 
 	unsigned align(unsigned size, unsigned /*index*/)
 	{
-		return FB_ALIGN(size, sizeof(ISC_SHORT));
+		return ALIGN(size, sizeof(ISC_SHORT));
 	}
 
-	unsigned addBlr(std::vector<ISC_UCHAR>& blr)
+	unsigned addBlr(ISC_UCHAR*& blr)
 	{
-		blr.push_back(blr_short);
-		blr.push_back(scale);
+		*blr++ = blr_short;
+		*blr++ = scale;
 		return sizeof(ISC_SHORT);
 	}
 
@@ -322,13 +330,13 @@ public:
 
 	unsigned align(unsigned size, unsigned /*index*/)
 	{
-		return FB_ALIGN(size, sizeof(ISC_LONG));
+		return ALIGN(size, sizeof(ISC_LONG));
 	}
 
-	unsigned addBlr(std::vector<ISC_UCHAR>& blr)
+	unsigned addBlr(ISC_UCHAR*& blr)
 	{
-		blr.push_back(blr_long);
-		blr.push_back(scale);
+		*blr++ = blr_long;
+		*blr++ = scale;
 		return sizeof(ISC_LONG);
 	}
 
@@ -348,13 +356,13 @@ public:
 
 	unsigned align(unsigned size, unsigned /*index*/)
 	{
-		return FB_ALIGN(size, sizeof(ISC_INT64));
+		return ALIGN(size, sizeof(ISC_INT64));
 	}
 
-	unsigned addBlr(std::vector<ISC_UCHAR>& blr)
+	unsigned addBlr(ISC_UCHAR*& blr)
 	{
-		blr.push_back(blr_int64);
-		blr.push_back(scale);
+		*blr++ = blr_int64;
+		*blr++ = scale;
 		return sizeof(ISC_INT64);
 	}
 
@@ -373,12 +381,12 @@ public:
 
 	unsigned align(unsigned size, unsigned /*index*/)
 	{
-		return FB_ALIGN(size, sizeof(float));
+		return ALIGN(size, sizeof(float));
 	}
 
-	unsigned addBlr(std::vector<ISC_UCHAR>& blr)
+	unsigned addBlr(ISC_UCHAR*& blr)
 	{
-		blr.push_back(blr_float);
+		*blr++ = blr_float;
 		return sizeof(float);
 	}
 };
@@ -394,12 +402,12 @@ public:
 
 	unsigned align(unsigned size, unsigned /*index*/)
 	{
-		return FB_ALIGN(size, sizeof(double));
+		return ALIGN(size, sizeof(double));
 	}
 
-	unsigned addBlr(std::vector<ISC_UCHAR>& blr)
+	unsigned addBlr(ISC_UCHAR*& blr)
 	{
-		blr.push_back(blr_double);
+		*blr++ = blr_double;
 		return sizeof(double);
 	}
 };
@@ -415,16 +423,16 @@ public:
 
 	unsigned align(unsigned size, unsigned /*index*/)
 	{
-		return FB_ALIGN(size, sizeof(ISC_QUAD));
+		return ALIGN(size, sizeof(ISC_QUAD));
 	}
 
-	unsigned addBlr(std::vector<ISC_UCHAR>& blr)
+	unsigned addBlr(ISC_UCHAR*& blr)
 	{
-		blr.push_back(blr_blob2);
-		blr.push_back(0);
-		blr.push_back(0);
-		blr.push_back(0);
-		blr.push_back(0);
+		*blr++ = blr_blob2;
+		*blr++ = 0;
+		*blr++ = 0;
+		*blr++ = 0;
+		*blr++ = 0;
 		return sizeof(ISC_QUAD);
 	}
 };
@@ -452,14 +460,14 @@ public:
 
 	unsigned align(unsigned size, unsigned /*index*/)
 	{
-		return FB_ALIGN(size, sizeof(ISC_USHORT));
+		return ALIGN(size, sizeof(ISC_USHORT));
 	}
 
-	unsigned addBlr(std::vector<ISC_UCHAR>& blr)
+	unsigned addBlr(ISC_UCHAR*& blr)
 	{
-		blr.push_back(blr_varying);
-		blr.push_back(length & 0xFF);
-		blr.push_back((length >> 8) & 0xFF);
+		*blr++ = blr_varying;
+		*blr++ = length & 0xFF;
+		*blr++ = (length >> 8) & 0xFF;
 		return sizeof(ISC_USHORT) + length;
 	}
 

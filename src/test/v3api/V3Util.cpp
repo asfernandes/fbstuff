@@ -38,8 +38,8 @@ IProvider* dispatcher = master->getDispatcher();
 void getEngineVersion(Firebird::IAttachment* attachment, unsigned* major, unsigned* minor,
 	unsigned* revision)
 {
-	static const UCHAR ITEMS[] = {isc_info_firebird_version};
-	UCHAR buffer[512];
+	static const ISC_UCHAR ITEMS[] = {isc_info_firebird_version};
+	ISC_UCHAR buffer[512];
 	IStatus* status = master->getStatus();
 
 	attachment->getInfo(status, sizeof(ITEMS), ITEMS, sizeof(buffer), buffer);
@@ -47,7 +47,7 @@ void getEngineVersion(Firebird::IAttachment* attachment, unsigned* major, unsign
 
 	if (buffer[0] == isc_info_firebird_version)
 	{
-		const UCHAR* p = buffer + 5;
+		const ISC_UCHAR* p = buffer + 5;
 
 		if (major)
 			*major = p[4] - '0';

@@ -99,9 +99,13 @@ BOOST_AUTO_TEST_CASE(multiDbTrans)
 				FbTest::DIALECT, 0);
 			BOOST_CHECK(status->isSuccess());
 
-			MessageImpl outMessage;
+			const IParametersMetadata* outParams = stmt->getOutputParameters(status);
+			BOOST_CHECK(status->isSuccess());
+
+			MessageImpl outMessage(outParams->getCount(status));
+			BOOST_CHECK(status->isSuccess());
+
 			Offset<ISC_QUAD> blobField(outMessage);
-			outMessage.finish();
 
 			stmt->execute(status, transaction, 0, NULL, NULL);
 			BOOST_CHECK(status->isSuccess());

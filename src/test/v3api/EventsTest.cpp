@@ -131,7 +131,12 @@ BOOST_AUTO_TEST_CASE(events)
 			return FB_EVENT_CALLBACK_VERSION;
 		}
 
-		virtual void FB_CARG eventCallbackFunction(unsigned int length, const UCHAR* events)
+		virtual IPluginModule* FB_CARG getModule()
+		{
+			return NULL;
+		}
+
+		virtual void FB_CARG eventCallbackFunction(unsigned int length, const ISC_UCHAR* events)
 		{
 			ISC_ULONG increment = 0;
 			isc_event_counts(&increment, eveLen, eveBuffer, events);

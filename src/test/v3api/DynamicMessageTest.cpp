@@ -86,10 +86,14 @@ BOOST_AUTO_TEST_CASE(dynamicMessage)
 			FbTest::DIALECT, IStatement::PREPARE_PREFETCH_METADATA);
 		BOOST_CHECK(status->isSuccess());
 
-		MessageImpl inMessage;
-		Offset<void*> systemFlagParam(inMessage, stmt->getInputParameters(status));
+		const IParametersMetadata* inParams = stmt->getInputParameters(status);
 		BOOST_CHECK(status->isSuccess());
-		inMessage.finish();
+
+		MessageImpl inMessage(inParams->getCount(status));
+		BOOST_CHECK(status->isSuccess());
+
+		Offset<void*> systemFlagParam(inMessage, inParams);
+		BOOST_CHECK(status->isSuccess());
 
 		const IParametersMetadata* outParams = stmt->getOutputParameters(status);
 		BOOST_CHECK(status->isSuccess());
@@ -97,13 +101,11 @@ BOOST_AUTO_TEST_CASE(dynamicMessage)
 		unsigned outParamsCount = outParams->getCount(status);
 		BOOST_CHECK(status->isSuccess());
 
-		MessageImpl outMessage;
+		MessageImpl outMessage(outParamsCount);
 		vector<Offset<void*> > outFields;
 
 		for (unsigned i = 0; i < outParamsCount; ++i)
 			outFields.push_back(Offset<void*>(outMessage, outParams));
-
-		outMessage.finish();
 
 		BOOST_CHECK(systemFlagParam.getType() == SQL_SHORT);
 		*static_cast<ISC_SHORT*>(inMessage[systemFlagParam]) = 0;
