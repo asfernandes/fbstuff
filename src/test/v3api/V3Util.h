@@ -19,6 +19,7 @@
 
 #include "../FbTest.h"
 #include <firebird/Interface.h>
+#include <firebird/Message.h>
 #include <firebird/Provider.h>
 #include <string>
 #include <vector>

@@ -163,6 +163,70 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 
 		if (version >= 251)
 		{
+			// Retrieve data with FB_MESSAGE.
+
+			stmt->prepare(status, transaction, 0,
+				"select rdb$relation_id, rdb$relation_name, rdb$description"
+				"  from rdb$relations"
+				"  where rdb$system_flag = ?"
+				"  order by rdb$relation_id",
+				FbTest::DIALECT, 0);
+			BOOST_CHECK(status->isSuccess());
+
+			//// TODO: Make easier to use FB_MESSAGE.
+
+			FB_MESSAGE(InputType,
+				(FB_INTEGER, systemFlag)
+			);
+
+			FB_MESSAGE(OutputType,
+				(FB_SMALLINT, relationId)
+				(FB_VARCHAR(31), relationName)
+				(FB_VARCHAR(100), description)
+			);
+
+			InputType input;
+			input.systemFlag = 0;
+
+			FbMessage inputMessage;
+			inputMessage.blr = InputType::getBlr(&inputMessage.blrLength);
+			inputMessage.buffer = (unsigned char*) &input;
+			inputMessage.bufferLength = InputType::getSize();
+
+			OutputType output;
+
+			FbMessage outputMessage;
+			outputMessage.blr = OutputType::getBlr(&outputMessage.blrLength);
+			outputMessage.buffer = (unsigned char*) &output;
+			outputMessage.bufferLength = OutputType::getSize();
+
+			stmt->execute(status, transaction, 0, &inputMessage, NULL);
+			BOOST_CHECK(status->isSuccess());
+
+			int pos = 0;
+			int ret;
+
+			while ((ret = stmt->fetch(status, &outputMessage)) != 100)
+			{
+				BOOST_CHECK(status->isSuccess());
+
+				string msg =
+					lexical_cast<string>(output.relationId) + " | " +
+					string(output.relationName.str, output.relationName.length) + " | " +
+					string(output.description.str, output.description.length);
+
+				BOOST_CHECK_EQUAL(msg, MSGS[pos]);
+				++pos;
+			}
+
+			BOOST_CHECK_EQUAL(pos, 3);
+
+			stmt->free(status, DSQL_unprepare);
+			BOOST_CHECK(status->isSuccess());
+		}
+
+		if (version >= 251)
+		{
 			// Retrieve data as strings.
 
 			// Also make the input parameter a blob.
