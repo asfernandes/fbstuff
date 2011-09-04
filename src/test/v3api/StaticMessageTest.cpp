@@ -173,40 +173,26 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 				FbTest::DIALECT, 0);
 			BOOST_CHECK(status->isSuccess());
 
-			//// TODO: Make easier to use FB_MESSAGE.
-
-			FB_MESSAGE(InputType,
+			FB_MESSAGE_DESC(InputType,
 				(FB_INTEGER, systemFlag)
-			);
+			) input;
 
-			FB_MESSAGE(OutputType,
+			FB_MESSAGE_DESC(OutputType,
 				(FB_SMALLINT, relationId)
 				(FB_VARCHAR(31), relationName)
 				(FB_VARCHAR(100), description)
-			);
+			) output;
 
-			InputType input;
+			input.clear();
 			input.systemFlag = 0;
 
-			FbMessage inputMessage;
-			inputMessage.blr = InputType::getBlr(&inputMessage.blrLength);
-			inputMessage.buffer = (unsigned char*) &input;
-			inputMessage.bufferLength = InputType::getSize();
-
-			OutputType output;
-
-			FbMessage outputMessage;
-			outputMessage.blr = OutputType::getBlr(&outputMessage.blrLength);
-			outputMessage.buffer = (unsigned char*) &output;
-			outputMessage.bufferLength = OutputType::getSize();
-
-			stmt->execute(status, transaction, 0, &inputMessage, NULL);
+			stmt->execute(status, transaction, 0, &input.desc, NULL);
 			BOOST_CHECK(status->isSuccess());
 
 			int pos = 0;
 			int ret;
 
-			while ((ret = stmt->fetch(status, &outputMessage)) != 100)
+			while ((ret = stmt->fetch(status, &output.desc)) != 100)
 			{
 				BOOST_CHECK(status->isSuccess());
 
