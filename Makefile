@@ -59,6 +59,7 @@ $(BIN_DIR)/fbtest: \
 	$(OBJ_DIR)/test/FbTest.o \
 	$(OBJ_DIR)/test/v3api/V3Util.o \
 	$(OBJ_DIR)/test/v3api/AffectedRecordsTest.o \
+	$(OBJ_DIR)/test/v3api/CursorTest.o \
 	$(OBJ_DIR)/test/v3api/DescribeTest.o \
 	$(OBJ_DIR)/test/v3api/DynamicMessageTest.o \
 	$(OBJ_DIR)/test/v3api/EventsTest.o \
