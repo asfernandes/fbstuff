@@ -30,6 +30,10 @@ const unsigned char ASCII_DPB[] = {
 	isc_dpb_version1,
 	isc_dpb_lc_ctype, 5, 'A', 'S', 'C', 'I', 'I'
 };
+const unsigned char UTF8_DPB[] = {
+	isc_dpb_version1,
+	isc_dpb_lc_ctype, 4, 'U', 'T', 'F', '8'
+};
 
 std::string getLocation(const std::string& file);
 

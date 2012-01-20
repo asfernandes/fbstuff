@@ -324,4 +324,76 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 }
 
 
+BOOST_AUTO_TEST_CASE(staticMessage2)
+{
+	const string location = FbTest::getLocation("staticMessage2.fdb");
+
+	IStatus* status = master->getStatus();
+
+	IAttachment* attachment = dispatcher->createDatabase(status, location.c_str(),
+		sizeof(FbTest::UTF8_DPB), FbTest::UTF8_DPB);
+	BOOST_CHECK(status->isSuccess());
+	BOOST_REQUIRE(attachment);
+
+	ITransaction* transaction = attachment->startTransaction(status, 0, NULL);
+	BOOST_CHECK(status->isSuccess());
+	BOOST_REQUIRE(transaction);
+
+	{
+		IStatement* stmt = attachment->allocateStatement(status);
+		BOOST_CHECK(status->isSuccess());
+		BOOST_REQUIRE(stmt);
+
+		{
+			stmt->prepare(status, transaction, 0,
+				"execute block (c varchar(10) character set win1252 not null = ?) returns (n integer) "
+				"as "
+				"begin "
+				"  n = octet_length(c); "
+				"  suspend; "
+				"end",
+				FbTest::DIALECT, 0);
+			BOOST_CHECK(status->isSuccess());
+
+			FB_MESSAGE_DESC(InputType,
+				(FB_VARCHAR(10 * 4), c)
+			) input;
+
+			FB_MESSAGE_DESC(OutputType,
+				(FB_INTEGER, n)
+			) output;
+
+			input.clear();
+			input.c.set("123áé456");
+
+			stmt->execute(status, transaction, 0, &input.desc, NULL);
+			BOOST_CHECK(status->isSuccess());
+
+			int ret = stmt->fetch(status, &output.desc);
+			BOOST_CHECK(status->isSuccess() && ret != 100);
+
+			BOOST_CHECK_EQUAL(output.n, 8);	// CORE-3737
+
+			stmt->free(status, DSQL_close);
+			BOOST_CHECK(status->isSuccess());
+
+			input.cNull = 1;
+			stmt->execute(status, transaction, 0, &input.desc, NULL);
+			BOOST_CHECK(!status->isSuccess() && status->get()[1] == isc_not_valid_for_var);
+		}
+
+		stmt->free(status, DSQL_drop);
+		BOOST_CHECK(status->isSuccess());
+	}
+
+	transaction->commit(status);
+	BOOST_CHECK(status->isSuccess());
+
+	attachment->drop(status);
+	BOOST_CHECK(status->isSuccess());
+
+	status->dispose();
+}
+
+
 BOOST_AUTO_TEST_SUITE_END()
