@@ -230,4 +230,41 @@ BOOST_AUTO_TEST_CASE(cursor)
 }
 
 
+BOOST_AUTO_TEST_CASE(ddlFetch)
+{
+	const string location = FbTest::getLocation("cursor.fdb");
+
+	IStatus* status = master->getStatus();
+
+	IAttachment* attachment = dispatcher->createDatabase(status, location.c_str(), 0, NULL);
+	BOOST_CHECK(status->isSuccess());
+	BOOST_REQUIRE(attachment);
+
+	ITransaction* transaction = attachment->startTransaction(status, 0, NULL);
+	BOOST_CHECK(status->isSuccess());
+	BOOST_REQUIRE(transaction);
+
+	IStatement* stmt1 = attachment->allocateStatement(status);
+	BOOST_CHECK(status->isSuccess());
+	BOOST_REQUIRE(stmt1);
+
+	stmt1->prepare(status, transaction, 0, "create table t (n integer)", FbTest::DIALECT, 0);
+	BOOST_CHECK(status->isSuccess());
+
+	stmt1->fetch(status, NULL);	// fetch from a DDL statement
+	BOOST_CHECK(!status->isSuccess());
+
+	stmt1->free(status, DSQL_drop);
+	BOOST_CHECK(status->isSuccess());
+
+	transaction->commit(status);
+	BOOST_CHECK(status->isSuccess());
+
+	attachment->drop(status);
+	BOOST_CHECK(status->isSuccess());
+
+	status->dispose();
+}
+
+
 BOOST_AUTO_TEST_SUITE_END()
