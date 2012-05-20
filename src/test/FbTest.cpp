@@ -28,11 +28,27 @@ namespace FbTest
 
 //------------------------------------------------------------------------------
 
-static const string LOCATION = "/tmp/";
+static string location = "/tmp/";
+
 
 string getLocation(const string& file)
 {
-	return LOCATION + file;
+	static bool first = true;
+
+	if (first)
+	{
+		first = false;
+
+		const char* envLocation = getenv("FBTEST_LOCATION");
+		if (envLocation)
+			location = envLocation;
+
+		char c = location[location.length() - 1];
+		if (c != '/' && c != '\\')
+			location += '/';
+	}
+
+	return location + file;
 }
 
 //------------------------------------------------------------------------------
