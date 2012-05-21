@@ -1,4 +1,4 @@
-MODULES	:= perf perf/udr test test/v3api
+MODULES	:= ods perf perf/udr test test/v3api
 
 TARGET	:= release
 
@@ -36,6 +36,7 @@ endef
 .PHONY: all mkdirs clean
 
 all: mkdirs \
+	$(BIN_DIR)/fbods	\
 	$(BIN_DIR)/fbinsert \
 	$(BIN_DIR)/fbtest	\
 	$(LIB_DIR)/libperfudr.$(SHRLIB_EXT) \
@@ -51,6 +52,9 @@ clean:
 $(foreach bdir,$(OBJ_DIRS),$(eval $(call compile,$(bdir))))
 
 -include $(addsuffix .d,$(basename $(OBJS)))
+
+$(BIN_DIR)/fbods: $(OBJ_DIR)/ods/Main.o
+	$(LD) $^ -o $@
 
 $(BIN_DIR)/fbinsert: $(OBJ_DIR)/perf/fbinsert.o
 	$(LD) $^ -o $@ -lboost_program_options -lboost_thread -lfbclient
