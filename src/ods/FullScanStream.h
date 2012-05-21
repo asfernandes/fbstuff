@@ -17,33 +17,50 @@
  *
  */
 
-#ifndef FBSTUFF_TEST_FB_TEST_H
-#define FBSTUFF_TEST_FB_TEST_H
+#ifndef FBSTUFF_ODS_FULL_SCAN_STREAM_H
+#define FBSTUFF_ODS_FULL_SCAN_STREAM_H
 
+#include "Database.h"
 #include <string>
-#include <ibase.h>
+#include <map>
+#include <boost/scoped_array.hpp>
 
-namespace FbTest
+namespace fbods
 {
 
 //------------------------------------------------------------------------------
 
 
-const int DIALECT = 3;
-const unsigned char ASCII_DPB[] = {
-	isc_dpb_version1,
-	isc_dpb_lc_ctype, 5, 'A', 'S', 'C', 'I', 'I'
-};
-const unsigned char UTF8_DPB[] = {
-	isc_dpb_version1,
-	isc_dpb_lc_ctype, 4, 'U', 'T', 'F', '8'
-};
+class FullScanStream
+{
+public:
+	FullScanStream(Database* aDatabase, Database::RelationId aRelationId);
+	FullScanStream(Database* aDatabase, const char* relationName);
 
-std::string getLocation(const std::string& file);
+private:
+	void init();
+
+public:
+	bool fetch(void* recordBuffer);
+
+private:
+	void readPointer();
+
+private:
+	Database* database;
+	Database::RelationId relationId;
+	bool first;
+	unsigned pointerNum;
+	unsigned dataNum;
+	boost::scoped_array<char> pointerScope;
+	boost::scoped_array<char> dataScope;
+	PointerPage* pointer;
+	DataPage* data;
+};
 
 
 //------------------------------------------------------------------------------
 
-}	// FbTest
+}	// fbods
 
-#endif	// FBSTUFF_TEST_FB_TEST_H
+#endif	// FBSTUFF_ODS_FULL_SCAN_STREAM_H

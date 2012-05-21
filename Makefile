@@ -53,7 +53,10 @@ $(foreach bdir,$(OBJ_DIRS),$(eval $(call compile,$(bdir))))
 
 -include $(addsuffix .d,$(basename $(OBJS)))
 
-$(BIN_DIR)/fbods: $(OBJ_DIR)/ods/Main.o
+$(BIN_DIR)/fbods: \
+	$(OBJ_DIR)/ods/FullScanStream.o \
+	$(OBJ_DIR)/ods/Main.o \
+
 	$(LD) $^ -o $@
 
 $(BIN_DIR)/fbinsert: $(OBJ_DIR)/perf/fbinsert.o
