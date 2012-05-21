@@ -27,53 +27,53 @@ struct PageHeader
 struct HeaderPage
 {
 	PageHeader pageHeader;
-    boost::uint16_t pageSize;
-    boost::uint16_t odsVersion;
-    boost::int32_t pages;
-    boost::uint32_t nextPage;
-    boost::int32_t oldestTransaction;
-    boost::int32_t oldestActive;
-    boost::int32_t nextTransaction;
-    boost::uint16_t sequence;
-    boost::uint16_t flags;
-    boost::int32_t creationDate[2];
-    boost::int32_t attachmentId;
-    boost::int32_t shadowCount;
-    boost::int16_t implementation;
-    boost::uint16_t odsMinor;
-    boost::uint16_t odsMinorOriginal;
-    boost::uint16_t end;
-    boost::uint32_t pageBuffers;
-    boost::int32_t bumpedTransaction;
-    boost::int32_t oldestSnapshot;
-    boost::int32_t backupPages;
-    boost::int32_t misc[3];
-    boost::uint8_t data[];
+	boost::uint16_t pageSize;
+	boost::uint16_t odsVersion;
+	boost::int32_t pages;
+	boost::uint32_t nextPage;
+	boost::int32_t oldestTransaction;
+	boost::int32_t oldestActive;
+	boost::int32_t nextTransaction;
+	boost::uint16_t sequence;
+	boost::uint16_t flags;
+	boost::int32_t creationDate[2];
+	boost::int32_t attachmentId;
+	boost::int32_t shadowCount;
+	boost::int16_t implementation;
+	boost::uint16_t odsMinor;
+	boost::uint16_t odsMinorOriginal;
+	boost::uint16_t end;
+	boost::uint32_t pageBuffers;
+	boost::int32_t bumpedTransaction;
+	boost::int32_t oldestSnapshot;
+	boost::int32_t backupPages;
+	boost::int32_t misc[3];
+	boost::uint8_t data[];
 };
 
 struct PointerPage
 {
 	PageHeader pageHeader;
-    boost::int32_t sequence;
-    boost::int32_t next;
-    boost::uint16_t count;
-    boost::uint16_t relation;
-    boost::uint16_t minSpace;
-    boost::uint16_t maxSpace;
-    boost::int32_t page[];
+	boost::int32_t sequence;
+	boost::int32_t next;
+	boost::uint16_t count;
+	boost::uint16_t relation;
+	boost::uint16_t minSpace;
+	boost::uint16_t maxSpace;
+	boost::int32_t page[];
 };
 
 struct DataPage
 {
 	PageHeader pageHeader;
-    boost::int32_t sequence;
-    boost::uint16_t relation;
-    boost::uint16_t count;
-    struct Repeat
-    {
-        boost::uint16_t offset;
-        boost::uint16_t length;
-    } rpt[];
+	boost::int32_t sequence;
+	boost::uint16_t relation;
+	boost::uint16_t count;
+	struct Repeat
+	{
+		boost::uint16_t offset;
+		boost::uint16_t length;
+	} rpt[];
 };
 
 struct RecordHeader
