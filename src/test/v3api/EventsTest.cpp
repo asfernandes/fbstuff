@@ -169,7 +169,7 @@ BOOST_AUTO_TEST_CASE(events)
 		BOOST_CHECK(counter == PostThread::COUNT + 1);
 	}
 
-	attachment->drop(status);
+	attachment->dropDatabase(status);
 	BOOST_CHECK(status->isSuccess());
 
 	status->dispose();

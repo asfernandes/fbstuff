@@ -223,7 +223,7 @@ BOOST_AUTO_TEST_CASE(cursor)
 	transaction->commit(status);
 	BOOST_CHECK(status->isSuccess());
 
-	attachment->drop(status);
+	attachment->dropDatabase(status);
 	BOOST_CHECK(status->isSuccess());
 
 	status->dispose();
@@ -260,7 +260,7 @@ BOOST_AUTO_TEST_CASE(ddlFetch)
 	transaction->commit(status);
 	BOOST_CHECK(status->isSuccess());
 
-	attachment->drop(status);
+	attachment->dropDatabase(status);
 	BOOST_CHECK(status->isSuccess());
 
 	status->dispose();

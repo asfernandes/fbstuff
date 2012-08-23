@@ -146,7 +146,7 @@ BOOST_AUTO_TEST_CASE(dynamicMessage)
 	transaction->commit(status);
 	BOOST_CHECK(status->isSuccess());
 
-	attachment->drop(status);
+	attachment->dropDatabase(status);
 	BOOST_CHECK(status->isSuccess());
 
 	status->dispose();

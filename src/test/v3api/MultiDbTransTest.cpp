@@ -145,10 +145,10 @@ BOOST_AUTO_TEST_CASE(multiDbTrans)
 		BOOST_CHECK(status->isSuccess());
 	}
 
-	attachment2->drop(status);
+	attachment2->dropDatabase(status);
 	BOOST_CHECK(status->isSuccess());
 
-	attachment1->drop(status);
+	attachment1->dropDatabase(status);
 	BOOST_CHECK(status->isSuccess());
 
 	status->dispose();
