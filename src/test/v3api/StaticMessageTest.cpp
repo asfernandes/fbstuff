@@ -50,23 +50,23 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 	// Create some tables and comment them.
 	{
 		attachment->execute(status, transaction, 0,
-			"create table employee (id integer)", FbTest::DIALECT, 0, NULL, NULL);
+			"create table employee (id integer)", FbTest::DIALECT, NULL, NULL, NULL, NULL);
 		BOOST_CHECK(status->isSuccess());
 
 		attachment->execute(status, transaction, 0,
-			"comment on table employee is 'Employees'", FbTest::DIALECT, 0, NULL, NULL);
+			"comment on table employee is 'Employees'", FbTest::DIALECT, NULL, NULL, NULL, NULL);
 		BOOST_CHECK(status->isSuccess());
 
 		attachment->execute(status, transaction, 0,
-			"create table customer (id integer)", FbTest::DIALECT, 0, NULL, NULL);
+			"create table customer (id integer)", FbTest::DIALECT, NULL, NULL, NULL, NULL);
 		BOOST_CHECK(status->isSuccess());
 
 		attachment->execute(status, transaction, 0,
-			"comment on table customer is 'Customers'", FbTest::DIALECT, 0, NULL, NULL);
+			"comment on table customer is 'Customers'", FbTest::DIALECT, NULL, NULL, NULL, NULL);
 		BOOST_CHECK(status->isSuccess());
 
 		attachment->execute(status, transaction, 0,
-			"create table sales (id integer)", FbTest::DIALECT, 0, NULL, NULL);
+			"create table sales (id integer)", FbTest::DIALECT, NULL, NULL, NULL, NULL);
 		BOOST_CHECK(status->isSuccess());
 
 		transaction->commitRetaining(status);
@@ -74,10 +74,6 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 	}
 
 	{
-		IStatement* stmt = attachment->allocateStatement(status);
-		BOOST_CHECK(status->isSuccess());
-		BOOST_REQUIRE(stmt);
-
 		static const char* const MSGS[] = {
 			"128 | EMPLOYEE                        | Employees",
 			"129 | CUSTOMER                        | Customers",
@@ -86,26 +82,27 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 
 		// Retrieve data with they datatype.
 		{
-			stmt->prepare(status, transaction, 0,
+			IStatement* stmt = attachment->prepare(status, transaction, 0,
 				"select rdb$relation_id, rdb$relation_name, rdb$description"
 				"  from rdb$relations"
 				"  where rdb$system_flag = ?"
 				"  order by rdb$relation_id",
 				FbTest::DIALECT, 0);
 			BOOST_CHECK(status->isSuccess());
+			BOOST_REQUIRE(stmt);
 
-			const IParametersMetadata* inParams = stmt->getInputParameters(status);
+			IMessageMetadata* inParams = stmt->getInputMetadata(status);
 			BOOST_CHECK(status->isSuccess());
 
-			MessageImpl inMessage(inParams->getCount(status));
+			MessageImpl inMessage(inParams);
 			BOOST_CHECK(status->isSuccess());
 
 			Offset<ISC_SHORT> systemFlagParam(inMessage);
 
-			const IParametersMetadata* outParams = stmt->getOutputParameters(status);
+			IMessageMetadata* outParams = stmt->getOutputMetadata(status);
 			BOOST_CHECK(status->isSuccess());
 
-			MessageImpl outMessage(outParams->getCount(status));
+			MessageImpl outMessage(outParams);
 			BOOST_CHECK(status->isSuccess());
 
 			Offset<ISC_SHORT> relationId(outMessage);
@@ -114,13 +111,15 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 
 			inMessage[systemFlagParam] = 0;
 
-			stmt->execute(status, transaction, 0, &inMessage, NULL);
+			IResultSet* rs = stmt->openCursor(status, transaction,
+				inMessage.getMetadata(), inMessage.getBuffer(), outMessage.getMetadata());
 			BOOST_CHECK(status->isSuccess());
+			BOOST_REQUIRE(rs);
 
 			int pos = 0;
 			int ret;
 
-			while ((ret = stmt->fetch(status, &outMessage)) != 100)
+			while ((ret = rs->fetch(status, outMessage.getBuffer())))
 			{
 				BOOST_CHECK(status->isSuccess());
 
@@ -153,7 +152,10 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 
 			BOOST_CHECK_EQUAL(pos, 3);
 
-			stmt->free(status, DSQL_unprepare);
+			rs->close(status);
+			BOOST_CHECK(status->isSuccess());
+
+			stmt->free(status);
 			BOOST_CHECK(status->isSuccess());
 		}
 
@@ -165,41 +167,44 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 		{
 			// Retrieve data with FB_MESSAGE.
 
-			stmt->prepare(status, transaction, 0,
+			IStatement* stmt = attachment->prepare(status, transaction, 0,
 				"select rdb$relation_id, rdb$relation_name, rdb$description"
 				"  from rdb$relations"
 				"  where rdb$system_flag = ?"
 				"  order by rdb$relation_id",
 				FbTest::DIALECT, 0);
 			BOOST_CHECK(status->isSuccess());
+			BOOST_REQUIRE(stmt);
 
-			FB_MESSAGE_DESC(InputType,
+			FB_MESSAGE(Input,
 				(FB_INTEGER, systemFlag)
-			) input;
+			) input(master);
 
-			FB_MESSAGE_DESC(OutputType,
+			FB_MESSAGE(Output,
 				(FB_SMALLINT, relationId)
 				(FB_VARCHAR(31), relationName)
 				(FB_VARCHAR(100), description)
-			) output;
+			) output(master);
 
 			input.clear();
-			input.systemFlag = 0;
+			input->systemFlag = 0;
 
-			stmt->execute(status, transaction, 0, &input.desc, NULL);
+			IResultSet* rs = stmt->openCursor(status, transaction,
+				input.getMetadata(), input.getData(), output.getMetadata());
 			BOOST_CHECK(status->isSuccess());
+			BOOST_REQUIRE(rs);
 
 			int pos = 0;
 			int ret;
 
-			while ((ret = stmt->fetch(status, &output.desc)) != 100)
+			while ((ret = rs->fetch(status, output.getData())))
 			{
 				BOOST_CHECK(status->isSuccess());
 
 				string msg =
-					lexical_cast<string>(output.relationId) + " | " +
-					string(output.relationName.str, output.relationName.length) + " | " +
-					string(output.description.str, output.description.length);
+					lexical_cast<string>(output->relationId) + " | " +
+					string(output->relationName.str, output->relationName.length) + " | " +
+					string(output->description.str, output->description.length);
 
 				BOOST_CHECK_EQUAL(msg, MSGS[pos]);
 				++pos;
@@ -207,7 +212,10 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 
 			BOOST_CHECK_EQUAL(pos, 3);
 
-			stmt->free(status, DSQL_unprepare);
+			rs->close(status);
+			BOOST_CHECK(status->isSuccess());
+
+			stmt->free(status);
 			BOOST_CHECK(status->isSuccess());
 		}
 
@@ -216,26 +224,27 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 			// Retrieve data as strings.
 
 			// Also make the input parameter a blob.
-			stmt->prepare(status, transaction, 0,
+			IStatement* stmt = attachment->prepare(status, transaction, 0,
 				"select rdb$relation_id, rdb$relation_name, rdb$description"
 				"  from rdb$relations"
 				"  where cast(rdb$system_flag as blob sub_type text) = ?"
 				"  order by rdb$relation_id",
 				FbTest::DIALECT, 0);
 			BOOST_CHECK(status->isSuccess());
+			BOOST_REQUIRE(stmt);
 
-			const IParametersMetadata* inParams = stmt->getInputParameters(status);
+			IMessageMetadata* inParams = stmt->getInputMetadata(status);
 			BOOST_CHECK(status->isSuccess());
 
-			MessageImpl inMessage(inParams->getCount(status));
+			MessageImpl inMessage(inParams);
 			BOOST_CHECK(status->isSuccess());
 
 			Offset<FbString> systemFlagParam(inMessage, 1);
 
-			const IParametersMetadata* outParams = stmt->getOutputParameters(status);
+			IMessageMetadata* outParams = stmt->getOutputMetadata(status);
 			BOOST_CHECK(status->isSuccess());
 
-			MessageImpl outMessage(outParams->getCount(status));
+			MessageImpl outMessage(outParams);
 			BOOST_CHECK(status->isSuccess());
 
 			Offset<FbString> relationId(outMessage, 10);
@@ -245,13 +254,15 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 			strcpy(inMessage[systemFlagParam].str, "0");
 			inMessage[systemFlagParam].length = 1;
 
-			stmt->execute(status, transaction, 0, &inMessage, NULL);
+			IResultSet* rs = stmt->openCursor(status, transaction,
+				inMessage.getMetadata(), inMessage.getBuffer(), outMessage.getMetadata());
 			BOOST_CHECK(status->isSuccess());
+			BOOST_REQUIRE(rs);
 
 			int pos = 0;
 			int ret;
 
-			while ((ret = stmt->fetch(status, &outMessage)) != 100)
+			while ((ret = rs->fetch(status, outMessage.getBuffer())))
 			{
 				BOOST_CHECK(status->isSuccess());
 
@@ -266,7 +277,10 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 
 			BOOST_CHECK_EQUAL(pos, 3);
 
-			stmt->free(status, DSQL_unprepare);
+			rs->close(status);
+			BOOST_CHECK(status->isSuccess());
+
+			stmt->free(status);
 			BOOST_CHECK(status->isSuccess());
 		}
 
@@ -274,19 +288,21 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 		{
 			// Try to retrieve a number as a blob in execute.
 
-			stmt->prepare(status, transaction, 0, "insert into employee values (11) returning id",
-				FbTest::DIALECT, 0);
+			IStatement* stmt = attachment->prepare(status, transaction, 0,
+				"insert into employee values (11) returning id", FbTest::DIALECT, 0);
+			BOOST_CHECK(status->isSuccess());
+			BOOST_REQUIRE(stmt);
+
+			IMessageMetadata* outParams = stmt->getOutputMetadata(status);
 			BOOST_CHECK(status->isSuccess());
 
-			const IParametersMetadata* outParams = stmt->getOutputParameters(status);
-			BOOST_CHECK(status->isSuccess());
-
-			MessageImpl outMessage(outParams->getCount(status));
+			MessageImpl outMessage(outParams);
 			BOOST_CHECK(status->isSuccess());
 
 			Offset<ISC_QUAD> idAsBlob(outMessage);
 
-			stmt->execute(status, transaction, 0, NULL, &outMessage);
+			stmt->execute(status, transaction, NULL, NULL,
+				outMessage.getMetadata(), outMessage.getBuffer());
 			BOOST_CHECK(status->isSuccess());
 
 			string msg;
@@ -308,10 +324,10 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 			}
 
 			BOOST_CHECK_EQUAL(msg, "11");
-		}
 
-		stmt->free(status, DSQL_drop);
-		BOOST_CHECK(status->isSuccess());
+			stmt->free(status);
+			BOOST_CHECK(status->isSuccess());
+		}
 	}
 
 	transaction->commit(status);
@@ -340,49 +356,48 @@ BOOST_AUTO_TEST_CASE(staticMessage2)
 	BOOST_REQUIRE(transaction);
 
 	{
-		IStatement* stmt = attachment->allocateStatement(status);
+		IStatement* stmt = attachment->prepare(status, transaction, 0,
+			"execute block (c varchar(10) character set win1252 not null = ?) returns (n integer) "
+			"as "
+			"begin "
+			"  n = octet_length(c); "
+			"  suspend; "
+			"end",
+			FbTest::DIALECT, 0);
 		BOOST_CHECK(status->isSuccess());
 		BOOST_REQUIRE(stmt);
 
-		{
-			stmt->prepare(status, transaction, 0,
-				"execute block (c varchar(10) character set win1252 not null = ?) returns (n integer) "
-				"as "
-				"begin "
-				"  n = octet_length(c); "
-				"  suspend; "
-				"end",
-				FbTest::DIALECT, 0);
-			BOOST_CHECK(status->isSuccess());
+		FB_MESSAGE(Input,
+			(FB_VARCHAR(10 * 4), c)
+		) input(master);
 
-			FB_MESSAGE_DESC(InputType,
-				(FB_VARCHAR(10 * 4), c)
-			) input;
+		FB_MESSAGE(Output,
+			(FB_INTEGER, n)
+		) output(master);
 
-			FB_MESSAGE_DESC(OutputType,
-				(FB_INTEGER, n)
-			) output;
+		input.clear();
+		input->c.set("123áé456");
 
-			input.clear();
-			input.c.set("123áé456");
+		IResultSet* rs = stmt->openCursor(status, transaction,
+			input.getMetadata(), input.getData(), output.getMetadata());
+		BOOST_CHECK(status->isSuccess());
+		BOOST_REQUIRE(rs);
 
-			stmt->execute(status, transaction, 0, &input.desc, NULL);
-			BOOST_CHECK(status->isSuccess());
+		bool ret = rs->fetch(status, output.getData());
+		BOOST_CHECK(status->isSuccess() && ret);
 
-			int ret = stmt->fetch(status, &output.desc);
-			BOOST_CHECK(status->isSuccess() && ret != 100);
+		BOOST_CHECK_EQUAL(output->n, 8);	// CORE-3737
 
-			BOOST_CHECK_EQUAL(output.n, 8);	// CORE-3737
+		rs->close(status);
+		BOOST_CHECK(status->isSuccess());
 
-			stmt->free(status, DSQL_close);
-			BOOST_CHECK(status->isSuccess());
+		input->cNull = 1;
+		rs = stmt->openCursor(status, transaction,
+			input.getMetadata(), input.getData(), output.getMetadata());
+		BOOST_CHECK(!status->isSuccess() && status->get()[1] == isc_not_valid_for_var);
+		BOOST_CHECK(!rs);
 
-			input.cNull = 1;
-			stmt->execute(status, transaction, 0, &input.desc, NULL);
-			BOOST_CHECK(!status->isSuccess() && status->get()[1] == isc_not_valid_for_var);
-		}
-
-		stmt->free(status, DSQL_drop);
+		stmt->free(status);
 		BOOST_CHECK(status->isSuccess());
 	}
 

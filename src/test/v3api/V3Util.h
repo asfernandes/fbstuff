@@ -37,260 +37,127 @@ extern Firebird::IProvider* dispatcher;
 
 //--------------------------------------
 
-static inline size_t ALIGN(size_t n, size_t b)
-{
-	return ((n + b - 1) & ~(b - 1));
-}
-
 class MessageImpl;
 
 class OffsetBase
 {
 public:
 	OffsetBase()
-		: pos(0),
-		  nullPos(0)
+		: index(0)
 	{
 	}
 
-	unsigned pos;
-	unsigned nullPos;
+	unsigned index;
 };
 
 template <class T>
 class Offset : public OffsetBase
 {
+public:
 };
 
 template <>
 class Offset<void*> : public OffsetBase
 {
 public:
-	Offset(MessageImpl& message, const Firebird::IParametersMetadata* aParams);
+	Offset(MessageImpl& message);
 
-	unsigned align(unsigned size, unsigned aIndex)
+	void setType(Firebird::IStatus* /*status*/, Firebird::IMetadataBuilder* /*builder*/)
 	{
-		index = aIndex;
-
-		Firebird::IStatus* status = master->getStatus();
-
-		switch ((type = params->getType(status, index)))
-		{
-			case SQL_SHORT:
-				size = ALIGN(size, sizeof(ISC_SHORT));
-				break;
-
-			case SQL_LONG:
-				size = ALIGN(size, sizeof(ISC_LONG));
-				break;
-
-			case SQL_INT64:
-				size = ALIGN(size, sizeof(ISC_INT64));
-				break;
-
-			case SQL_FLOAT:
-				size = ALIGN(size, sizeof(float));
-				break;
-
-			case SQL_DOUBLE:
-				size = ALIGN(size, sizeof(double));
-				break;
-
-			case SQL_BLOB:
-				size = ALIGN(size, sizeof(ISC_QUAD));
-				break;
-
-			case SQL_TEXT:
-			case SQL_VARYING:
-				size = ALIGN(size, sizeof(ISC_USHORT));
-				break;
-
-			default:
-				BOOST_VERIFY(false);
-				break;
-		}
-
-		status->dispose();
-
-		return size;
 	}
-
-	unsigned addBlr(ISC_UCHAR*& blr)
-	{
-		Firebird::IStatus* status = master->getStatus();
-		unsigned ret;
-
-		switch (type)
-		{
-			case SQL_SHORT:
-			{
-				unsigned scale = params->getScale(status, index);
-				*blr++ = blr_short;
-				*blr++ = scale;
-				ret = sizeof(ISC_SHORT);
-				break;
-			}
-
-			case SQL_LONG:
-			{
-				unsigned scale = params->getScale(status, index);
-				*blr++ = blr_long;
-				*blr++ = scale;
-				ret = sizeof(ISC_LONG);
-				break;
-			}
-
-			case SQL_INT64:
-			{
-				unsigned scale = params->getScale(status, index);
-				*blr++ = blr_int64;
-				*blr++ = scale;
-				ret = sizeof(ISC_INT64);
-				break;
-			}
-
-			case SQL_FLOAT:
-				*blr++ = blr_float;
-				ret = sizeof(float);
-				break;
-
-			case SQL_DOUBLE:
-				*blr++ = blr_double;
-				ret = sizeof(double);
-				break;
-
-			case SQL_BLOB:
-				*blr++ = blr_blob2;
-				*blr++ = 0;
-				*blr++ = 0;
-				*blr++ = 0;
-				*blr++ = 0;
-				ret = sizeof(ISC_QUAD);
-				break;
-
-			case SQL_TEXT:
-			case SQL_VARYING:
-			{
-				unsigned length = params->getLength(status, index);
-				*blr++ = blr_varying;
-				*blr++ = length & 0xFF;
-				*blr++ = (length >> 8) & 0xFF;
-				ret = sizeof(ISC_USHORT) + length;
-				break;
-			}
-
-			default:
-				BOOST_VERIFY(false);
-				ret = 0;
-				break;
-		}
-
-		status->dispose();
-
-		return ret;
-	}
-
-	unsigned getType() const
-	{
-		return type;
-	}
-
-private:
-	const Firebird::IParametersMetadata* params;
-	unsigned type;
-	unsigned index;
 };
 
-class MessageImpl : public Firebird::FbMessage
+class MessageImpl
 {
 public:
-	MessageImpl(unsigned aItemCount)
-		: itemCount(aItemCount * 2),
-		  items(0)
+	MessageImpl(Firebird::IMessageMetadata* aMetadata)
+		: metadata(aMetadata),
+		  buffer(NULL),
+		  offsets(NULL),
+		  item(0)
 	{
-		static const ISC_UCHAR HEADER[] = {
-			blr_version5,
-			blr_begin,
-			blr_message, 0, 0, 0
-		};
+		status = master->getStatus();
 
-		blrLength = 0;
-		blr = blrPos = new ISC_UCHAR[sizeof(HEADER) + 10 * itemCount + 2];
-		bufferLength = 0;
-		buffer = NULL;
-
-		memcpy(blrPos, HEADER, sizeof(HEADER));
-		blrPos += sizeof(HEADER);
+		itemCount = metadata->getCount(status);
+		builder = metadata->getBuilder(status);
 	}
 
 	~MessageImpl()
 	{
-		if (buffer)
-			delete [] buffer;
-
-		if (blr)
-			delete [] blr;
+		delete [] offsets;
+		delete [] buffer;
+		status->dispose();
 	}
 
 	template <typename T>
 	void add(Offset<T>& offset)
 	{
-		if (items >= itemCount)
+		if (item >= itemCount)
 			return;	// return an error, this is already constructed message
 
-		bufferLength = offset.align(bufferLength, items / 2);
-		offset.pos = bufferLength;
-		bufferLength += offset.addBlr(blrPos);
+		offset.index = item;
 
-		bufferLength = ALIGN(bufferLength, sizeof(ISC_SHORT));
-		offset.nullPos = bufferLength;
-		bufferLength += sizeof(ISC_SHORT);
+		if (metadata->getType(status, item) == SQL_TEXT)
+			builder->setType(status, item, SQL_VARYING);
 
-		*blrPos++ = blr_short;
-		*blrPos++ = 0;
+		offset.setType(status, builder);
 
-		items += 2;
-
-		if (items == itemCount)
+		if (++item == itemCount)
 		{
-			*blrPos++ = blr_end;
-			*blrPos++ = blr_eoc;
+			metadata = builder->getMetadata(status);
 
-			blrLength = blrPos - blr;
-
-			ISC_UCHAR* blrStart = blrPos - blrLength;
-			blrStart[4] = items & 0xFF;
-			blrStart[5] = (items >> 8) & 0xFF;
-
+			unsigned bufferLength = metadata->getMessageLength(status);
 			buffer = new ISC_UCHAR[bufferLength];
 			memset(buffer, 0, bufferLength);
+
+			offsets = new unsigned[itemCount * 2];
+
+			for (unsigned i = 0; i < itemCount; ++i)
+			{
+				offsets[i * 2] = metadata->getOffset(status, i);
+				offsets[i * 2 + 1] = metadata->getNullOffset(status, i);
+			}
 		}
 	}
 
-	bool isNull(const OffsetBase& index)
+	bool isNull(const OffsetBase& offset)
 	{
-		return *(ISC_SHORT*) (buffer + index.nullPos);
+		return *(ISC_SHORT*) (buffer + offsets[offset.index * 2 + 1]);
 	}
 
-	void setNull(const OffsetBase& index, bool null)
+	void setNull(const OffsetBase& offset, bool null)
 	{
-		*(ISC_SHORT*) (buffer + index.nullPos) = (ISC_SHORT) null;
+		*(ISC_SHORT*) (buffer + offsets[offset.index * 2 + 1]) = null ? -1 : 0;
 	}
 
-	template <typename T> T& operator [](const Offset<T>& index)
+	template <typename T> T& operator [](const Offset<T>& offset)
 	{
-		return *(T*) (buffer + index.pos);
+		return *(T*) (buffer + offsets[offset.index * 2]);
 	}
 
-	void* operator [](const Offset<void*>& index)
+	void* operator [](const Offset<void*>& offset)
 	{
-		return buffer + index.pos;
+		return buffer + offsets[offset.index * 2];
 	}
 
-public:
+	Firebird::IMessageMetadata* getMetadata()
+	{
+		return metadata;
+	}
+
+	void* getBuffer()
+	{
+		return buffer;
+	}
+
+private:
+	Firebird::IMessageMetadata* metadata;
+	ISC_UCHAR* buffer;
+	unsigned* offsets;
+	unsigned item;
 	unsigned itemCount;
-	unsigned items;
-	ISC_UCHAR* blrPos;
+	Firebird::IStatus* status;
+	Firebird::IMetadataBuilder* builder;
 };
 
 template <>
@@ -303,16 +170,11 @@ public:
 		message.add(*this);
 	}
 
-	unsigned align(unsigned size, unsigned /*index*/)
+	void setType(Firebird::IStatus* status, Firebird::IMetadataBuilder* builder)
 	{
-		return ALIGN(size, sizeof(ISC_SHORT));
-	}
-
-	unsigned addBlr(ISC_UCHAR*& blr)
-	{
-		*blr++ = blr_short;
-		*blr++ = scale;
-		return sizeof(ISC_SHORT);
+		builder->setType(status, index, SQL_SHORT);
+		builder->setScale(status, index, scale);
+		builder->setLength(status, index, sizeof(ISC_SHORT));
 	}
 
 private:
@@ -329,16 +191,11 @@ public:
 		message.add(*this);
 	}
 
-	unsigned align(unsigned size, unsigned /*index*/)
+	void setType(Firebird::IStatus* status, Firebird::IMetadataBuilder* builder)
 	{
-		return ALIGN(size, sizeof(ISC_LONG));
-	}
-
-	unsigned addBlr(ISC_UCHAR*& blr)
-	{
-		*blr++ = blr_long;
-		*blr++ = scale;
-		return sizeof(ISC_LONG);
+		builder->setType(status, index, SQL_LONG);
+		builder->setScale(status, index, scale);
+		builder->setLength(status, index, sizeof(ISC_LONG));
 	}
 
 private:
@@ -355,16 +212,11 @@ public:
 		message.add(*this);
 	}
 
-	unsigned align(unsigned size, unsigned /*index*/)
+	void setType(Firebird::IStatus* status, Firebird::IMetadataBuilder* builder)
 	{
-		return ALIGN(size, sizeof(ISC_INT64));
-	}
-
-	unsigned addBlr(ISC_UCHAR*& blr)
-	{
-		*blr++ = blr_int64;
-		*blr++ = scale;
-		return sizeof(ISC_INT64);
+		builder->setType(status, index, SQL_INT64);
+		builder->setScale(status, index, scale);
+		builder->setLength(status, index, sizeof(ISC_INT64));
 	}
 
 private:
@@ -380,15 +232,10 @@ public:
 		message.add(*this);
 	}
 
-	unsigned align(unsigned size, unsigned /*index*/)
+	void setType(Firebird::IStatus* status, Firebird::IMetadataBuilder* builder)
 	{
-		return ALIGN(size, sizeof(float));
-	}
-
-	unsigned addBlr(ISC_UCHAR*& blr)
-	{
-		*blr++ = blr_float;
-		return sizeof(float);
+		builder->setType(status, index, SQL_FLOAT);
+		builder->setLength(status, index, sizeof(float));
 	}
 };
 
@@ -401,15 +248,10 @@ public:
 		message.add(*this);
 	}
 
-	unsigned align(unsigned size, unsigned /*index*/)
+	void setType(Firebird::IStatus* status, Firebird::IMetadataBuilder* builder)
 	{
-		return ALIGN(size, sizeof(double));
-	}
-
-	unsigned addBlr(ISC_UCHAR*& blr)
-	{
-		*blr++ = blr_double;
-		return sizeof(double);
+		builder->setType(status, index, SQL_DOUBLE);
+		builder->setLength(status, index, sizeof(double));
 	}
 };
 
@@ -422,19 +264,10 @@ public:
 		message.add(*this);
 	}
 
-	unsigned align(unsigned size, unsigned /*index*/)
+	void setType(Firebird::IStatus* status, Firebird::IMetadataBuilder* builder)
 	{
-		return ALIGN(size, sizeof(ISC_QUAD));
-	}
-
-	unsigned addBlr(ISC_UCHAR*& blr)
-	{
-		*blr++ = blr_blob2;
-		*blr++ = 0;
-		*blr++ = 0;
-		*blr++ = 0;
-		*blr++ = 0;
-		return sizeof(ISC_QUAD);
+		builder->setType(status, index, SQL_BLOB);
+		builder->setLength(status, index, sizeof(ISC_QUAD));
 	}
 };
 
@@ -459,33 +292,22 @@ public:
 		message.add(*this);
 	}
 
-	unsigned align(unsigned size, unsigned /*index*/)
+	void setType(Firebird::IStatus* status, Firebird::IMetadataBuilder* builder)
 	{
-		return ALIGN(size, sizeof(ISC_USHORT));
-	}
-
-	unsigned addBlr(ISC_UCHAR*& blr)
-	{
-		*blr++ = blr_varying;
-		*blr++ = length & 0xFF;
-		*blr++ = (length >> 8) & 0xFF;
-		return sizeof(ISC_USHORT) + length;
+		builder->setType(status, index, SQL_VARYING);
+		builder->setLength(status, index, length);
 	}
 
 private:
 	ISC_USHORT length;
 };
 
-//// TODO: boolean, date, time, timestamp
-
-//--------------------------------------
-
-inline Offset<void*>::Offset(MessageImpl& message, const Firebird::IParametersMetadata* aParams)
-	: params(aParams),
-	  type(0)
+inline Offset<void*>::Offset(MessageImpl& message)
 {
 	message.add(*this);
 }
+
+//// TODO: boolean, date, time, timestamp
 
 //--------------------------------------
 

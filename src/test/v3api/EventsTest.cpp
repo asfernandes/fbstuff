@@ -61,13 +61,13 @@ namespace
 			IStatus* status = master->getStatus();
 
 			ITransaction* transaction = attachment->execute(status, NULL, strlen(cmdTra), cmdTra,
-				3, 0, NULL, NULL);
+				3, NULL, NULL, NULL, NULL);
 			BOOST_CHECK(status->isSuccess());
 			BOOST_REQUIRE(transaction);
 
 			for (int i = 0; i < COUNT; ++i)
 			{
-				attachment->execute(status, transaction, strlen(cmdBlock), cmdBlock, 3, 0, NULL, NULL);
+				attachment->execute(status, transaction, strlen(cmdBlock), cmdBlock, 3, NULL, NULL, NULL, NULL);
 				BOOST_CHECK(status->isSuccess());
 			}
 

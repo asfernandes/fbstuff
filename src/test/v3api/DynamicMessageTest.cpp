@@ -50,23 +50,23 @@ BOOST_AUTO_TEST_CASE(dynamicMessage)
 	// Create some tables and comment them.
 	{
 		attachment->execute(status, transaction, 0,
-			"create table employee (id integer)", FbTest::DIALECT, 0, NULL, NULL);
+			"create table employee (id integer)", FbTest::DIALECT, NULL, NULL, NULL, NULL);
 		BOOST_CHECK(status->isSuccess());
 
 		attachment->execute(status, transaction, 0,
-			"comment on table employee is 'Employees'", FbTest::DIALECT, 0, NULL, NULL);
+			"comment on table employee is 'Employees'", FbTest::DIALECT, NULL, NULL, NULL, NULL);
 		BOOST_CHECK(status->isSuccess());
 
 		attachment->execute(status, transaction, 0,
-			"create table customer (id integer)", FbTest::DIALECT, 0, NULL, NULL);
+			"create table customer (id integer)", FbTest::DIALECT, NULL, NULL, NULL, NULL);
 		BOOST_CHECK(status->isSuccess());
 
 		attachment->execute(status, transaction, 0,
-			"comment on table customer is 'Customers'", FbTest::DIALECT, 0, NULL, NULL);
+			"comment on table customer is 'Customers'", FbTest::DIALECT, NULL, NULL, NULL, NULL);
 		BOOST_CHECK(status->isSuccess());
 
 		attachment->execute(status, transaction, 0,
-			"create table sales (id integer)", FbTest::DIALECT, 0, NULL, NULL);
+			"create table sales (id integer)", FbTest::DIALECT, NULL, NULL, NULL, NULL);
 		BOOST_CHECK(status->isSuccess());
 
 		transaction->commitRetaining(status);
@@ -74,44 +74,41 @@ BOOST_AUTO_TEST_CASE(dynamicMessage)
 	}
 
 	{
-		IStatement* stmt = attachment->allocateStatement(status);
-		BOOST_CHECK(status->isSuccess());
-		BOOST_REQUIRE(stmt);
-
-		stmt->prepare(status, transaction, 0,
+		IStatement* stmt = attachment->prepare(status, transaction, 0,
 			"select rdb$relation_id, rdb$relation_name, rdb$description"
 			"  from rdb$relations"
 			"  where rdb$system_flag = ?"
 			"  order by rdb$relation_id",
 			FbTest::DIALECT, IStatement::PREPARE_PREFETCH_METADATA);
 		BOOST_CHECK(status->isSuccess());
+		BOOST_REQUIRE(stmt);
 
-		const IParametersMetadata* inParams = stmt->getInputParameters(status);
+		IMessageMetadata* inParams = stmt->getInputMetadata(status);
 		BOOST_CHECK(status->isSuccess());
 
-		MessageImpl inMessage(inParams->getCount(status));
-		BOOST_CHECK(status->isSuccess());
+		MessageImpl inMessage(inParams);
+		Offset<void*> systemFlagParam(inMessage);
 
-		Offset<void*> systemFlagParam(inMessage, inParams);
-		BOOST_CHECK(status->isSuccess());
-
-		const IParametersMetadata* outParams = stmt->getOutputParameters(status);
+		IMessageMetadata* outParams = stmt->getOutputMetadata(status);
 		BOOST_CHECK(status->isSuccess());
 
 		unsigned outParamsCount = outParams->getCount(status);
 		BOOST_CHECK(status->isSuccess());
 
-		MessageImpl outMessage(outParamsCount);
+		MessageImpl outMessage(outParams);
 		vector<Offset<void*> > outFields;
 
 		for (unsigned i = 0; i < outParamsCount; ++i)
-			outFields.push_back(Offset<void*>(outMessage, outParams));
+			outFields.push_back(Offset<void*>(outMessage));
 
-		BOOST_CHECK(systemFlagParam.getType() == SQL_SHORT);
+		BOOST_CHECK(inParams->getType(status, systemFlagParam.index) == SQL_SHORT);
+		BOOST_CHECK(status->isSuccess());
 		*static_cast<ISC_SHORT*>(inMessage[systemFlagParam]) = 0;
 
-		stmt->execute(status, transaction, 0, &inMessage, NULL);
+		IResultSet* rs = stmt->openCursor(status, transaction,
+			inMessage.getMetadata(), inMessage.getBuffer(), outMessage.getMetadata());
 		BOOST_CHECK(status->isSuccess());
+		BOOST_REQUIRE(rs);
 
 		static const char* const MSGS[] = {
 			"128 | EMPLOYEE                        | Employees",
@@ -121,7 +118,7 @@ BOOST_AUTO_TEST_CASE(dynamicMessage)
 		int pos = 0;
 		int ret;
 
-		while ((ret = stmt->fetch(status, &outMessage)) != 100)
+		while ((ret = rs->fetch(status, outMessage.getBuffer())))
 		{
 			BOOST_CHECK(status->isSuccess());
 
@@ -139,7 +136,13 @@ BOOST_AUTO_TEST_CASE(dynamicMessage)
 			++pos;
 		}
 
-		stmt->free(status, DSQL_drop);
+		outParams->release();
+		inParams->release();
+
+		rs->close(status);
+		BOOST_CHECK(status->isSuccess());
+
+		stmt->free(status);
 		BOOST_CHECK(status->isSuccess());
 	}
 

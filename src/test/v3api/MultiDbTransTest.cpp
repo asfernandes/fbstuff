@@ -82,35 +82,32 @@ BOOST_AUTO_TEST_CASE(multiDbTrans)
 		// Lets try to create the same table in the two databases, using the same transaction.
 		const char* const CMD = "create table employee (id integer)";
 
-		attachment1->execute(status, transaction, 0, CMD, FbTest::DIALECT, 0, NULL, NULL);
+		attachment1->execute(status, transaction, 0, CMD, FbTest::DIALECT, NULL, NULL, NULL, NULL);
 		BOOST_CHECK(status->isSuccess());
 
-		attachment2->execute(status, transaction, 0, CMD, FbTest::DIALECT, 0, NULL, NULL);
+		attachment2->execute(status, transaction, 0, CMD, FbTest::DIALECT, NULL, NULL, NULL, NULL);
 		BOOST_CHECK(status->isSuccess());
 
 		{
-			IStatement* stmt = attachment2->allocateStatement(status);
-			BOOST_CHECK(status->isSuccess());
-			BOOST_REQUIRE(stmt);
-
-			stmt->prepare(status, transaction, 0,
+			IStatement* stmt = attachment2->prepare(status, transaction, 0,
 				"select cast('123' as blob)"
 				"  from rdb$database",
 				FbTest::DIALECT, 0);
 			BOOST_CHECK(status->isSuccess());
+			BOOST_REQUIRE(stmt);
 
-			const IParametersMetadata* outParams = stmt->getOutputParameters(status);
+			IMessageMetadata* outParams = stmt->getOutputMetadata(status);
 			BOOST_CHECK(status->isSuccess());
 
-			MessageImpl outMessage(outParams->getCount(status));
-			BOOST_CHECK(status->isSuccess());
+			MessageImpl outMessage(outParams);
 
 			Offset<ISC_QUAD> blobField(outMessage);
 
-			stmt->execute(status, transaction, 0, NULL, NULL);
+			IResultSet* rs = stmt->openCursor(status, transaction, NULL, NULL, outMessage.getMetadata());
 			BOOST_CHECK(status->isSuccess());
+			BOOST_REQUIRE(rs);
 
-			BOOST_REQUIRE(stmt->fetch(status, &outMessage) != 100);
+			BOOST_REQUIRE(rs->fetch(status, outMessage.getBuffer()));
 			BOOST_CHECK(status->isSuccess());
 
 			string blobStr;
@@ -133,7 +130,10 @@ BOOST_AUTO_TEST_CASE(multiDbTrans)
 
 			BOOST_CHECK_EQUAL(blobStr, "123");
 
-			stmt->free(status, DSQL_drop);
+			rs->close(status);
+			BOOST_CHECK(status->isSuccess());
+
+			stmt->free(status);
 			BOOST_CHECK(status->isSuccess());
 		}
 

@@ -80,30 +80,36 @@ string valueToString(IAttachment* attachment, ITransaction* transaction,
 		return "";
 
 	void* p = message[field];
+	string s;
 
-	switch (field.getType())
+	IStatus* status = master->getStatus();
+
+	switch (message.getMetadata()->getType(status, field.index))
 	{
 		//// TODO: scale for SQL_SHORT, SQL_LONG and SQL_INT64
 
 		case SQL_SHORT:
-			return lexical_cast<string>(*static_cast<ISC_SHORT*>(p));
+			s = lexical_cast<string>(*static_cast<ISC_SHORT*>(p));
+			break;
 
 		case SQL_LONG:
-			return lexical_cast<string>(*static_cast<ISC_LONG*>(p));
+			s = lexical_cast<string>(*static_cast<ISC_LONG*>(p));
+			break;
 
 		case SQL_INT64:
-			return lexical_cast<string>(*static_cast<ISC_INT64*>(p));
+			s = lexical_cast<string>(*static_cast<ISC_INT64*>(p));
+			break;
 
 		case SQL_FLOAT:
-			return lexical_cast<string>(*static_cast<float*>(p));
+			s = lexical_cast<string>(*static_cast<float*>(p));
+			break;
 
 		case SQL_DOUBLE:
-			return lexical_cast<string>(*static_cast<double*>(p));
+			s = lexical_cast<string>(*static_cast<double*>(p));
+			break;
 
 		case SQL_BLOB:
 		{
-			IStatus* status = master->getStatus();
-
 			IBlob* blob = attachment->openBlob(status, transaction,
 				static_cast<ISC_QUAD*>(p), 0, NULL);
 			BOOST_VERIFY(status->isSuccess());
@@ -118,20 +124,25 @@ string valueToString(IAttachment* attachment, ITransaction* transaction,
 			blob->close(status);
 			BOOST_VERIFY(status->isSuccess());
 
-			status->dispose();
-
-			return str;
+			s = str;
+			break;
 		}
 
 		case SQL_TEXT:
 		case SQL_VARYING:
-			return string(static_cast<char*>(p) + sizeof(ISC_USHORT),
+			s = string(static_cast<char*>(p) + sizeof(ISC_USHORT),
 				*static_cast<ISC_USHORT*>(p));
+			break;
 
 		default:
 			BOOST_VERIFY(false);
-			return "";
+			s = "";
+			break;
 	}
+
+	status->dispose();
+
+	return s;
 }
 
 //------------------------------------------------------------------------------

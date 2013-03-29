@@ -60,16 +60,13 @@ BOOST_AUTO_TEST_CASE(describe)
 		{
 			bool prefetch = (i == 0);
 
-			IStatement* stmt = attachment->allocateStatement(status);
-			BOOST_CHECK(status->isSuccess());
-			BOOST_REQUIRE(stmt);
-
-			stmt->prepare(status, transaction, 0,
+			IStatement* stmt = attachment->prepare(status, transaction, 0,
 				"select rdb$relation_id relid, rdb$character_set_name csname"
 				"  from rdb$database"
 				"  where rdb$relation_id < ?",
 				FbTest::DIALECT, (prefetch ? IStatement::PREPARE_PREFETCH_ALL : 0));
 			BOOST_CHECK(status->isSuccess());
+			BOOST_REQUIRE(stmt);
 
 			unsigned type = stmt->getType(status);
 			BOOST_CHECK(status->isSuccess());
@@ -80,11 +77,11 @@ BOOST_AUTO_TEST_CASE(describe)
 			string detailedPlan = major >= 3 ? stmt->getPlan(status, true) : "";
 			BOOST_CHECK(status->isSuccess());
 
-			const IParametersMetadata* inputParams = stmt->getInputParameters(status);
+			IMessageMetadata* inputParams = stmt->getInputMetadata(status);
 			BOOST_CHECK(status->isSuccess());
 			BOOST_REQUIRE(inputParams);
 
-			const IParametersMetadata* outputParams = stmt->getOutputParameters(status);
+			IMessageMetadata* outputParams = stmt->getOutputMetadata(status);
 			BOOST_CHECK(status->isSuccess());
 			BOOST_REQUIRE(outputParams);
 
@@ -113,7 +110,7 @@ BOOST_AUTO_TEST_CASE(describe)
 				unsigned length;
 				unsigned scale;
 
-				static void test(IStatus* status, const IParametersMetadata* params,
+				static void test(IStatus* status, const IMessageMetadata* params,
 					unsigned count, FieldInfo* fieldInfo)
 				{
 					BOOST_CHECK_EQUAL(params->getCount(status), count);
@@ -166,7 +163,10 @@ BOOST_AUTO_TEST_CASE(describe)
 
 			FieldInfo::test(status, outputParams, sizeof(outputInfo) / sizeof(outputInfo[0]), outputInfo);
 
-			stmt->free(status, DSQL_drop);
+			outputParams->release();
+			inputParams->release();
+
+			stmt->free(status);
 			BOOST_CHECK(status->isSuccess());
 		}
 

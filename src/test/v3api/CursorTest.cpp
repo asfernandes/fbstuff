@@ -47,7 +47,7 @@ BOOST_AUTO_TEST_CASE(cursor)
 	// Create some tables.
 	{
 		attachment->execute(status, transaction, 0,
-			"create table t (n integer)", FbTest::DIALECT, 0, NULL, NULL);
+			"create table t (n integer)", FbTest::DIALECT, NULL, NULL, NULL, NULL);
 		BOOST_CHECK(status->isSuccess());
 
 		transaction->commitRetaining(status);
@@ -55,45 +55,27 @@ BOOST_AUTO_TEST_CASE(cursor)
 	}
 
 	attachment->execute(status, transaction, 0,
-		"insert into t values (10)", FbTest::DIALECT, 0, NULL, NULL);
+		"insert into t values (10)", FbTest::DIALECT, NULL, NULL, NULL, NULL);
 	BOOST_CHECK(status->isSuccess());
 
 	attachment->execute(status, transaction, 0,
-		"insert into t values (20)", FbTest::DIALECT, 0, NULL, NULL);
+		"insert into t values (20)", FbTest::DIALECT, NULL, NULL, NULL, NULL);
 	BOOST_CHECK(status->isSuccess());
 
 	attachment->execute(status, transaction, 0,
-		"insert into t values (30)", FbTest::DIALECT, 0, NULL, NULL);
+		"insert into t values (30)", FbTest::DIALECT, NULL, NULL, NULL, NULL);
 	BOOST_CHECK(status->isSuccess());
 
-	IStatement* stmt1 = attachment->allocateStatement(status);
-	BOOST_CHECK(status->isSuccess());
-	BOOST_REQUIRE(stmt1);
-
-	IStatement* stmt2 = attachment->allocateStatement(status);
-	BOOST_CHECK(status->isSuccess());
-	BOOST_REQUIRE(stmt2);
-
-	IStatement* stmt3 = attachment->allocateStatement(status);
-	BOOST_CHECK(status->isSuccess());
-	BOOST_REQUIRE(stmt3);
-
-	IStatement* stmt4 = attachment->allocateStatement(status);
-	BOOST_CHECK(status->isSuccess());
-	BOOST_REQUIRE(stmt4);
-
-	IStatement* stmt5 = attachment->allocateStatement(status);
-	BOOST_CHECK(status->isSuccess());
-	BOOST_REQUIRE(stmt5);
-
-	stmt1->prepare(status, transaction, 0, "select n from t order by n for update",
+	IStatement* stmt1 = attachment->prepare(status, transaction, 0,
+		"select n from t order by n for update",
 		FbTest::DIALECT, 0);
 	BOOST_CHECK(status->isSuccess());
+	BOOST_REQUIRE(stmt1);
 
 	stmt1->setCursorName(status, "C");
 	BOOST_CHECK(status->isSuccess());
 
-	stmt2->prepare(status, transaction, 0,
+	IStatement* stmt2 = attachment->prepare(status, transaction, 0,
 		"execute block returns (n1 integer, n2 integer, n3 integer, n4 integer)\n"
 		"as\n"
 		"  declare c cursor for (select n from t order by n);\n"
@@ -113,111 +95,116 @@ BOOST_AUTO_TEST_CASE(cursor)
 		"end",
 		FbTest::DIALECT, 0);
 	BOOST_CHECK(status->isSuccess());
+	BOOST_REQUIRE(stmt2);
 
-	stmt3->prepare(status, transaction, 0,
+	IStatement* stmt3 = attachment->prepare(status, transaction, 0,
 		"update t set n = n * 10 where current of c returning n, old.n, new.n, t.n",
 		FbTest::DIALECT, 0);
 	BOOST_CHECK(status->isSuccess());
+	BOOST_REQUIRE(stmt3);
 
-	stmt4->prepare(status, transaction, 0,
+	IStatement* stmt4 = attachment->prepare(status, transaction, 0,
 		"update t set n = n * 10 where n = 200 returning n, old.n, new.n, t.n",
 		FbTest::DIALECT, 0);
 	BOOST_CHECK(status->isSuccess());
+	BOOST_REQUIRE(stmt4);
 
-	stmt5->prepare(status, transaction, 0,
+	IStatement* stmt5 = attachment->prepare(status, transaction, 0,
 		"delete from t where current of c returning n, t.n, -1, -1",
 		FbTest::DIALECT, 0);
 	BOOST_CHECK(status->isSuccess());
+	BOOST_REQUIRE(stmt5);
 
-	FB_MESSAGE_DESC(OutputType1,
+	FB_MESSAGE(Output1,
 		(FB_INTEGER, n)
-	) output1;
+	) output1(master);
 
-	FB_MESSAGE_DESC(OutputType2,
+	FB_MESSAGE(Output2,
 		(FB_INTEGER, n1)
 		(FB_INTEGER, n2)
 		(FB_INTEGER, n3)
 		(FB_INTEGER, n4)
-	) output2;
+	) output2(master);
 
 	{
-		output2.n1 = output2.n2 = output2.n3 = output2.n4 = 0;
+		output2->n1 = output2->n2 = output2->n3 = output2->n4 = 0;
 
-		stmt1->execute(status, transaction, 0, NULL, NULL);
+		IResultSet* rs1 = stmt1->openCursor(status, transaction, NULL, NULL, output1.getMetadata());
 		BOOST_CHECK(status->isSuccess());
 
-		BOOST_CHECK(stmt1->fetch(status, &output1.desc) != 100);
-		BOOST_CHECK(output1.n == 10);
-
-		stmt3->execute(status, transaction, 0, NULL, &output2.desc);
+		BOOST_CHECK(rs1->fetch(status, output1.getData()));
 		BOOST_CHECK(status->isSuccess());
-		BOOST_CHECK(output2.n1 == 100 && output2.n2 == 10 && output2.n3 == 100 && output2.n4 == 100);
+		BOOST_CHECK(output1->n == 10);
 
-		BOOST_CHECK(stmt1->fetch(status, &output1.desc) != 100);
-		BOOST_CHECK(output1.n == 20);
-
-		stmt3->execute(status, transaction, 0, NULL, &output2.desc);
+		stmt3->execute(status, transaction, NULL, NULL, output2.getMetadata(), output2.getData());
 		BOOST_CHECK(status->isSuccess());
-		BOOST_CHECK(output2.n1 == 200 && output2.n2 == 20 && output2.n3 == 200 && output2.n4 == 200);
+		BOOST_CHECK(output2->n1 == 100 && output2->n2 == 10 && output2->n3 == 100 && output2->n4 == 100);
 
-		BOOST_CHECK(stmt1->fetch(status, &output1.desc) != 100);
-		BOOST_CHECK(output1.n == 30);
+		BOOST_CHECK(rs1->fetch(status, output1.getData()));
+		BOOST_CHECK(output1->n == 20);
 
-		stmt5->execute(status, transaction, 0, NULL, &output2.desc);
+		stmt3->execute(status, transaction, NULL, NULL, output2.getMetadata(), output2.getData());
 		BOOST_CHECK(status->isSuccess());
-		BOOST_CHECK(output2.n1 == 30 && output2.n2 == 30);
+		BOOST_CHECK(output2->n1 == 200 && output2->n2 == 20 && output2->n3 == 200 && output2->n4 == 200);
 
-		BOOST_CHECK(stmt1->fetch(status, &output1.desc) == 100);
+		BOOST_CHECK(rs1->fetch(status, output1.getData()));
+		BOOST_CHECK(output1->n == 30);
 
-		stmt1->free(status, DSQL_close);
+		stmt5->execute(status, transaction, NULL, NULL, output2.getMetadata(), output2.getData());
+		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(output2->n1 == 30 && output2->n2 == 30);
+
+		BOOST_CHECK(!rs1->fetch(status, output1.getData()));
+
+		rs1->close(status);
 		BOOST_CHECK(status->isSuccess());
 	}
 
 	{
-		stmt2->execute(status, transaction, 0, NULL, NULL);
+		IResultSet* rs2 = stmt2->openCursor(status, transaction, NULL, NULL, output2.getMetadata());
 		BOOST_CHECK(status->isSuccess());
 
-		BOOST_CHECK(stmt2->fetch(status, &output2.desc) != 100);
-		BOOST_CHECK(output2.n1 == 1000 && output2.n2 == 100 && output2.n3 == 1000 && output2.n4 == 1000);
+		BOOST_CHECK(rs2->fetch(status, output2.getData()));
+		BOOST_CHECK(output2->n1 == 1000 && output2->n2 == 100 && output2->n3 == 1000 && output2->n4 == 1000);
 
-		stmt2->free(status, DSQL_close);
+		rs2->close(status);
 		BOOST_CHECK(status->isSuccess());
 	}
 
-	stmt4->execute(status, transaction, 0, NULL, &output2.desc);
+	stmt4->execute(status, transaction, NULL, NULL, output2.getMetadata(), output2.getData());
 	BOOST_CHECK(status->isSuccess());
-	BOOST_CHECK(output2.n1 == 2000 && output2.n2 == 200 && output2.n3 == 2000 && output2.n4 == 2000);
+	BOOST_CHECK(output2->n1 == 2000 && output2->n2 == 200 && output2->n3 == 2000 && output2->n4 == 2000);
 
-	stmt4->execute(status, transaction, 0, NULL, &output2.desc);
+	stmt4->execute(status, transaction, NULL, NULL, output2.getMetadata(), output2.getData());
 	BOOST_CHECK(status->isSuccess());
-	BOOST_CHECK(output2.n1 == 0 && output2.n2 == 0 && output2.n3 == 0 && output2.n4 == 0);
+	BOOST_CHECK(output2->n1 == 0 && output2->n2 == 0 && output2->n3 == 0 && output2->n4 == 0);
 
 	{
-		stmt1->execute(status, transaction, 0, NULL, NULL);
+		IResultSet* rs1 = stmt1->openCursor(status, transaction, NULL, NULL, output1.getMetadata());
 		BOOST_CHECK(status->isSuccess());
 
-		BOOST_CHECK(stmt1->fetch(status, &output1.desc) != 100);
-		BOOST_CHECK(output1.n == 1000);
+		BOOST_CHECK(rs1->fetch(status, output1.getData()));
+		BOOST_CHECK(output1->n == 1000);
 
-		BOOST_CHECK(stmt1->fetch(status, &output1.desc) != 100);
-		BOOST_CHECK(output1.n == 2000);
+		BOOST_CHECK(rs1->fetch(status, output1.getData()));
+		BOOST_CHECK(output1->n == 2000);
 
-		BOOST_CHECK(stmt1->fetch(status, &output1.desc) == 100);
+		BOOST_CHECK(!rs1->fetch(status, output1.getData()));
 
-		stmt1->free(status, DSQL_close);
+		rs1->close(status);
 		BOOST_CHECK(status->isSuccess());
 	}
 
-	stmt4->free(status, DSQL_drop);
+	stmt4->free(status);
 	BOOST_CHECK(status->isSuccess());
 
-	stmt3->free(status, DSQL_drop);
+	stmt3->free(status);
 	BOOST_CHECK(status->isSuccess());
 
-	stmt2->free(status, DSQL_drop);
+	stmt2->free(status);
 	BOOST_CHECK(status->isSuccess());
 
-	stmt1->free(status, DSQL_drop);
+	stmt1->free(status);
 	BOOST_CHECK(status->isSuccess());
 
 	transaction->commit(status);
@@ -232,7 +219,7 @@ BOOST_AUTO_TEST_CASE(cursor)
 
 BOOST_AUTO_TEST_CASE(ddlFetch)
 {
-	const string location = FbTest::getLocation("cursor.fdb");
+	const string location = FbTest::getLocation("ddlFetch.fdb");
 
 	IStatus* status = master->getStatus();
 
@@ -244,17 +231,24 @@ BOOST_AUTO_TEST_CASE(ddlFetch)
 	BOOST_CHECK(status->isSuccess());
 	BOOST_REQUIRE(transaction);
 
-	IStatement* stmt1 = attachment->allocateStatement(status);
+	IStatement* stmt1 = attachment->prepare(status, transaction, 0, "create table t (n integer)",
+		FbTest::DIALECT, 0);
 	BOOST_CHECK(status->isSuccess());
 	BOOST_REQUIRE(stmt1);
 
-	stmt1->prepare(status, transaction, 0, "create table t (n integer)", FbTest::DIALECT, 0);
+	// Open a cursor for a DDL statement.
+	IResultSet* rs = stmt1->openCursor(status, transaction, NULL, NULL, NULL);
+
+	/*** ASF: I think statement above should raise an error.
+	BOOST_CHECK(!status->isSuccess());
+	BOOST_CHECK(!rs);
+	***/
+	rs->fetch(status, NULL);
+	BOOST_CHECK(!status->isSuccess());
+	rs->close(status);
 	BOOST_CHECK(status->isSuccess());
 
-	stmt1->fetch(status, NULL);	// fetch from a DDL statement
-	BOOST_CHECK(!status->isSuccess());
-
-	stmt1->free(status, DSQL_drop);
+	stmt1->free(status);
 	BOOST_CHECK(status->isSuccess());
 
 	transaction->commit(status);
