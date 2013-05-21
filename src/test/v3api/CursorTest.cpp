@@ -132,7 +132,7 @@ BOOST_AUTO_TEST_CASE(cursor)
 		IResultSet* rs1 = stmt1->openCursor(status, transaction, NULL, NULL, output1.getMetadata());
 		BOOST_CHECK(status->isSuccess());
 
-		BOOST_CHECK(rs1->fetch(status, output1.getData()));
+		BOOST_CHECK(rs1->fetchNext(status, output1.getData()));
 		BOOST_CHECK(status->isSuccess());
 		BOOST_CHECK(output1->n == 10);
 
@@ -140,21 +140,21 @@ BOOST_AUTO_TEST_CASE(cursor)
 		BOOST_CHECK(status->isSuccess());
 		BOOST_CHECK(output2->n1 == 100 && output2->n2 == 10 && output2->n3 == 100 && output2->n4 == 100);
 
-		BOOST_CHECK(rs1->fetch(status, output1.getData()));
+		BOOST_CHECK(rs1->fetchNext(status, output1.getData()));
 		BOOST_CHECK(output1->n == 20);
 
 		stmt3->execute(status, transaction, NULL, NULL, output2.getMetadata(), output2.getData());
 		BOOST_CHECK(status->isSuccess());
 		BOOST_CHECK(output2->n1 == 200 && output2->n2 == 20 && output2->n3 == 200 && output2->n4 == 200);
 
-		BOOST_CHECK(rs1->fetch(status, output1.getData()));
+		BOOST_CHECK(rs1->fetchNext(status, output1.getData()));
 		BOOST_CHECK(output1->n == 30);
 
 		stmt5->execute(status, transaction, NULL, NULL, output2.getMetadata(), output2.getData());
 		BOOST_CHECK(status->isSuccess());
 		BOOST_CHECK(output2->n1 == 30 && output2->n2 == 30);
 
-		BOOST_CHECK(!rs1->fetch(status, output1.getData()));
+		BOOST_CHECK(!rs1->fetchNext(status, output1.getData()));
 
 		rs1->close(status);
 		BOOST_CHECK(status->isSuccess());
@@ -164,7 +164,7 @@ BOOST_AUTO_TEST_CASE(cursor)
 		IResultSet* rs2 = stmt2->openCursor(status, transaction, NULL, NULL, output2.getMetadata());
 		BOOST_CHECK(status->isSuccess());
 
-		BOOST_CHECK(rs2->fetch(status, output2.getData()));
+		BOOST_CHECK(rs2->fetchNext(status, output2.getData()));
 		BOOST_CHECK(output2->n1 == 1000 && output2->n2 == 100 && output2->n3 == 1000 && output2->n4 == 1000);
 
 		rs2->close(status);
@@ -183,13 +183,13 @@ BOOST_AUTO_TEST_CASE(cursor)
 		IResultSet* rs1 = stmt1->openCursor(status, transaction, NULL, NULL, output1.getMetadata());
 		BOOST_CHECK(status->isSuccess());
 
-		BOOST_CHECK(rs1->fetch(status, output1.getData()));
+		BOOST_CHECK(rs1->fetchNext(status, output1.getData()));
 		BOOST_CHECK(output1->n == 1000);
 
-		BOOST_CHECK(rs1->fetch(status, output1.getData()));
+		BOOST_CHECK(rs1->fetchNext(status, output1.getData()));
 		BOOST_CHECK(output1->n == 2000);
 
-		BOOST_CHECK(!rs1->fetch(status, output1.getData()));
+		BOOST_CHECK(!rs1->fetchNext(status, output1.getData()));
 
 		rs1->close(status);
 		BOOST_CHECK(status->isSuccess());
@@ -243,7 +243,7 @@ BOOST_AUTO_TEST_CASE(ddlFetch)
 	BOOST_CHECK(!status->isSuccess());
 	BOOST_CHECK(!rs);
 	***/
-	rs->fetch(status, NULL);
+	rs->fetchNext(status, NULL);
 	BOOST_CHECK(!status->isSuccess());
 	rs->close(status);
 	BOOST_CHECK(status->isSuccess());

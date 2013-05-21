@@ -107,7 +107,7 @@ BOOST_AUTO_TEST_CASE(multiDbTrans)
 			BOOST_CHECK(status->isSuccess());
 			BOOST_REQUIRE(rs);
 
-			BOOST_REQUIRE(rs->fetch(status, outMessage.getBuffer()));
+			BOOST_REQUIRE(rs->fetchNext(status, outMessage.getBuffer()));
 			BOOST_CHECK(status->isSuccess());
 
 			string blobStr;

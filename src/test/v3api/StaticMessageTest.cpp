@@ -119,7 +119,7 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 			int pos = 0;
 			int ret;
 
-			while ((ret = rs->fetch(status, outMessage.getBuffer())))
+			while ((ret = rs->fetchNext(status, outMessage.getBuffer())))
 			{
 				BOOST_CHECK(status->isSuccess());
 
@@ -197,7 +197,7 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 			int pos = 0;
 			int ret;
 
-			while ((ret = rs->fetch(status, output.getData())))
+			while ((ret = rs->fetchNext(status, output.getData())))
 			{
 				BOOST_CHECK(status->isSuccess());
 
@@ -262,7 +262,7 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 			int pos = 0;
 			int ret;
 
-			while ((ret = rs->fetch(status, outMessage.getBuffer())))
+			while ((ret = rs->fetchNext(status, outMessage.getBuffer())))
 			{
 				BOOST_CHECK(status->isSuccess());
 
@@ -383,7 +383,7 @@ BOOST_AUTO_TEST_CASE(staticMessage2)
 		BOOST_CHECK(status->isSuccess());
 		BOOST_REQUIRE(rs);
 
-		bool ret = rs->fetch(status, output.getData());
+		bool ret = rs->fetchNext(status, output.getData());
 		BOOST_CHECK(status->isSuccess() && ret);
 
 		BOOST_CHECK_EQUAL(output->n, 8);	// CORE-3737

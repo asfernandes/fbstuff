@@ -118,7 +118,7 @@ BOOST_AUTO_TEST_CASE(dynamicMessage)
 		int pos = 0;
 		int ret;
 
-		while ((ret = rs->fetch(status, outMessage.getBuffer())))
+		while ((ret = rs->fetchNext(status, outMessage.getBuffer())))
 		{
 			BOOST_CHECK(status->isSuccess());
 
