@@ -411,4 +411,123 @@ BOOST_AUTO_TEST_CASE(staticMessage2)
 }
 
 
+BOOST_AUTO_TEST_CASE(staticMessage3)
+{
+	const string location = FbTest::getLocation("staticMessage3.fdb");
+
+	IStatus* status = master->getStatus();
+
+	IAttachment* attachment = dispatcher->createDatabase(status, location.c_str(),
+		sizeof(FbTest::UTF8_DPB), FbTest::UTF8_DPB);
+	BOOST_CHECK(status->isSuccess());
+	BOOST_REQUIRE(attachment);
+
+	unsigned major, minor;
+	getEngineVersion(attachment, &major, &minor, NULL);
+	unsigned version = major * 100u + minor * 10u;
+
+	ITransaction* transaction = attachment->startTransaction(status, 0, NULL);
+	BOOST_CHECK(status->isSuccess());
+	BOOST_REQUIRE(transaction);
+
+	{
+		attachment->execute(status, transaction, 0,
+			"create procedure p1 returns (n integer) "
+			"as "
+			"begin "
+			"  n = 11; "
+			"  if (1 = 0) then "
+			"      suspend; "
+			"end",
+			FbTest::DIALECT, NULL, NULL, NULL, NULL);
+		BOOST_CHECK(status->isSuccess());
+
+		transaction->commitRetaining(status);
+		BOOST_CHECK(status->isSuccess());
+	}
+
+	FB_MESSAGE(Output,
+		(FB_INTEGER, n)
+	) output(master);
+
+	{
+		IStatement* stmt = attachment->prepare(status, transaction, 0,
+			"execute block returns (n integer) "
+			"as "
+			"begin "
+			"  n = 11; "
+			"  suspend; "
+			"end",
+			FbTest::DIALECT, 0);
+		BOOST_CHECK(status->isSuccess());
+		BOOST_REQUIRE(stmt);
+
+		output.clear();
+
+		IResultSet* rs = stmt->openCursor(status, transaction, NULL, NULL, output.getMetadata());
+		BOOST_CHECK(status->isSuccess());
+
+		BOOST_CHECK(rs->fetchNext(status, output.getData()));
+		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK_EQUAL(output->n, 11);
+
+		rs->close(status);
+		BOOST_CHECK(status->isSuccess());
+
+		stmt->free(status);
+		BOOST_CHECK(status->isSuccess());
+	}
+
+	{
+		output.clear();
+
+		attachment->execute(status, transaction, 0,
+			"execute block returns (n integer) "
+			"as "
+			"begin "
+			"  n = 11; "
+			"end",
+			FbTest::DIALECT, NULL, NULL, output.getMetadata(), output.getData());
+
+		if (version == 300)
+		{
+			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK_EQUAL(output->n, 11);
+		}
+		else
+		{
+			BOOST_CHECK(!status->isSuccess());
+			BOOST_CHECK_EQUAL(status->get()[1] , isc_stream_eof);
+		}
+	}
+
+	{
+		output.clear();
+
+		attachment->execute(status, transaction, 0, "execute procedure p1",
+			FbTest::DIALECT, NULL, NULL, output.getMetadata(), output.getData());
+		BOOST_CHECK(status->isSuccess());
+
+		BOOST_CHECK_EQUAL(output->n, 11);
+	}
+
+	{
+		output.clear();
+
+		attachment->execute(status, transaction, 0, "select * from p1",
+			FbTest::DIALECT, NULL, NULL, output.getMetadata(), output.getData());
+		BOOST_CHECK(!status->isSuccess());
+		BOOST_CHECK_EQUAL(status->get()[1] , isc_stream_eof);
+	}
+
+	transaction->commit(status);
+	BOOST_CHECK(status->isSuccess());
+
+	attachment->dropDatabase(status);
+	BOOST_CHECK(status->isSuccess());
+
+	status->dispose();
+}
+
+
 BOOST_AUTO_TEST_SUITE_END()
