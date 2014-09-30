@@ -60,7 +60,7 @@ $(BIN_DIR)/fbods: \
 	$(LD) $^ -o $@
 
 $(BIN_DIR)/fbinsert: $(OBJ_DIR)/perf/fbinsert.o
-	$(LD) $^ -o $@ -lboost_program_options -lboost_thread -lfbclient
+	$(LD) $^ -o $@ -lboost_program_options -lboost_system -lboost_thread -lfbclient
 
 $(BIN_DIR)/fbtest: \
 	$(OBJ_DIR)/test/FbTest.o \
@@ -74,7 +74,7 @@ $(BIN_DIR)/fbtest: \
 	$(OBJ_DIR)/test/v3api/MultiDbTransTest.o \
 	$(OBJ_DIR)/test/v3api/StaticMessageTest.o \
 
-	$(LD) $^ -o $@ -lboost_unit_test_framework -lboost_thread -lfbclient
+	$(LD) $^ -o $@ -lboost_unit_test_framework -lboost_system -lboost_thread -lfbclient
 
 $(LIB_DIR)/libperfudr.$(SHRLIB_EXT): $(OBJ_DIR)/perf/udr/Message.o
 	$(LD) -shared $^ -o $@ -lfbclient -ludr_engine
