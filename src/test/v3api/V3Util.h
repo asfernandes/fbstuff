@@ -20,7 +20,6 @@
 #include "../FbTest.h"
 #include <firebird/Interface.h>
 #include <firebird/Message.h>
-#include <firebird/Provider.h>
 #include <string>
 #include <vector>
 #include <string.h>
@@ -311,6 +310,7 @@ inline Offset<void*>::Offset(MessageImpl& message)
 
 //--------------------------------------
 
+bool checkStatus(Firebird::IStatus* status);
 void getEngineVersion(Firebird::IAttachment* attachment, unsigned* major, unsigned* minor = NULL,
 	unsigned* revision = NULL);
 std::string valueToString(Firebird::IAttachment* attachment, Firebird::ITransaction* transaction,

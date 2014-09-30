@@ -35,6 +35,11 @@ IProvider* dispatcher = master->getDispatcher();
 
 //--------------------------------------
 
+bool checkStatus(IStatus* status)
+{
+	return !(status->getStatus() & IStatus::FB_HAS_ERRORS);
+}
+
 void getEngineVersion(Firebird::IAttachment* attachment, unsigned* major, unsigned* minor,
 	unsigned* revision)
 {
@@ -43,7 +48,7 @@ void getEngineVersion(Firebird::IAttachment* attachment, unsigned* major, unsign
 	IStatus* status = master->getStatus();
 
 	attachment->getInfo(status, sizeof(ITEMS), ITEMS, sizeof(buffer), buffer);
-	BOOST_VERIFY(status->isSuccess());
+	BOOST_VERIFY(checkStatus(status));
 
 	if (buffer[0] == isc_info_firebird_version)
 	{
@@ -112,17 +117,22 @@ string valueToString(IAttachment* attachment, ITransaction* transaction,
 		{
 			IBlob* blob = attachment->openBlob(status, transaction,
 				static_cast<ISC_QUAD*>(p), 0, NULL);
-			BOOST_VERIFY(status->isSuccess());
+			BOOST_VERIFY(checkStatus(status));
 
 			string str;
 			char blobBuffer[1024];
+			int blobStatus;
 			unsigned blobLen;
 
-			while ((blobLen = blob->getSegment(status, sizeof(blobBuffer), blobBuffer)) != 0)
+			while ((blobStatus = blob->getSegment(status, sizeof(blobBuffer),
+									blobBuffer, &blobLen)) == IStatus::FB_OK ||
+				   blobStatus == IStatus::FB_SEGMENT)
+			{
 				str.append(blobBuffer, blobLen);
+			}
 
 			blob->close(status);
-			BOOST_VERIFY(status->isSuccess());
+			BOOST_VERIFY(checkStatus(status));
 
 			s = str;
 			break;

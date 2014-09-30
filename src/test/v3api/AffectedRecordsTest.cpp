@@ -39,29 +39,29 @@ BOOST_AUTO_TEST_CASE(affectedRecords)
 	IStatus* status = master->getStatus();
 
 	IAttachment* attachment = dispatcher->createDatabase(status, location.c_str(), 0, NULL);
-	BOOST_CHECK(status->isSuccess());
+	BOOST_CHECK(checkStatus(status));
 	BOOST_REQUIRE(attachment);
 
 	ITransaction* transaction = attachment->startTransaction(status, 0, NULL);
-	BOOST_CHECK(status->isSuccess());
+	BOOST_CHECK(checkStatus(status));
 	BOOST_REQUIRE(transaction);
 
 	// Create some tables.
 	{
 		attachment->execute(status, transaction, 0,
 			"create table t0 (n integer)", FbTest::DIALECT, NULL, NULL, NULL, NULL);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		attachment->execute(status, transaction, 0,
 			"create table t1 (n integer)", FbTest::DIALECT, NULL, NULL, NULL, NULL);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		attachment->execute(status, transaction, 0,
 			"create generator g1", FbTest::DIALECT, NULL, NULL, NULL, NULL);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		transaction->commitRetaining(status);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 	}
 
 	unsigned int counts[] = {7, 9};
@@ -73,74 +73,74 @@ BOOST_AUTO_TEST_CASE(affectedRecords)
 		IStatement* stmt = attachment->prepare(status, transaction, 0,
 			("insert into t" + lexical_cast<string>(i) + " values (1)").c_str(),
 			FbTest::DIALECT, IStatement::PREPARE_PREFETCH_AFFECTED_RECORDS);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		for (unsigned j = 0; j < counts[i]; ++j)
 		{
 			stmt->execute(status, transaction, NULL, NULL, NULL, NULL);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 
 			rec = stmt->getAffectedRecords(status);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 			BOOST_CHECK_EQUAL(rec, 1);
 		}
 
 		stmt->free(status);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 	}
 
 	{
 		IStatement* stmt = attachment->prepare(status, transaction, 0, "insert into t0 select * from t1",
 			FbTest::DIALECT, IStatement::PREPARE_PREFETCH_AFFECTED_RECORDS);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		stmt->execute(status, transaction, NULL, NULL, NULL, NULL);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		rec = stmt->getAffectedRecords(status);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 		BOOST_CHECK_EQUAL(rec, counts[1]);
 
 		stmt->free(status);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 	}
 
 	{
 		IStatement* stmt = attachment->prepare(status, transaction, 0, "update t0 set n = n + 1",
 			FbTest::DIALECT, IStatement::PREPARE_PREFETCH_AFFECTED_RECORDS);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		stmt->execute(status, transaction, NULL, NULL, NULL, NULL);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		rec = stmt->getAffectedRecords(status);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 		BOOST_CHECK_EQUAL(rec, counts[0] + counts[1]);
 
 		stmt->free(status);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 	}
 
 	{
 		// Lets try without IStatement::PREPARE_PREFETCH_AFFECTED_RECORDS.
 		IStatement* stmt = attachment->prepare(status, transaction, 0, "delete from t0", FbTest::DIALECT, 0);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		stmt->execute(status, transaction, NULL, NULL, NULL, NULL);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		rec = stmt->getAffectedRecords(status);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 		BOOST_CHECK_EQUAL(rec, counts[0] + counts[1]);
 
 		stmt->free(status);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 	}
 
 	{
 		attachment->execute(status, transaction, 0,
 			"update t1 set n = gen_id(g1, 1)", FbTest::DIALECT, NULL, NULL, NULL, NULL);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 	}
 
 	{
@@ -151,17 +151,17 @@ BOOST_AUTO_TEST_CASE(affectedRecords)
 			"  when matched then update set n = t1.n"
 			"  when not matched then insert values (n)",
 			FbTest::DIALECT, IStatement::PREPARE_PREFETCH_AFFECTED_RECORDS);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		stmt->execute(status, transaction, NULL, NULL, NULL, NULL);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		rec = stmt->getAffectedRecords(status);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 		BOOST_CHECK_EQUAL(rec, counts[1]);
 
 		stmt->free(status);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 	}
 
 	{
@@ -172,17 +172,17 @@ BOOST_AUTO_TEST_CASE(affectedRecords)
 			"  when matched then update set n = t1.n"
 			"  when not matched then insert values (n)",
 			FbTest::DIALECT, IStatement::PREPARE_PREFETCH_AFFECTED_RECORDS);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		stmt->execute(status, transaction, NULL, NULL, NULL, NULL);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		rec = stmt->getAffectedRecords(status);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 		BOOST_CHECK_EQUAL(rec, counts[1]);
 
 		stmt->free(status);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 	}
 
 	{
@@ -192,24 +192,24 @@ BOOST_AUTO_TEST_CASE(affectedRecords)
 			"    on (t0.n = t1.n)"
 			"  when not matched then insert values (n)",
 			FbTest::DIALECT, IStatement::PREPARE_PREFETCH_AFFECTED_RECORDS);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		stmt->execute(status, transaction, NULL, NULL, NULL, NULL);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		rec = stmt->getAffectedRecords(status);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 		BOOST_CHECK_EQUAL(rec, 4);
 
 		stmt->free(status);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 	}
 
 	transaction->commit(status);
-	BOOST_CHECK(status->isSuccess());
+	BOOST_CHECK(checkStatus(status));
 
 	attachment->dropDatabase(status);
-	BOOST_CHECK(status->isSuccess());
+	BOOST_CHECK(checkStatus(status));
 
 	status->dispose();
 }

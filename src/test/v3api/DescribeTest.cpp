@@ -45,11 +45,11 @@ BOOST_AUTO_TEST_CASE(describe)
 
 		IAttachment* attachment = dispatcher->createDatabase(status, location.c_str(),
 			testDpbLength[test], testDpb[test]);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 		BOOST_REQUIRE(attachment);
 
 		ITransaction* transaction = attachment->startTransaction(status, 0, NULL);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 		BOOST_REQUIRE(transaction);
 
 		unsigned major;
@@ -65,24 +65,24 @@ BOOST_AUTO_TEST_CASE(describe)
 				"  from rdb$database"
 				"  where rdb$relation_id < ?",
 				FbTest::DIALECT, (prefetch ? IStatement::PREPARE_PREFETCH_ALL : 0));
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 			BOOST_REQUIRE(stmt);
 
 			unsigned type = stmt->getType(status);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 
 			string legacyPlan = stmt->getPlan(status, false);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 
 			string detailedPlan = major >= 3 ? stmt->getPlan(status, true) : "";
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 
 			IMessageMetadata* inputParams = stmt->getInputMetadata(status);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 			BOOST_REQUIRE(inputParams);
 
 			IMessageMetadata* outputParams = stmt->getOutputMetadata(status);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 			BOOST_REQUIRE(outputParams);
 
 			BOOST_CHECK_EQUAL(type, isc_info_sql_stmt_select);
@@ -106,44 +106,44 @@ BOOST_AUTO_TEST_CASE(describe)
 				string alias;
 				unsigned type;
 				bool nullable;
-				unsigned subType;
+				unsigned charSet;
 				unsigned length;
 				unsigned scale;
 
-				static void test(IStatus* status, const IMessageMetadata* params,
+				static void test(IStatus* status, IMessageMetadata* params,
 					unsigned count, FieldInfo* fieldInfo)
 				{
 					BOOST_CHECK_EQUAL(params->getCount(status), count);
-					BOOST_CHECK(status->isSuccess());
+					BOOST_CHECK(checkStatus(status));
 
 					for (unsigned i = 0; i < count; ++i)
 					{
 						BOOST_CHECK_EQUAL(params->getField(status, i), fieldInfo[i].field);
-						BOOST_CHECK(status->isSuccess());
+						BOOST_CHECK(checkStatus(status));
 
 						BOOST_CHECK_EQUAL(params->getRelation(status, i), fieldInfo[i].relation);
-						BOOST_CHECK(status->isSuccess());
+						BOOST_CHECK(checkStatus(status));
 
 						BOOST_CHECK_EQUAL(params->getOwner(status, i), fieldInfo[i].owner);
-						BOOST_CHECK(status->isSuccess());
+						BOOST_CHECK(checkStatus(status));
 
 						BOOST_CHECK_EQUAL(params->getAlias(status, i), fieldInfo[i].alias);
-						BOOST_CHECK(status->isSuccess());
+						BOOST_CHECK(checkStatus(status));
 
 						BOOST_CHECK_EQUAL(params->getType(status, i), fieldInfo[i].type);
-						BOOST_CHECK(status->isSuccess());
+						BOOST_CHECK(checkStatus(status));
 
 						BOOST_CHECK_EQUAL(params->isNullable(status, i), fieldInfo[i].nullable);
-						BOOST_CHECK(status->isSuccess());
+						BOOST_CHECK(checkStatus(status));
 
-						BOOST_CHECK_EQUAL(params->getSubType(status, i), fieldInfo[i].subType);
-						BOOST_CHECK(status->isSuccess());
+						BOOST_CHECK_EQUAL(params->getCharSet(status, i), fieldInfo[i].charSet);
+						BOOST_CHECK(checkStatus(status));
 
 						BOOST_CHECK_EQUAL(params->getLength(status, i), fieldInfo[i].length);
-						BOOST_CHECK(status->isSuccess());
+						BOOST_CHECK(checkStatus(status));
 
 						BOOST_CHECK_EQUAL(params->getScale(status, i), fieldInfo[i].scale);
-						BOOST_CHECK(status->isSuccess());
+						BOOST_CHECK(checkStatus(status));
 					}
 				}
 			};
@@ -167,14 +167,14 @@ BOOST_AUTO_TEST_CASE(describe)
 			inputParams->release();
 
 			stmt->free(status);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 		}
 
 		transaction->commit(status);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		attachment->dropDatabase(status);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		status->dispose();
 	}

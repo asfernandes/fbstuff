@@ -40,37 +40,37 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 
 	IAttachment* attachment = dispatcher->createDatabase(status, location.c_str(),
 		sizeof(FbTest::ASCII_DPB), FbTest::ASCII_DPB);
-	BOOST_CHECK(status->isSuccess());
+	BOOST_CHECK(checkStatus(status));
 	BOOST_REQUIRE(attachment);
 
 	ITransaction* transaction = attachment->startTransaction(status, 0, NULL);
-	BOOST_CHECK(status->isSuccess());
+	BOOST_CHECK(checkStatus(status));
 	BOOST_REQUIRE(transaction);
 
 	// Create some tables and comment them.
 	{
 		attachment->execute(status, transaction, 0,
 			"create table employee (id integer)", FbTest::DIALECT, NULL, NULL, NULL, NULL);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		attachment->execute(status, transaction, 0,
 			"comment on table employee is 'Employees'", FbTest::DIALECT, NULL, NULL, NULL, NULL);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		attachment->execute(status, transaction, 0,
 			"create table customer (id integer)", FbTest::DIALECT, NULL, NULL, NULL, NULL);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		attachment->execute(status, transaction, 0,
 			"comment on table customer is 'Customers'", FbTest::DIALECT, NULL, NULL, NULL, NULL);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		attachment->execute(status, transaction, 0,
 			"create table sales (id integer)", FbTest::DIALECT, NULL, NULL, NULL, NULL);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		transaction->commitRetaining(status);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 	}
 
 	{
@@ -88,22 +88,22 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 				"  where rdb$system_flag = ?"
 				"  order by rdb$relation_id",
 				FbTest::DIALECT, 0);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 			BOOST_REQUIRE(stmt);
 
 			IMessageMetadata* inParams = stmt->getInputMetadata(status);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 
 			MessageImpl inMessage(inParams);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 
 			Offset<ISC_SHORT> systemFlagParam(inMessage);
 
 			IMessageMetadata* outParams = stmt->getOutputMetadata(status);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 
 			MessageImpl outMessage(outParams);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 
 			Offset<ISC_SHORT> relationId(outMessage);
 			Offset<FbString> relationName(outMessage, 31);
@@ -113,15 +113,15 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 
 			IResultSet* rs = stmt->openCursor(status, transaction,
 				inMessage.getMetadata(), inMessage.getBuffer(), outMessage.getMetadata());
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 			BOOST_REQUIRE(rs);
 
 			int pos = 0;
 			int ret;
 
-			while ((ret = rs->fetchNext(status, outMessage.getBuffer())))
+			while ((ret = rs->fetchNext(status, outMessage.getBuffer())) == IStatus::FB_OK)
 			{
-				BOOST_CHECK(status->isSuccess());
+				BOOST_CHECK(checkStatus(status));
 
 				string descriptionStr;
 
@@ -129,16 +129,21 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 				{
 					IBlob* blob = attachment->openBlob(status, transaction,
 						&outMessage[description], 0, NULL);
-					BOOST_CHECK(status->isSuccess());
+					BOOST_CHECK(checkStatus(status));
 
 					char blobBuffer[2];	// intentionaly test very small buffer
+					int blobStatus;
 					unsigned blobLen;
 
-					while ((blobLen = blob->getSegment(status, sizeof(blobBuffer), blobBuffer)) != 0)
+					while ((blobStatus = blob->getSegment(status, sizeof(blobBuffer),
+											blobBuffer, &blobLen)) == IStatus::FB_OK ||
+						   blobStatus == IStatus::FB_SEGMENT)
+					{
 						descriptionStr.append(blobBuffer, blobLen);
+					}
 
 					blob->close(status);
-					BOOST_CHECK(status->isSuccess());
+					BOOST_CHECK(checkStatus(status));
 				}
 
 				string msg =
@@ -153,10 +158,10 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 			BOOST_CHECK_EQUAL(pos, 3);
 
 			rs->close(status);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 
 			stmt->free(status);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 		}
 
 		unsigned major, minor, revision;
@@ -173,7 +178,7 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 				"  where rdb$system_flag = ?"
 				"  order by rdb$relation_id",
 				FbTest::DIALECT, 0);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 			BOOST_REQUIRE(stmt);
 
 			FB_MESSAGE(Input,
@@ -191,15 +196,15 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 
 			IResultSet* rs = stmt->openCursor(status, transaction,
 				input.getMetadata(), input.getData(), output.getMetadata());
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 			BOOST_REQUIRE(rs);
 
 			int pos = 0;
 			int ret;
 
-			while ((ret = rs->fetchNext(status, output.getData())))
+			while ((ret = rs->fetchNext(status, output.getData())) == IStatus::FB_OK)
 			{
-				BOOST_CHECK(status->isSuccess());
+				BOOST_CHECK(checkStatus(status));
 
 				string msg =
 					lexical_cast<string>(output->relationId) + " | " +
@@ -213,10 +218,10 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 			BOOST_CHECK_EQUAL(pos, 3);
 
 			rs->close(status);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 
 			stmt->free(status);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 		}
 
 		if (version >= 251)
@@ -230,22 +235,22 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 				"  where cast(rdb$system_flag as blob sub_type text) = ?"
 				"  order by rdb$relation_id",
 				FbTest::DIALECT, 0);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 			BOOST_REQUIRE(stmt);
 
 			IMessageMetadata* inParams = stmt->getInputMetadata(status);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 
 			MessageImpl inMessage(inParams);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 
 			Offset<FbString> systemFlagParam(inMessage, 1);
 
 			IMessageMetadata* outParams = stmt->getOutputMetadata(status);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 
 			MessageImpl outMessage(outParams);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 
 			Offset<FbString> relationId(outMessage, 10);
 			Offset<FbString> relationName(outMessage, 31);
@@ -256,15 +261,15 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 
 			IResultSet* rs = stmt->openCursor(status, transaction,
 				inMessage.getMetadata(), inMessage.getBuffer(), outMessage.getMetadata());
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 			BOOST_REQUIRE(rs);
 
 			int pos = 0;
 			int ret;
 
-			while ((ret = rs->fetchNext(status, outMessage.getBuffer())))
+			while ((ret = rs->fetchNext(status, outMessage.getBuffer())) == IStatus::FB_OK)
 			{
-				BOOST_CHECK(status->isSuccess());
+				BOOST_CHECK(checkStatus(status));
 
 				string msg =
 					outMessage[relationId].asStdString() + " | " +
@@ -278,10 +283,10 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 			BOOST_CHECK_EQUAL(pos, 3);
 
 			rs->close(status);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 
 			stmt->free(status);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 		}
 
 		if (version >= 251)
@@ -290,20 +295,20 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 
 			IStatement* stmt = attachment->prepare(status, transaction, 0,
 				"insert into employee values (11) returning id", FbTest::DIALECT, 0);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 			BOOST_REQUIRE(stmt);
 
 			IMessageMetadata* outParams = stmt->getOutputMetadata(status);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 
 			MessageImpl outMessage(outParams);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 
 			Offset<ISC_QUAD> idAsBlob(outMessage);
 
 			stmt->execute(status, transaction, NULL, NULL,
 				outMessage.getMetadata(), outMessage.getBuffer());
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 
 			string msg;
 
@@ -311,30 +316,35 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 			{
 				IBlob* blob = attachment->openBlob(status, transaction,
 					&outMessage[idAsBlob], 0, NULL);
-				BOOST_CHECK(status->isSuccess());
+				BOOST_CHECK(checkStatus(status));
 
 				char blobBuffer[2];	// intentionaly test very small buffer
+				int blobStatus;
 				unsigned blobLen;
 
-				while ((blobLen = blob->getSegment(status, sizeof(blobBuffer), blobBuffer)) != 0)
+				while ((blobStatus = blob->getSegment(status, sizeof(blobBuffer),
+										blobBuffer, &blobLen)) == IStatus::FB_OK ||
+					   blobStatus == IStatus::FB_SEGMENT)
+				{
 					msg.append(blobBuffer, blobLen);
+				}
 
 				blob->close(status);
-				BOOST_CHECK(status->isSuccess());
+				BOOST_CHECK(checkStatus(status));
 			}
 
 			BOOST_CHECK_EQUAL(msg, "11");
 
 			stmt->free(status);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 		}
 	}
 
 	transaction->commit(status);
-	BOOST_CHECK(status->isSuccess());
+	BOOST_CHECK(checkStatus(status));
 
 	attachment->dropDatabase(status);
-	BOOST_CHECK(status->isSuccess());
+	BOOST_CHECK(checkStatus(status));
 
 	status->dispose();
 }
@@ -348,11 +358,11 @@ BOOST_AUTO_TEST_CASE(staticMessage2)
 
 	IAttachment* attachment = dispatcher->createDatabase(status, location.c_str(),
 		sizeof(FbTest::UTF8_DPB), FbTest::UTF8_DPB);
-	BOOST_CHECK(status->isSuccess());
+	BOOST_CHECK(checkStatus(status));
 	BOOST_REQUIRE(attachment);
 
 	ITransaction* transaction = attachment->startTransaction(status, 0, NULL);
-	BOOST_CHECK(status->isSuccess());
+	BOOST_CHECK(checkStatus(status));
 	BOOST_REQUIRE(transaction);
 
 	{
@@ -364,7 +374,7 @@ BOOST_AUTO_TEST_CASE(staticMessage2)
 			"  suspend; "
 			"end",
 			FbTest::DIALECT, 0);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 		BOOST_REQUIRE(stmt);
 
 		FB_MESSAGE(Input,
@@ -380,32 +390,32 @@ BOOST_AUTO_TEST_CASE(staticMessage2)
 
 		IResultSet* rs = stmt->openCursor(status, transaction,
 			input.getMetadata(), input.getData(), output.getMetadata());
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 		BOOST_REQUIRE(rs);
 
-		bool ret = rs->fetchNext(status, output.getData());
-		BOOST_CHECK(status->isSuccess() && ret);
+		bool ret = rs->fetchNext(status, output.getData()) == IStatus::FB_OK;
+		BOOST_CHECK(checkStatus(status) && ret);
 
 		BOOST_CHECK_EQUAL(output->n, 8);	// CORE-3737
 
 		rs->close(status);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		input->cNull = 1;
 		rs = stmt->openCursor(status, transaction,
 			input.getMetadata(), input.getData(), output.getMetadata());
-		BOOST_CHECK(!status->isSuccess() && status->get()[1] == isc_not_valid_for_var);
+		BOOST_CHECK(!checkStatus(status) && status->getErrors()[1] == isc_not_valid_for_var);
 		BOOST_CHECK(!rs);
 
 		stmt->free(status);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 	}
 
 	transaction->commit(status);
-	BOOST_CHECK(status->isSuccess());
+	BOOST_CHECK(checkStatus(status));
 
 	attachment->dropDatabase(status);
-	BOOST_CHECK(status->isSuccess());
+	BOOST_CHECK(checkStatus(status));
 
 	status->dispose();
 }
@@ -419,7 +429,7 @@ BOOST_AUTO_TEST_CASE(staticMessage3)	// test for CORE-4184
 
 	IAttachment* attachment = dispatcher->createDatabase(status, location.c_str(),
 		sizeof(FbTest::UTF8_DPB), FbTest::UTF8_DPB);
-	BOOST_CHECK(status->isSuccess());
+	BOOST_CHECK(checkStatus(status));
 	BOOST_REQUIRE(attachment);
 
 	unsigned major, minor;
@@ -427,7 +437,7 @@ BOOST_AUTO_TEST_CASE(staticMessage3)	// test for CORE-4184
 	unsigned version = major * 100u + minor * 10u;
 
 	ITransaction* transaction = attachment->startTransaction(status, 0, NULL);
-	BOOST_CHECK(status->isSuccess());
+	BOOST_CHECK(checkStatus(status));
 	BOOST_REQUIRE(transaction);
 
 	{
@@ -441,10 +451,10 @@ BOOST_AUTO_TEST_CASE(staticMessage3)	// test for CORE-4184
 			"      suspend; "
 			"end",
 			FbTest::DIALECT, NULL, NULL, NULL, NULL);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		transaction->commitRetaining(status);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 	}
 
 	FB_MESSAGE(Message,
@@ -473,33 +483,33 @@ BOOST_AUTO_TEST_CASE(staticMessage3)	// test for CORE-4184
 				"  suspend; "
 				"end",
 				FbTest::DIALECT, 0);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 			BOOST_REQUIRE(stmt);
 
 			output.clear();
 
 			IResultSet* rs = stmt->openCursor(status, transaction,
 				input.getMetadata(), input.getData(), output.getMetadata());
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 
 			if (i == 0)
 			{
-				BOOST_CHECK(rs->fetchNext(status, output.getData()));
-				BOOST_CHECK(status->isSuccess());
+				BOOST_CHECK(rs->fetchNext(status, output.getData()) == IStatus::FB_OK);
+				BOOST_CHECK(checkStatus(status));
 				BOOST_CHECK_EQUAL(output->n, input->n);
 			}
 			else
 			{
-				BOOST_CHECK(!rs->fetchNext(status, output.getData()));
-				BOOST_CHECK(!status->isSuccess());
-				BOOST_CHECK_EQUAL(status->get()[1] , isc_not_valid_for_var);
+				BOOST_CHECK(!rs->fetchNext(status, output.getData()) == IStatus::FB_OK);
+				BOOST_CHECK(!checkStatus(status));
+				BOOST_CHECK_EQUAL(status->getErrors()[1] , isc_not_valid_for_var);
 			}
 
 			rs->close(status);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 
 			stmt->free(status);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 		}
 
 		{
@@ -513,30 +523,30 @@ BOOST_AUTO_TEST_CASE(staticMessage3)	// test for CORE-4184
 				"      suspend; "
 				"end",
 				FbTest::DIALECT, 0);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 			BOOST_REQUIRE(stmt);
 
 			output.clear();
 
 			IResultSet* rs = stmt->openCursor(status, transaction,
 				input.getMetadata(), input.getData(), output.getMetadata());
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 
-			BOOST_CHECK(!rs->fetchNext(status, output.getData()));
+			BOOST_CHECK(rs->fetchNext(status, output.getData()) != IStatus::FB_OK);
 
 			if (i == 0 || version == 300)
-				BOOST_CHECK(status->isSuccess());
+				BOOST_CHECK(checkStatus(status));
 			else
 			{
-				BOOST_CHECK(!status->isSuccess());
-				BOOST_CHECK_EQUAL(status->get()[1] , isc_not_valid_for_var);
+				BOOST_CHECK(!checkStatus(status));
+				BOOST_CHECK_EQUAL(status->getErrors()[1] , isc_not_valid_for_var);
 			}
 
 			rs->close(status);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 
 			stmt->free(status);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 		}
 
 		{
@@ -552,12 +562,12 @@ BOOST_AUTO_TEST_CASE(staticMessage3)	// test for CORE-4184
 				FbTest::DIALECT,
 				input.getMetadata(), input.getData(), output.getMetadata(), output.getData());
 
-			BOOST_CHECK(!status->isSuccess());
+			BOOST_CHECK(!checkStatus(status));
 
 			if (i == 0 || version == 300)
-				BOOST_CHECK_EQUAL(status->get()[1] , isc_stream_eof);
+				BOOST_CHECK_EQUAL(status->getErrors()[1] , isc_stream_eof);
 			else
-				BOOST_CHECK_EQUAL(status->get()[1] , isc_not_valid_for_var);
+				BOOST_CHECK_EQUAL(status->getErrors()[1] , isc_not_valid_for_var);
 		}
 
 		{
@@ -569,13 +579,13 @@ BOOST_AUTO_TEST_CASE(staticMessage3)	// test for CORE-4184
 
 			if (i == 0)
 			{
-				BOOST_CHECK(status->isSuccess());
+				BOOST_CHECK(checkStatus(status));
 				BOOST_CHECK_EQUAL(output->n, input->n);
 			}
 			else
 			{
-				BOOST_CHECK(!status->isSuccess());
-				BOOST_CHECK_EQUAL(status->get()[1] , isc_not_valid_for_var);
+				BOOST_CHECK(!checkStatus(status));
+				BOOST_CHECK_EQUAL(status->getErrors()[1] , isc_not_valid_for_var);
 			}
 		}
 
@@ -585,20 +595,20 @@ BOOST_AUTO_TEST_CASE(staticMessage3)	// test for CORE-4184
 			attachment->execute(status, transaction, 0, "select * from p1(?)",
 				FbTest::DIALECT,
 				input.getMetadata(), input.getData(), output.getMetadata(), output.getData());
-			BOOST_CHECK(!status->isSuccess());
+			BOOST_CHECK(!checkStatus(status));
 
 			if (i == 0 || version == 300)
-				BOOST_CHECK_EQUAL(status->get()[1] , isc_stream_eof);
+				BOOST_CHECK_EQUAL(status->getErrors()[1] , isc_stream_eof);
 			else
-				BOOST_CHECK_EQUAL(status->get()[1] , isc_not_valid_for_var);
+				BOOST_CHECK_EQUAL(status->getErrors()[1] , isc_not_valid_for_var);
 		}
 	}
 
 	transaction->commit(status);
-	BOOST_CHECK(status->isSuccess());
+	BOOST_CHECK(checkStatus(status));
 
 	attachment->dropDatabase(status);
-	BOOST_CHECK(status->isSuccess());
+	BOOST_CHECK(checkStatus(status));
 
 	status->dispose();
 }

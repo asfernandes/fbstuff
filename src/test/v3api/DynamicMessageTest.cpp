@@ -40,37 +40,37 @@ BOOST_AUTO_TEST_CASE(dynamicMessage)
 
 	IAttachment* attachment = dispatcher->createDatabase(status, location.c_str(),
 		sizeof(FbTest::ASCII_DPB), FbTest::ASCII_DPB);
-	BOOST_CHECK(status->isSuccess());
+	BOOST_CHECK(checkStatus(status));
 	BOOST_REQUIRE(attachment);
 
 	ITransaction* transaction = attachment->startTransaction(status, 0, NULL);
-	BOOST_CHECK(status->isSuccess());
+	BOOST_CHECK(checkStatus(status));
 	BOOST_REQUIRE(transaction);
 
 	// Create some tables and comment them.
 	{
 		attachment->execute(status, transaction, 0,
 			"create table employee (id integer)", FbTest::DIALECT, NULL, NULL, NULL, NULL);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		attachment->execute(status, transaction, 0,
 			"comment on table employee is 'Employees'", FbTest::DIALECT, NULL, NULL, NULL, NULL);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		attachment->execute(status, transaction, 0,
 			"create table customer (id integer)", FbTest::DIALECT, NULL, NULL, NULL, NULL);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		attachment->execute(status, transaction, 0,
 			"comment on table customer is 'Customers'", FbTest::DIALECT, NULL, NULL, NULL, NULL);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		attachment->execute(status, transaction, 0,
 			"create table sales (id integer)", FbTest::DIALECT, NULL, NULL, NULL, NULL);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		transaction->commitRetaining(status);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 	}
 
 	{
@@ -80,20 +80,20 @@ BOOST_AUTO_TEST_CASE(dynamicMessage)
 			"  where rdb$system_flag = ?"
 			"  order by rdb$relation_id",
 			FbTest::DIALECT, IStatement::PREPARE_PREFETCH_METADATA);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 		BOOST_REQUIRE(stmt);
 
 		IMessageMetadata* inParams = stmt->getInputMetadata(status);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		MessageImpl inMessage(inParams);
 		Offset<void*> systemFlagParam(inMessage);
 
 		IMessageMetadata* outParams = stmt->getOutputMetadata(status);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		unsigned outParamsCount = outParams->getCount(status);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		MessageImpl outMessage(outParams);
 		vector<Offset<void*> > outFields;
@@ -102,12 +102,12 @@ BOOST_AUTO_TEST_CASE(dynamicMessage)
 			outFields.push_back(Offset<void*>(outMessage));
 
 		BOOST_CHECK(inParams->getType(status, systemFlagParam.index) == SQL_SHORT);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 		*static_cast<ISC_SHORT*>(inMessage[systemFlagParam]) = 0;
 
 		IResultSet* rs = stmt->openCursor(status, transaction,
 			inMessage.getMetadata(), inMessage.getBuffer(), outMessage.getMetadata());
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 		BOOST_REQUIRE(rs);
 
 		static const char* const MSGS[] = {
@@ -120,7 +120,7 @@ BOOST_AUTO_TEST_CASE(dynamicMessage)
 
 		while ((ret = rs->fetchNext(status, outMessage.getBuffer())))
 		{
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 
 			string msg;
 
@@ -140,17 +140,17 @@ BOOST_AUTO_TEST_CASE(dynamicMessage)
 		inParams->release();
 
 		rs->close(status);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		stmt->free(status);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 	}
 
 	transaction->commit(status);
-	BOOST_CHECK(status->isSuccess());
+	BOOST_CHECK(checkStatus(status));
 
 	attachment->dropDatabase(status);
-	BOOST_CHECK(status->isSuccess());
+	BOOST_CHECK(checkStatus(status));
 
 	status->dispose();
 }

@@ -39,21 +39,21 @@ BOOST_AUTO_TEST_CASE(blob)
 	IStatus* status = master->getStatus();
 
 	IAttachment* attachment = dispatcher->createDatabase(status, location.c_str(), 0, NULL);
-	BOOST_CHECK(status->isSuccess());
+	BOOST_CHECK(checkStatus(status));
 	BOOST_REQUIRE(attachment);
 
 	ITransaction* transaction = attachment->startTransaction(status, 0, NULL);
-	BOOST_CHECK(status->isSuccess());
+	BOOST_CHECK(checkStatus(status));
 	BOOST_REQUIRE(transaction);
 
 	// Create test table.
 	{
 		attachment->execute(status, transaction, 0,
 			"create table test (b1 blob)", FbTest::DIALECT, NULL, NULL, NULL, NULL);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		transaction->commitRetaining(status);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 	}
 
 	{
@@ -66,7 +66,7 @@ BOOST_AUTO_TEST_CASE(blob)
 
 		IStatement* stmt = attachment->prepare(status, transaction, 0,
 			"insert into test (b1) values (?)", FbTest::DIALECT, 0);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 		BOOST_REQUIRE(stmt);
 
 		{
@@ -75,29 +75,29 @@ BOOST_AUTO_TEST_CASE(blob)
 			) input(master);
 
 			input.clear();
-			IBlob* blob = attachment->createBlob(status, transaction, &input->b1);
-			BOOST_CHECK(status->isSuccess());
+			IBlob* blob = attachment->createBlob(status, transaction, &input->b1, 0, NULL);
+			BOOST_CHECK(checkStatus(status));
 
 			for (const char* const* segment = SEGMENTS; *segment; ++segment)
 			{
 				blob->putSegment(status, strlen(*segment), *segment);
-				BOOST_CHECK(status->isSuccess());
+				BOOST_CHECK(checkStatus(status));
 			}
 
 			blob->close(status);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 
 			stmt->execute(status, transaction, input.getMetadata(), input.getData(), NULL, NULL);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 
 			stmt->free(status);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 		}
 
 		{
 			stmt = attachment->prepare(status, transaction, 0,
 				"select b1 from test", FbTest::DIALECT, 0);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 
 			FB_MESSAGE(OutputType,
 				(FB_BLOB, b1)
@@ -105,47 +105,48 @@ BOOST_AUTO_TEST_CASE(blob)
 
 			IResultSet* rs = stmt->openCursor(status, transaction, NULL, NULL,
 				output.getMetadata());
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 
 			BOOST_CHECK(rs->fetchNext(status, output.getData()) != 100);
 
-			IBlob* blob = attachment->openBlob(status, transaction, &output->b1);
-			BOOST_CHECK(status->isSuccess());
+			IBlob* blob = attachment->openBlob(status, transaction, &output->b1, 0, NULL);
+			BOOST_CHECK(checkStatus(status));
 
 			for (const char* const* segment = SEGMENTS;; ++segment)
 			{
 				char data[30];
-				unsigned len = blob->getSegment(status, sizeof(data) - 1, data);
+				unsigned len;
+				int blobStatus = blob->getSegment(status, sizeof(data) - 1, data, &len);
 				data[len] = '\0';
 
 				if (*segment)
 				{
-					BOOST_CHECK(status->isSuccess());
+					BOOST_CHECK(checkStatus(status));
 					BOOST_CHECK(strcmp(data, *segment) == 0);
 				}
 				else
 				{
-					BOOST_CHECK(len == 0 && status->get()[1] == isc_segstr_eof);
+					BOOST_CHECK(len == 0 && blobStatus == IStatus::FB_EOF);
 					break;
 				}
 			}
 
 			blob->close(status);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 
 			rs->close(status);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 
 			stmt->free(status);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 		}
 	}
 
 	transaction->commit(status);
-	BOOST_CHECK(status->isSuccess());
+	BOOST_CHECK(checkStatus(status));
 
 	attachment->dropDatabase(status);
-	BOOST_CHECK(status->isSuccess());
+	BOOST_CHECK(checkStatus(status));
 
 	status->dispose();
 }

@@ -39,12 +39,12 @@ BOOST_AUTO_TEST_CASE(multiDbTrans)
 
 	IAttachment* attachment1 = dispatcher->createDatabase(status, location1.c_str(),
 		sizeof(FbTest::ASCII_DPB), FbTest::ASCII_DPB);
-	BOOST_CHECK(status->isSuccess());
+	BOOST_CHECK(checkStatus(status));
 	BOOST_REQUIRE(attachment1);
 
 	IAttachment* attachment2 = dispatcher->createDatabase(status, location2.c_str(),
 		sizeof(FbTest::ASCII_DPB), FbTest::ASCII_DPB);
-	BOOST_CHECK(status->isSuccess());
+	BOOST_CHECK(checkStatus(status));
 	BOOST_REQUIRE(attachment2);
 
 	IDtc* dtc = master->getDtc();
@@ -66,49 +66,49 @@ BOOST_AUTO_TEST_CASE(multiDbTrans)
 		else
 		{
 			ITransaction* transaction1 = attachment1->startTransaction(status, 0, NULL);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 			BOOST_REQUIRE(transaction1);
 
 			ITransaction* transaction2 = attachment2->startTransaction(status, 0, NULL);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 			BOOST_REQUIRE(transaction2);
 
 			transaction = dtc->join(status, transaction1, transaction2);
 		}
 
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 		BOOST_REQUIRE(transaction);
 
 		// Lets try to create the same table in the two databases, using the same transaction.
 		const char* const CMD = "create table employee (id integer)";
 
 		attachment1->execute(status, transaction, 0, CMD, FbTest::DIALECT, NULL, NULL, NULL, NULL);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		attachment2->execute(status, transaction, 0, CMD, FbTest::DIALECT, NULL, NULL, NULL, NULL);
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 
 		{
 			IStatement* stmt = attachment2->prepare(status, transaction, 0,
 				"select cast('123' as blob)"
 				"  from rdb$database",
 				FbTest::DIALECT, 0);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 			BOOST_REQUIRE(stmt);
 
 			IMessageMetadata* outParams = stmt->getOutputMetadata(status);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 
 			MessageImpl outMessage(outParams);
 
 			Offset<ISC_QUAD> blobField(outMessage);
 
 			IResultSet* rs = stmt->openCursor(status, transaction, NULL, NULL, outMessage.getMetadata());
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 			BOOST_REQUIRE(rs);
 
 			BOOST_REQUIRE(rs->fetchNext(status, outMessage.getBuffer()));
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 
 			string blobStr;
 
@@ -116,25 +116,30 @@ BOOST_AUTO_TEST_CASE(multiDbTrans)
 			{
 				IBlob* blob = attachment2->openBlob(status, transaction,
 					&outMessage[blobField], 0, NULL);
-				BOOST_CHECK(status->isSuccess());
+				BOOST_CHECK(checkStatus(status));
 
 				char blobBuffer[10];
+				int blobStatus;
 				unsigned blobLen;
 
-				while ((blobLen = blob->getSegment(status, sizeof(blobBuffer), blobBuffer)) != 0)
+				while ((blobStatus = blob->getSegment(status, sizeof(blobBuffer),
+										blobBuffer, &blobLen)) == IStatus::FB_OK ||
+					   blobStatus == IStatus::FB_SEGMENT)
+				{
 					blobStr.append(blobBuffer, blobLen);
+				}
 
 				blob->close(status);
-				BOOST_CHECK(status->isSuccess());
+				BOOST_CHECK(checkStatus(status));
 			}
 
 			BOOST_CHECK_EQUAL(blobStr, "123");
 
 			rs->close(status);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 
 			stmt->free(status);
-			BOOST_CHECK(status->isSuccess());
+			BOOST_CHECK(checkStatus(status));
 		}
 
 		if (i == 0)
@@ -142,14 +147,14 @@ BOOST_AUTO_TEST_CASE(multiDbTrans)
 		else
 			transaction->commit(status);
 
-		BOOST_CHECK(status->isSuccess());
+		BOOST_CHECK(checkStatus(status));
 	}
 
 	attachment2->dropDatabase(status);
-	BOOST_CHECK(status->isSuccess());
+	BOOST_CHECK(checkStatus(status));
 
 	attachment1->dropDatabase(status);
-	BOOST_CHECK(status->isSuccess());
+	BOOST_CHECK(checkStatus(status));
 
 	status->dispose();
 }
