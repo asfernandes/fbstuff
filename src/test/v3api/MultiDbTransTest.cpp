@@ -107,7 +107,7 @@ BOOST_AUTO_TEST_CASE(multiDbTrans)
 			BOOST_CHECK(checkStatus(status));
 			BOOST_REQUIRE(rs);
 
-			BOOST_REQUIRE(rs->fetchNext(status, outMessage.getBuffer()));
+			BOOST_REQUIRE(rs->fetchNext(status, outMessage.getBuffer()) == IStatus::FB_OK);
 			BOOST_CHECK(checkStatus(status));
 
 			string blobStr;
