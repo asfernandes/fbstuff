@@ -208,8 +208,10 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 
 				string msg =
 					lexical_cast<string>(output->relationId) + " | " +
-					string(output->relationName.str, output->relationName.length) + " | " +
-					string(output->description.str, output->description.length);
+					string(output->relationName.str,
+						(output->relationNameNull ? 0 : output->relationName.length)) + " | " +
+					string(output->description.str,
+						(output->descriptionNull ? 0 : output->description.length));
 
 				BOOST_CHECK_EQUAL(msg, MSGS[pos]);
 				++pos;
@@ -273,8 +275,9 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 
 				string msg =
 					outMessage[relationId].asStdString() + " | " +
-					outMessage[relationName].asStdString() + " | " +
-					outMessage[description].asStdString();
+					(outMessage.isNull(relationName) ? "" : outMessage[relationName].asStdString()) +
+					" | " +
+					(outMessage.isNull(description) ? "" : outMessage[description].asStdString());
 
 				BOOST_CHECK_EQUAL(msg, MSGS[pos]);
 				++pos;

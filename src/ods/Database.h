@@ -61,8 +61,8 @@ public:
 	};
 
 	std::fstream file;
-	HeaderPage header;
 	std::map<RelationId, unsigned> relationPointer;
+	HeaderPage header;
 };
 
 template <int LENGTH>
