@@ -407,8 +407,14 @@ BOOST_AUTO_TEST_CASE(staticMessage2)
 		input->cNull = 1;
 		rs = stmt->openCursor(status, transaction,
 			input.getMetadata(), input.getData(), output.getMetadata());
+
+		if (rs)	// remote
+			BOOST_CHECK(rs->fetchNext(status, output.getData()) == IStatus::FB_ERROR);
+
 		BOOST_CHECK(!checkStatus(status) && status->getErrors()[1] == isc_not_valid_for_var);
-		BOOST_CHECK(!rs);
+
+		if (rs)	// remote
+			rs->close(status);
 
 		stmt->free(status);
 		BOOST_CHECK(checkStatus(status));
