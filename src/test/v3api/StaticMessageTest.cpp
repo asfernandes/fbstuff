@@ -36,7 +36,8 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 {
 	const string location = FbTest::getLocation("staticMessage.fdb");
 
-	IStatus* status = master->getStatus();
+	CheckStatusWrapper statusWrapper(master->getStatus());
+	CheckStatusWrapper* status = &statusWrapper;
 
 	IAttachment* attachment = dispatcher->createDatabase(status, location.c_str(),
 		sizeof(FbTest::ASCII_DPB), FbTest::ASCII_DPB);
@@ -94,20 +95,20 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 			IMessageMetadata* inParams = stmt->getInputMetadata(status);
 			BOOST_CHECK(checkStatus(status));
 
-			MessageImpl inMessage(inParams);
+			MessageImpl inMessage(status, inParams);
 			BOOST_CHECK(checkStatus(status));
 
-			Offset<ISC_SHORT> systemFlagParam(inMessage);
+			Offset<ISC_SHORT> systemFlagParam(status, inMessage);
 
 			IMessageMetadata* outParams = stmt->getOutputMetadata(status);
 			BOOST_CHECK(checkStatus(status));
 
-			MessageImpl outMessage(outParams);
+			MessageImpl outMessage(status, outParams);
 			BOOST_CHECK(checkStatus(status));
 
-			Offset<ISC_SHORT> relationId(outMessage);
-			Offset<FbString> relationName(outMessage, 31);
-			Offset<ISC_QUAD> description(outMessage);
+			Offset<ISC_SHORT> relationId(status, outMessage);
+			Offset<FbString> relationName(status, outMessage, 31);
+			Offset<ISC_QUAD> description(status, outMessage);
 
 			inMessage[systemFlagParam] = 0;
 
@@ -183,13 +184,13 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 
 			FB_MESSAGE(Input,
 				(FB_INTEGER, systemFlag)
-			) input(master);
+			) input(status, master);
 
 			FB_MESSAGE(Output,
 				(FB_SMALLINT, relationId)
 				(FB_VARCHAR(31), relationName)
 				(FB_VARCHAR(100), description)
-			) output(master);
+			) output(status, master);
 
 			input.clear();
 			input->systemFlag = 0;
@@ -243,20 +244,20 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 			IMessageMetadata* inParams = stmt->getInputMetadata(status);
 			BOOST_CHECK(checkStatus(status));
 
-			MessageImpl inMessage(inParams);
+			MessageImpl inMessage(status, inParams);
 			BOOST_CHECK(checkStatus(status));
 
-			Offset<FbString> systemFlagParam(inMessage, 1);
+			Offset<FbString> systemFlagParam(status, inMessage, 1);
 
 			IMessageMetadata* outParams = stmt->getOutputMetadata(status);
 			BOOST_CHECK(checkStatus(status));
 
-			MessageImpl outMessage(outParams);
+			MessageImpl outMessage(status, outParams);
 			BOOST_CHECK(checkStatus(status));
 
-			Offset<FbString> relationId(outMessage, 10);
-			Offset<FbString> relationName(outMessage, 31);
-			Offset<FbString> description(outMessage, 100);
+			Offset<FbString> relationId(status, outMessage, 10);
+			Offset<FbString> relationName(status, outMessage, 31);
+			Offset<FbString> description(status, outMessage, 100);
 
 			strcpy(inMessage[systemFlagParam].str, "0");
 			inMessage[systemFlagParam].length = 1;
@@ -304,10 +305,10 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 			IMessageMetadata* outParams = stmt->getOutputMetadata(status);
 			BOOST_CHECK(checkStatus(status));
 
-			MessageImpl outMessage(outParams);
+			MessageImpl outMessage(status, outParams);
 			BOOST_CHECK(checkStatus(status));
 
-			Offset<ISC_QUAD> idAsBlob(outMessage);
+			Offset<ISC_QUAD> idAsBlob(status, outMessage);
 
 			stmt->execute(status, transaction, NULL, NULL,
 				outMessage.getMetadata(), outMessage.getBuffer());
@@ -357,7 +358,8 @@ BOOST_AUTO_TEST_CASE(staticMessage2)
 {
 	const string location = FbTest::getLocation("staticMessage2.fdb");
 
-	IStatus* status = master->getStatus();
+	CheckStatusWrapper statusWrapper(master->getStatus());
+	CheckStatusWrapper* status = &statusWrapper;
 
 	IAttachment* attachment = dispatcher->createDatabase(status, location.c_str(),
 		sizeof(FbTest::UTF8_DPB), FbTest::UTF8_DPB);
@@ -382,11 +384,11 @@ BOOST_AUTO_TEST_CASE(staticMessage2)
 
 		FB_MESSAGE(Input,
 			(FB_VARCHAR(10 * 4), c)
-		) input(master);
+		) input(status, master);
 
 		FB_MESSAGE(Output,
 			(FB_INTEGER, n)
-		) output(master);
+		) output(status, master);
 
 		input.clear();
 		input->c.set("123áé456");
@@ -434,7 +436,8 @@ BOOST_AUTO_TEST_CASE(staticMessage3)	// test for CORE-4184
 {
 	const string location = FbTest::getLocation("staticMessage3.fdb");
 
-	IStatus* status = master->getStatus();
+	CheckStatusWrapper statusWrapper(master->getStatus());
+	CheckStatusWrapper* status = &statusWrapper;
 
 	IAttachment* attachment = dispatcher->createDatabase(status, location.c_str(),
 		sizeof(FbTest::UTF8_DPB), FbTest::UTF8_DPB);
@@ -468,7 +471,7 @@ BOOST_AUTO_TEST_CASE(staticMessage3)	// test for CORE-4184
 
 	FB_MESSAGE(Message,
 		(FB_INTEGER, n)
-	) input(master), output(master);
+	) input(status, master), output(status, master);
 
 	for (int i = 0; i < 2; ++i)
 	{

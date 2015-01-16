@@ -36,7 +36,8 @@ BOOST_AUTO_TEST_CASE(dynamicMessage)
 {
 	const string location = FbTest::getLocation("dynamicMessage.fdb");
 
-	IStatus* status = master->getStatus();
+	CheckStatusWrapper statusWrapper(master->getStatus());
+	CheckStatusWrapper* status = &statusWrapper;
 
 	IAttachment* attachment = dispatcher->createDatabase(status, location.c_str(),
 		sizeof(FbTest::ASCII_DPB), FbTest::ASCII_DPB);
@@ -86,8 +87,8 @@ BOOST_AUTO_TEST_CASE(dynamicMessage)
 		IMessageMetadata* inParams = stmt->getInputMetadata(status);
 		BOOST_CHECK(checkStatus(status));
 
-		MessageImpl inMessage(inParams);
-		Offset<void*> systemFlagParam(inMessage);
+		MessageImpl inMessage(status, inParams);
+		Offset<void*> systemFlagParam(status, inMessage);
 
 		IMessageMetadata* outParams = stmt->getOutputMetadata(status);
 		BOOST_CHECK(checkStatus(status));
@@ -95,11 +96,11 @@ BOOST_AUTO_TEST_CASE(dynamicMessage)
 		unsigned outParamsCount = outParams->getCount(status);
 		BOOST_CHECK(checkStatus(status));
 
-		MessageImpl outMessage(outParams);
+		MessageImpl outMessage(status, outParams);
 		vector<Offset<void*> > outFields;
 
 		for (unsigned i = 0; i < outParamsCount; ++i)
-			outFields.push_back(Offset<void*>(outMessage));
+			outFields.push_back(Offset<void*>(status, outMessage));
 
 		BOOST_CHECK(inParams->getType(status, systemFlagParam.index) == SQL_SHORT);
 		BOOST_CHECK(checkStatus(status));

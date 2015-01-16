@@ -17,6 +17,8 @@
  *
  */
 
+#define FB_UDR_STATUS_TYPE ::Firebird::CheckStatusWrapper
+
 #include <firebird/UdrCppEngine.h>
 
 

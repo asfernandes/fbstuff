@@ -58,7 +58,8 @@ namespace
 			const char cmdTra[] = "set transaction";
 			const char cmdBlock[] = "execute block as begin post_event 'EVENT1'; end";
 
-			IStatus* status = master->getStatus();
+			CheckStatusWrapper statusWrapper(master->getStatus());
+			CheckStatusWrapper* status = &statusWrapper;
 
 			ITransaction* transaction = attachment->execute(status, NULL, strlen(cmdTra), cmdTra,
 				3, NULL, NULL, NULL, NULL);
@@ -67,7 +68,8 @@ namespace
 
 			for (int i = 0; i < COUNT; ++i)
 			{
-				attachment->execute(status, transaction, strlen(cmdBlock), cmdBlock, 3, NULL, NULL, NULL, NULL);
+				attachment->execute(status, transaction, strlen(cmdBlock), cmdBlock, 3,
+					NULL, NULL, NULL, NULL);
 				BOOST_CHECK(checkStatus(status));
 			}
 
@@ -82,13 +84,15 @@ namespace
 }
 
 
-class Event : public FirebirdApi<FirebirdPolicy>::EventCallbackImpl<Event>
+class Event : public IEventCallbackImpl<Event, CheckStatusWrapper>
 {
 public:
 	Event(IAttachment* aAttachment, volatile int* aCounter)
 		: refCounter(1),
 		  attachment(aAttachment),
-		  counter(aCounter)
+		  counter(aCounter),
+		  statusWrapper(master->getStatus()),
+		  status(&statusWrapper)
 	{
 		eveLen = isc_event_block(&eveBuffer, &eveResult, 1, "EVENT1");
 
@@ -96,8 +100,6 @@ public:
 		eveBuffer[eveLen - 4] = 1;
 
 		mut.lock();
-
-		status = master->getStatus();
 
 		events = attachment->queEvents(status, this, eveLen, eveBuffer);
 		BOOST_CHECK(checkStatus(status));
@@ -146,7 +148,8 @@ public:
 	IAttachment* attachment;
 	volatile int* counter;
 
-	IStatus* status;
+	CheckStatusWrapper statusWrapper;
+	CheckStatusWrapper* status;
 	IEvents* events;
 	unsigned char* eveBuffer;
 	unsigned char* eveResult;
@@ -159,7 +162,8 @@ BOOST_AUTO_TEST_CASE(events)
 {
 	const string location = FbTest::getLocation("events.fdb");
 
-	IStatus* status = master->getStatus();
+	CheckStatusWrapper statusWrapper(master->getStatus());
+	CheckStatusWrapper* status = &statusWrapper;
 
 	IAttachment* attachment = dispatcher->createDatabase(status, location.c_str(),
 		sizeof(FbTest::ASCII_DPB), FbTest::ASCII_DPB);

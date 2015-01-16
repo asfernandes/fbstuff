@@ -35,7 +35,8 @@ BOOST_AUTO_TEST_CASE(multiDbTrans)
 	const string location1 = FbTest::getLocation("multiDbTrans1.fdb");
 	const string location2 = FbTest::getLocation("multiDbTrans2.fdb");
 
-	IStatus* status = master->getStatus();
+	CheckStatusWrapper statusWrapper(master->getStatus());
+	CheckStatusWrapper* status = &statusWrapper;
 
 	IAttachment* attachment1 = dispatcher->createDatabase(status, location1.c_str(),
 		sizeof(FbTest::ASCII_DPB), FbTest::ASCII_DPB);
@@ -102,9 +103,9 @@ BOOST_AUTO_TEST_CASE(multiDbTrans)
 			IMessageMetadata* outParams = stmt->getOutputMetadata(status);
 			BOOST_CHECK(checkStatus(status));
 
-			MessageImpl outMessage(outParams);
+			MessageImpl outMessage(status, outParams);
 
-			Offset<ISC_QUAD> blobField(outMessage);
+			Offset<ISC_QUAD> blobField(status, outMessage);
 
 			IResultSet* rs = stmt->openCursor(status, transaction, NULL, NULL, outMessage.getMetadata());
 			BOOST_CHECK(checkStatus(status));

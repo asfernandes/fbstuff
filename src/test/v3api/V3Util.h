@@ -59,9 +59,11 @@ template <>
 class Offset<void*> : public OffsetBase
 {
 public:
-	Offset(MessageImpl& message);
+	template <typename StatusType>
+	Offset(StatusType* status, MessageImpl& message);
 
-	void setType(Firebird::IStatus* /*status*/, Firebird::IMetadataBuilder* /*builder*/)
+	template <typename StatusType>
+	void setType(StatusType* /*status*/, Firebird::IMetadataBuilder* /*builder*/)
 	{
 	}
 };
@@ -69,27 +71,26 @@ public:
 class MessageImpl
 {
 public:
-	MessageImpl(Firebird::IMessageMetadata* aMetadata)
+	template <typename StatusType>
+	MessageImpl(StatusType* status, Firebird::IMessageMetadata* aMetadata)
 		: metadata(aMetadata),
 		  buffer(NULL),
 		  offsets(NULL),
 		  item(0)
 	{
-		status = master->getStatus();
-
 		itemCount = metadata->getCount(status);
 		builder = metadata->getBuilder(status);
 	}
 
 	~MessageImpl()
 	{
+		builder->release();
 		delete [] offsets;
 		delete [] buffer;
-		status->dispose();
 	}
 
-	template <typename T>
-	void add(Offset<T>& offset)
+	template <typename StatusType, typename T>
+	void add(StatusType* status, Offset<T>& offset)
 	{
 		if (item >= itemCount)
 			return;	// return an error, this is already constructed message
@@ -155,7 +156,6 @@ private:
 	unsigned* offsets;
 	unsigned item;
 	unsigned itemCount;
-	Firebird::IStatus* status;
 	Firebird::IMetadataBuilder* builder;
 };
 
@@ -163,13 +163,15 @@ template <>
 class Offset<ISC_SHORT> : public OffsetBase
 {
 public:
-	Offset(MessageImpl& message, ISC_UCHAR aScale = 0)
+	template <typename StatusType>
+	Offset(StatusType* status, MessageImpl& message, ISC_UCHAR aScale = 0)
 		: scale(aScale)
 	{
-		message.add(*this);
+		message.add(status, *this);
 	}
 
-	void setType(Firebird::IStatus* status, Firebird::IMetadataBuilder* builder)
+	template <typename StatusType>
+	void setType(StatusType* status, Firebird::IMetadataBuilder* builder)
 	{
 		builder->setType(status, index, SQL_SHORT);
 		builder->setScale(status, index, scale);
@@ -184,13 +186,15 @@ template <>
 class Offset<ISC_LONG> : public OffsetBase
 {
 public:
-	Offset(MessageImpl& message, ISC_UCHAR aScale = 0)
+	template <typename StatusType>
+	Offset(StatusType* status, MessageImpl& message, ISC_UCHAR aScale = 0)
 		: scale(aScale)
 	{
-		message.add(*this);
+		message.add(status, *this);
 	}
 
-	void setType(Firebird::IStatus* status, Firebird::IMetadataBuilder* builder)
+	template <typename StatusType>
+	void setType(StatusType* status, Firebird::IMetadataBuilder* builder)
 	{
 		builder->setType(status, index, SQL_LONG);
 		builder->setScale(status, index, scale);
@@ -205,13 +209,15 @@ template <>
 class Offset<ISC_INT64> : public OffsetBase
 {
 public:
-	Offset(MessageImpl& message, ISC_UCHAR aScale = 0)
+	template <typename StatusType>
+	Offset(StatusType* status, MessageImpl& message, ISC_UCHAR aScale = 0)
 		: scale(aScale)
 	{
-		message.add(*this);
+		message.add(status, *this);
 	}
 
-	void setType(Firebird::IStatus* status, Firebird::IMetadataBuilder* builder)
+	template <typename StatusType>
+	void setType(StatusType* status, Firebird::IMetadataBuilder* builder)
 	{
 		builder->setType(status, index, SQL_INT64);
 		builder->setScale(status, index, scale);
@@ -226,12 +232,14 @@ template <>
 class Offset<float> : public OffsetBase
 {
 public:
-	Offset(MessageImpl& message)
+	template <typename StatusType>
+	Offset(StatusType* status, MessageImpl& message)
 	{
-		message.add(*this);
+		message.add(status, *this);
 	}
 
-	void setType(Firebird::IStatus* status, Firebird::IMetadataBuilder* builder)
+	template <typename StatusType>
+	void setType(StatusType* status, Firebird::IMetadataBuilder* builder)
 	{
 		builder->setType(status, index, SQL_FLOAT);
 		builder->setLength(status, index, sizeof(float));
@@ -242,12 +250,14 @@ template <>
 class Offset<double> : public OffsetBase
 {
 public:
-	Offset(MessageImpl& message)
+	template <typename StatusType>
+	Offset(StatusType* status, MessageImpl& message)
 	{
-		message.add(*this);
+		message.add(status, *this);
 	}
 
-	void setType(Firebird::IStatus* status, Firebird::IMetadataBuilder* builder)
+	template <typename StatusType>
+	void setType(StatusType* status, Firebird::IMetadataBuilder* builder)
 	{
 		builder->setType(status, index, SQL_DOUBLE);
 		builder->setLength(status, index, sizeof(double));
@@ -258,12 +268,14 @@ template <>
 class Offset<ISC_QUAD> : public OffsetBase
 {
 public:
-	Offset(MessageImpl& message)
+	template <typename StatusType>
+	Offset(StatusType* status, MessageImpl& message)
 	{
-		message.add(*this);
+		message.add(status, *this);
 	}
 
-	void setType(Firebird::IStatus* status, Firebird::IMetadataBuilder* builder)
+	template <typename StatusType>
+	void setType(StatusType* status, Firebird::IMetadataBuilder* builder)
 	{
 		builder->setType(status, index, SQL_BLOB);
 		builder->setLength(status, index, sizeof(ISC_QUAD));
@@ -285,13 +297,15 @@ template <>
 class Offset<FbString> : public OffsetBase
 {
 public:
-	Offset(MessageImpl& message, ISC_USHORT aLength)
+	template <typename StatusType>
+	Offset(StatusType* status, MessageImpl& message, ISC_USHORT aLength)
 		: length(aLength)
 	{
-		message.add(*this);
+		message.add(status, *this);
 	}
 
-	void setType(Firebird::IStatus* status, Firebird::IMetadataBuilder* builder)
+	template <typename StatusType>
+	void setType(StatusType* status, Firebird::IMetadataBuilder* builder)
 	{
 		builder->setType(status, index, SQL_VARYING);
 		builder->setLength(status, index, length);
@@ -301,9 +315,10 @@ private:
 	ISC_USHORT length;
 };
 
-inline Offset<void*>::Offset(MessageImpl& message)
+template <typename StatusType>
+inline Offset<void*>::Offset(StatusType* status, MessageImpl& message)
 {
-	message.add(*this);
+	message.add(status, *this);
 }
 
 //// TODO: boolean, date, time, timestamp

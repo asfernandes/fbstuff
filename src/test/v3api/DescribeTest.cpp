@@ -41,7 +41,8 @@ BOOST_AUTO_TEST_CASE(describe)
 	{
 		const string location = FbTest::getLocation("describe.fdb");
 
-		IStatus* status = master->getStatus();
+		CheckStatusWrapper statusWrapper(master->getStatus());
+		CheckStatusWrapper* status = &statusWrapper;
 
 		IAttachment* attachment = dispatcher->createDatabase(status, location.c_str(),
 			testDpbLength[test], testDpb[test]);
@@ -110,7 +111,7 @@ BOOST_AUTO_TEST_CASE(describe)
 				unsigned length;
 				unsigned scale;
 
-				static void test(IStatus* status, IMessageMetadata* params,
+				static void test(CheckStatusWrapper* status, IMessageMetadata* params,
 					unsigned count, FieldInfo* fieldInfo)
 				{
 					BOOST_CHECK_EQUAL(params->getCount(status), count);

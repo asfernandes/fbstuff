@@ -36,7 +36,8 @@ BOOST_AUTO_TEST_CASE(affectedRecords)
 {
 	const string location = FbTest::getLocation("affectedRecords.fdb");
 
-	IStatus* status = master->getStatus();
+	CheckStatusWrapper statusWrapper(master->getStatus());
+	CheckStatusWrapper* status = &statusWrapper;
 
 	IAttachment* attachment = dispatcher->createDatabase(status, location.c_str(), 0, NULL);
 	BOOST_CHECK(checkStatus(status));

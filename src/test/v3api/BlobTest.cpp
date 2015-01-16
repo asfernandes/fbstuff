@@ -36,7 +36,8 @@ BOOST_AUTO_TEST_CASE(blob)
 {
 	const string location = FbTest::getLocation("blob.fdb");
 
-	IStatus* status = master->getStatus();
+	CheckStatusWrapper statusWrapper(master->getStatus());
+	CheckStatusWrapper* status = &statusWrapper;
 
 	IAttachment* attachment = dispatcher->createDatabase(status, location.c_str(), 0, NULL);
 	BOOST_CHECK(checkStatus(status));
@@ -72,7 +73,7 @@ BOOST_AUTO_TEST_CASE(blob)
 		{
 			FB_MESSAGE(InputType,
 				(FB_BLOB, b1)
-			) input(master);
+			) input(status, master);
 
 			input.clear();
 			IBlob* blob = attachment->createBlob(status, transaction, &input->b1, 0, NULL);
@@ -101,7 +102,7 @@ BOOST_AUTO_TEST_CASE(blob)
 
 			FB_MESSAGE(OutputType,
 				(FB_BLOB, b1)
-			) output(master);
+			) output(status, master);
 
 			IResultSet* rs = stmt->openCursor(status, transaction, NULL, NULL,
 				output.getMetadata());

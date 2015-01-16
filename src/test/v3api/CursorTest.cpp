@@ -34,7 +34,8 @@ BOOST_AUTO_TEST_CASE(cursor)
 {
 	const string location = FbTest::getLocation("cursor.fdb");
 
-	IStatus* status = master->getStatus();
+	CheckStatusWrapper statusWrapper(master->getStatus());
+	CheckStatusWrapper* status = &statusWrapper;
 
 	IAttachment* attachment = dispatcher->createDatabase(status, location.c_str(), 0, NULL);
 	BOOST_CHECK(checkStatus(status));
@@ -117,14 +118,14 @@ BOOST_AUTO_TEST_CASE(cursor)
 
 	FB_MESSAGE(Output1,
 		(FB_INTEGER, n)
-	) output1(master);
+	) output1(status, master);
 
 	FB_MESSAGE(Output2,
 		(FB_INTEGER, n1)
 		(FB_INTEGER, n2)
 		(FB_INTEGER, n3)
 		(FB_INTEGER, n4)
-	) output2(master);
+	) output2(status, master);
 
 	{
 		output2->n1 = output2->n2 = output2->n3 = output2->n4 = 0;
@@ -224,7 +225,8 @@ BOOST_AUTO_TEST_CASE(ddlFetch)
 {
 	const string location = FbTest::getLocation("ddlFetch.fdb");
 
-	IStatus* status = master->getStatus();
+	CheckStatusWrapper statusWrapper(master->getStatus());
+	CheckStatusWrapper* status = &statusWrapper;
 
 	IAttachment* attachment = dispatcher->createDatabase(status, location.c_str(), 0, NULL);
 	BOOST_CHECK(checkStatus(status));

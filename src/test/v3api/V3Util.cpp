@@ -46,9 +46,10 @@ void getEngineVersion(Firebird::IAttachment* attachment, unsigned* major, unsign
 	static const ISC_UCHAR ITEMS[] = {isc_info_firebird_version};
 	ISC_UCHAR buffer[512];
 	IStatus* status = master->getStatus();
+	CheckStatusWrapper statusWrapper(status);
 
-	attachment->getInfo(status, sizeof(ITEMS), ITEMS, sizeof(buffer), buffer);
-	BOOST_VERIFY(checkStatus(status));
+	attachment->getInfo(&statusWrapper, sizeof(ITEMS), ITEMS, sizeof(buffer), buffer);
+	BOOST_VERIFY(checkStatus(&statusWrapper));
 
 	if (buffer[0] == isc_info_firebird_version)
 	{
@@ -88,8 +89,9 @@ string valueToString(IAttachment* attachment, ITransaction* transaction,
 	string s;
 
 	IStatus* status = master->getStatus();
+	CheckStatusWrapper statusWrapper(status);
 
-	switch (message.getMetadata()->getType(status, field.index))
+	switch (message.getMetadata()->getType(&statusWrapper, field.index))
 	{
 		//// TODO: scale for SQL_SHORT, SQL_LONG and SQL_INT64
 
@@ -115,24 +117,24 @@ string valueToString(IAttachment* attachment, ITransaction* transaction,
 
 		case SQL_BLOB:
 		{
-			IBlob* blob = attachment->openBlob(status, transaction,
+			IBlob* blob = attachment->openBlob(&statusWrapper, transaction,
 				static_cast<ISC_QUAD*>(p), 0, NULL);
-			BOOST_VERIFY(checkStatus(status));
+			BOOST_VERIFY(checkStatus(&statusWrapper));
 
 			string str;
 			char blobBuffer[1024];
 			int blobStatus;
 			unsigned blobLen;
 
-			while ((blobStatus = blob->getSegment(status, sizeof(blobBuffer),
+			while ((blobStatus = blob->getSegment(&statusWrapper, sizeof(blobBuffer),
 									blobBuffer, &blobLen)) == IStatus::FB_OK ||
 				   blobStatus == IStatus::FB_SEGMENT)
 			{
 				str.append(blobBuffer, blobLen);
 			}
 
-			blob->close(status);
-			BOOST_VERIFY(checkStatus(status));
+			blob->close(&statusWrapper);
+			BOOST_VERIFY(checkStatus(&statusWrapper));
 
 			s = str;
 			break;
