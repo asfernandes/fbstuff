@@ -56,16 +56,16 @@ BOOST_AUTO_TEST_CASE(multiDbTrans)
 
 		if (i == 0)
 		{
-			IDtcStart* transactionParameters = dtc->startBuilder(status);
+			IDtcStart* dtcStart = dtc->startBuilder(status);
 			BOOST_CHECK(checkStatus(status));
-			BOOST_REQUIRE(transactionParameters);
+			BOOST_REQUIRE(dtcStart);
 
-			transactionParameters->setComponent(status, attachment1);
+			dtcStart->addAttachment(status, attachment1);
 			BOOST_CHECK(checkStatus(status));
-			transactionParameters->setComponent(status, attachment2);
+			dtcStart->addAttachment(status, attachment2);
 			BOOST_CHECK(checkStatus(status));
 
-			transaction = dtc->start(status, transactionParameters);
+			transaction = dtcStart->start(status);
 		}
 		else
 		{
