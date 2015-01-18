@@ -182,11 +182,11 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 			BOOST_CHECK(checkStatus(status));
 			BOOST_REQUIRE(stmt);
 
-			FB_MESSAGE(Input,
+			FB_MESSAGE(Input, CheckStatusWrapper,
 				(FB_INTEGER, systemFlag)
 			) input(status, master);
 
-			FB_MESSAGE(Output,
+			FB_MESSAGE(Output, CheckStatusWrapper,
 				(FB_SMALLINT, relationId)
 				(FB_VARCHAR(31), relationName)
 				(FB_VARCHAR(100), description)
@@ -382,11 +382,11 @@ BOOST_AUTO_TEST_CASE(staticMessage2)
 		BOOST_CHECK(checkStatus(status));
 		BOOST_REQUIRE(stmt);
 
-		FB_MESSAGE(Input,
+		FB_MESSAGE(Input, CheckStatusWrapper,
 			(FB_VARCHAR(10 * 4), c)
 		) input(status, master);
 
-		FB_MESSAGE(Output,
+		FB_MESSAGE(Output, CheckStatusWrapper,
 			(FB_INTEGER, n)
 		) output(status, master);
 
@@ -469,7 +469,7 @@ BOOST_AUTO_TEST_CASE(staticMessage3)	// test for CORE-4184
 		BOOST_CHECK(checkStatus(status));
 	}
 
-	FB_MESSAGE(Message,
+	FB_MESSAGE(Message, CheckStatusWrapper,
 		(FB_INTEGER, n)
 	) input(status, master), output(status, master);
 

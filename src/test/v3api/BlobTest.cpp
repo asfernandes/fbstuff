@@ -71,7 +71,7 @@ BOOST_AUTO_TEST_CASE(blob)
 		BOOST_REQUIRE(stmt);
 
 		{
-			FB_MESSAGE(InputType,
+			FB_MESSAGE(InputType, CheckStatusWrapper,
 				(FB_BLOB, b1)
 			) input(status, master);
 
@@ -100,7 +100,7 @@ BOOST_AUTO_TEST_CASE(blob)
 				"select b1 from test", FbTest::DIALECT, 0);
 			BOOST_CHECK(checkStatus(status));
 
-			FB_MESSAGE(OutputType,
+			FB_MESSAGE(OutputType, CheckStatusWrapper,
 				(FB_BLOB, b1)
 			) output(status, master);
 

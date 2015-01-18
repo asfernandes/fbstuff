@@ -23,12 +23,12 @@
 
 
 FB_UDR_BEGIN_PROCEDURE(gen_rows_message)
-	FB_MESSAGE(InMessage,
+	FB_UDR_MESSAGE(InMessage,
 		(FB_INTEGER, start)
 		(FB_INTEGER, end)
 	);
 
-	FB_MESSAGE(OutMessage,
+	FB_UDR_MESSAGE(OutMessage,
 		(FB_INTEGER, result)
 	);
 
@@ -46,12 +46,12 @@ FB_UDR_END_PROCEDURE
 
 
 FB_UDR_BEGIN_PROCEDURE(gen_rows_message_5c)
-	FB_MESSAGE(InMessage,
+	FB_UDR_MESSAGE(InMessage,
 		(FB_INTEGER, start)
 		(FB_INTEGER, end)
 	);
 
-	FB_MESSAGE(OutMessage,
+	FB_UDR_MESSAGE(OutMessage,
 		(FB_INTEGER, result1)
 		(FB_INTEGER, result2)
 		(FB_INTEGER, result3)
@@ -74,12 +74,12 @@ FB_UDR_END_PROCEDURE
 
 
 FB_UDR_BEGIN_PROCEDURE(copy_message)
-	FB_MESSAGE(InMessage,
+	FB_UDR_MESSAGE(InMessage,
 		(FB_INTEGER, count)
 		(FB_VARCHAR(20), input)
 	);
 
-	FB_MESSAGE(OutMessage,
+	FB_UDR_MESSAGE(OutMessage,
 		(FB_VARCHAR(20), output)
 	);
 
@@ -97,12 +97,12 @@ FB_UDR_END_PROCEDURE
 
 
 FB_UDR_BEGIN_PROCEDURE(copy_message_5c)
-	FB_MESSAGE(InMessage,
+	FB_UDR_MESSAGE(InMessage,
 		(FB_INTEGER, count)
 		(FB_VARCHAR(20), input)
 	);
 
-	FB_MESSAGE(OutMessage,
+	FB_UDR_MESSAGE(OutMessage,
 		(FB_VARCHAR(20), output1)
 		(FB_VARCHAR(20), output2)
 		(FB_VARCHAR(20), output3)

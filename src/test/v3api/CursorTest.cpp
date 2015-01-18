@@ -116,11 +116,11 @@ BOOST_AUTO_TEST_CASE(cursor)
 	BOOST_CHECK(checkStatus(status));
 	BOOST_REQUIRE(stmt5);
 
-	FB_MESSAGE(Output1,
+	FB_MESSAGE(Output1, CheckStatusWrapper,
 		(FB_INTEGER, n)
 	) output1(status, master);
 
-	FB_MESSAGE(Output2,
+	FB_MESSAGE(Output2, CheckStatusWrapper,
 		(FB_INTEGER, n1)
 		(FB_INTEGER, n2)
 		(FB_INTEGER, n3)
