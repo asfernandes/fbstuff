@@ -512,7 +512,7 @@ BOOST_AUTO_TEST_CASE(staticMessage3)	// test for CORE-4184
 			}
 			else
 			{
-				BOOST_CHECK(!rs->fetchNext(status, output.getData()) == IStatus::FB_OK);
+				BOOST_CHECK(rs->fetchNext(status, output.getData()) != IStatus::FB_OK);
 				BOOST_CHECK(!checkStatus(status));
 				BOOST_CHECK_EQUAL(status->getErrors()[1] , isc_not_valid_for_var);
 			}

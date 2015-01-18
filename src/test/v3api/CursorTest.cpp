@@ -155,7 +155,7 @@ BOOST_AUTO_TEST_CASE(cursor)
 		BOOST_CHECK(checkStatus(status));
 		BOOST_CHECK(output2->n1 == 30 && output2->n2 == 30);
 
-		BOOST_CHECK(!rs1->fetchNext(status, output1.getData()) == IStatus::FB_OK);
+		BOOST_CHECK(rs1->fetchNext(status, output1.getData()) != IStatus::FB_OK);
 
 		rs1->close(status);
 		BOOST_CHECK(checkStatus(status));
@@ -193,7 +193,7 @@ BOOST_AUTO_TEST_CASE(cursor)
 		BOOST_CHECK(rs1->fetchNext(status, output1.getData()) == IStatus::FB_OK);
 		BOOST_CHECK(output1->n == 2000);
 
-		BOOST_CHECK(!rs1->fetchNext(status, output1.getData()) == IStatus::FB_OK);
+		BOOST_CHECK(rs1->fetchNext(status, output1.getData()) != IStatus::FB_OK);
 
 		rs1->close(status);
 		BOOST_CHECK(checkStatus(status));
