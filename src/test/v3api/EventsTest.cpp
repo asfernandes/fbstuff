@@ -81,82 +81,82 @@ namespace
 
 		IAttachment* attachment;
 	};
+
+	class Event : public IEventCallbackImpl<Event, CheckStatusWrapper>
+	{
+	public:
+		Event(IAttachment* aAttachment, volatile int* aCounter)
+			: refCounter(1),
+			  attachment(aAttachment),
+			  counter(aCounter),
+			  statusWrapper(master->getStatus()),
+			  status(&statusWrapper)
+		{
+			eveLen = isc_event_block(&eveBuffer, &eveResult, 1, "EVENT1");
+
+			// Make isc_wait_for_event wait instead of return counters before no event was happened.
+			eveBuffer[eveLen - 4] = 1;
+
+			mut.lock();
+
+			events = attachment->queEvents(status, this, eveLen, eveBuffer);
+			BOOST_CHECK(checkStatus(status));
+		}
+
+		~Event()
+		{
+			events->cancel(status);
+			BOOST_CHECK(checkStatus(status));
+
+			status->dispose();
+
+			isc_free((char*) eveBuffer);
+			isc_free((char*) eveResult);
+		}
+
+		virtual IPluginModule* getModule()
+		{
+			return NULL;
+		}
+
+		virtual void addRef()
+		{
+			++refCounter;
+		}
+
+		virtual int release()
+		{
+			if (--refCounter == 0)
+				delete this;
+
+			return refCounter;
+		}
+
+		virtual void eventCallbackFunction(unsigned int length, const ISC_UCHAR* events)
+		{
+			ISC_ULONG increment = 0;
+			isc_event_counts(&increment, eveLen, eveBuffer, events);
+
+			*counter += increment;
+			mut.unlock();
+		}
+
+		int refCounter;
+
+		IAttachment* attachment;
+		volatile int* counter;
+
+		CheckStatusWrapper statusWrapper;
+		CheckStatusWrapper* status;
+		IEvents* events;
+		unsigned char* eveBuffer;
+		unsigned char* eveResult;
+		unsigned eveLen;
+
+		mutex mut;
+	};
 }
 
-
-class Event : public IEventCallbackImpl<Event, CheckStatusWrapper>
-{
-public:
-	Event(IAttachment* aAttachment, volatile int* aCounter)
-		: refCounter(1),
-		  attachment(aAttachment),
-		  counter(aCounter),
-		  statusWrapper(master->getStatus()),
-		  status(&statusWrapper)
-	{
-		eveLen = isc_event_block(&eveBuffer, &eveResult, 1, "EVENT1");
-
-		// Make isc_wait_for_event wait instead of return counters before no event was happened.
-		eveBuffer[eveLen - 4] = 1;
-
-		mut.lock();
-
-		events = attachment->queEvents(status, this, eveLen, eveBuffer);
-		BOOST_CHECK(checkStatus(status));
-	}
-
-	~Event()
-	{
-		events->cancel(status);
-		BOOST_CHECK(checkStatus(status));
-
-		status->dispose();
-
-		isc_free((char*) eveBuffer);
-		isc_free((char*) eveResult);
-	}
-
-	virtual IPluginModule* getModule()
-	{
-		return NULL;
-	}
-
-	virtual void addRef()
-	{
-		++refCounter;
-	}
-
-	virtual int release()
-	{
-		if (--refCounter == 0)
-			delete this;
-
-		return refCounter;
-	}
-
-	virtual void eventCallbackFunction(unsigned int length, const ISC_UCHAR* events)
-	{
-		ISC_ULONG increment = 0;
-		isc_event_counts(&increment, eveLen, eveBuffer, events);
-
-		*counter += increment;
-		mut.unlock();
-	}
-
-	int refCounter;
-
-	IAttachment* attachment;
-	volatile int* counter;
-
-	CheckStatusWrapper statusWrapper;
-	CheckStatusWrapper* status;
-	IEvents* events;
-	unsigned char* eveBuffer;
-	unsigned char* eveResult;
-	unsigned eveLen;
-
-	mutex mut;
-};
 
 BOOST_AUTO_TEST_CASE(events)
 {

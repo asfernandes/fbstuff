@@ -105,7 +105,7 @@ BOOST_AUTO_TEST_CASE(blob)
 			) output(status, master);
 
 			IResultSet* rs = stmt->openCursor(status, transaction, NULL, NULL,
-				output.getMetadata());
+				output.getMetadata(), 0);
 			BOOST_CHECK(checkStatus(status));
 
 			BOOST_CHECK(rs->fetchNext(status, output.getData()) != 100);
@@ -127,7 +127,7 @@ BOOST_AUTO_TEST_CASE(blob)
 				}
 				else
 				{
-					BOOST_CHECK(len == 0 && blobStatus == IStatus::FB_EOF);
+					BOOST_CHECK(len == 0 && blobStatus == IStatus::RESULT_NO_DATA);
 					break;
 				}
 			}

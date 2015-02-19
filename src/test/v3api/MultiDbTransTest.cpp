@@ -107,11 +107,12 @@ BOOST_AUTO_TEST_CASE(multiDbTrans)
 
 			Offset<ISC_QUAD> blobField(status, outMessage);
 
-			IResultSet* rs = stmt->openCursor(status, transaction, NULL, NULL, outMessage.getMetadata());
+			IResultSet* rs = stmt->openCursor(status, transaction, NULL, NULL,
+				outMessage.getMetadata(), 0);
 			BOOST_CHECK(checkStatus(status));
 			BOOST_REQUIRE(rs);
 
-			BOOST_REQUIRE(rs->fetchNext(status, outMessage.getBuffer()) == IStatus::FB_OK);
+			BOOST_REQUIRE(rs->fetchNext(status, outMessage.getBuffer()) == IStatus::RESULT_OK);
 			BOOST_CHECK(checkStatus(status));
 
 			string blobStr;
@@ -127,8 +128,8 @@ BOOST_AUTO_TEST_CASE(multiDbTrans)
 				unsigned blobLen;
 
 				while ((blobStatus = blob->getSegment(status, sizeof(blobBuffer),
-										blobBuffer, &blobLen)) == IStatus::FB_OK ||
-					   blobStatus == IStatus::FB_SEGMENT)
+										blobBuffer, &blobLen)) == IStatus::RESULT_OK ||
+					   blobStatus == IStatus::RESULT_SEGMENT)
 				{
 					blobStr.append(blobBuffer, blobLen);
 				}

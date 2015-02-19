@@ -107,7 +107,7 @@ BOOST_AUTO_TEST_CASE(dynamicMessage)
 		*static_cast<ISC_SHORT*>(inMessage[systemFlagParam]) = 0;
 
 		IResultSet* rs = stmt->openCursor(status, transaction,
-			inMessage.getMetadata(), inMessage.getBuffer(), outMessage.getMetadata());
+			inMessage.getMetadata(), inMessage.getBuffer(), outMessage.getMetadata(), 0);
 		BOOST_CHECK(checkStatus(status));
 		BOOST_REQUIRE(rs);
 

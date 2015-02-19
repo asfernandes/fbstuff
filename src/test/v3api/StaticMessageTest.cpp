@@ -113,14 +113,14 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 			inMessage[systemFlagParam] = 0;
 
 			IResultSet* rs = stmt->openCursor(status, transaction,
-				inMessage.getMetadata(), inMessage.getBuffer(), outMessage.getMetadata());
+				inMessage.getMetadata(), inMessage.getBuffer(), outMessage.getMetadata(), 0);
 			BOOST_CHECK(checkStatus(status));
 			BOOST_REQUIRE(rs);
 
 			int pos = 0;
 			int ret;
 
-			while ((ret = rs->fetchNext(status, outMessage.getBuffer())) == IStatus::FB_OK)
+			while ((ret = rs->fetchNext(status, outMessage.getBuffer())) == IStatus::RESULT_OK)
 			{
 				BOOST_CHECK(checkStatus(status));
 
@@ -137,8 +137,8 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 					unsigned blobLen;
 
 					while ((blobStatus = blob->getSegment(status, sizeof(blobBuffer),
-											blobBuffer, &blobLen)) == IStatus::FB_OK ||
-						   blobStatus == IStatus::FB_SEGMENT)
+											blobBuffer, &blobLen)) == IStatus::RESULT_OK ||
+						   blobStatus == IStatus::RESULT_SEGMENT)
 					{
 						descriptionStr.append(blobBuffer, blobLen);
 					}
@@ -196,14 +196,14 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 			input->systemFlag = 0;
 
 			IResultSet* rs = stmt->openCursor(status, transaction,
-				input.getMetadata(), input.getData(), output.getMetadata());
+				input.getMetadata(), input.getData(), output.getMetadata(), 0);
 			BOOST_CHECK(checkStatus(status));
 			BOOST_REQUIRE(rs);
 
 			int pos = 0;
 			int ret;
 
-			while ((ret = rs->fetchNext(status, output.getData())) == IStatus::FB_OK)
+			while ((ret = rs->fetchNext(status, output.getData())) == IStatus::RESULT_OK)
 			{
 				BOOST_CHECK(checkStatus(status));
 
@@ -263,14 +263,14 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 			inMessage[systemFlagParam].length = 1;
 
 			IResultSet* rs = stmt->openCursor(status, transaction,
-				inMessage.getMetadata(), inMessage.getBuffer(), outMessage.getMetadata());
+				inMessage.getMetadata(), inMessage.getBuffer(), outMessage.getMetadata(), 0);
 			BOOST_CHECK(checkStatus(status));
 			BOOST_REQUIRE(rs);
 
 			int pos = 0;
 			int ret;
 
-			while ((ret = rs->fetchNext(status, outMessage.getBuffer())) == IStatus::FB_OK)
+			while ((ret = rs->fetchNext(status, outMessage.getBuffer())) == IStatus::RESULT_OK)
 			{
 				BOOST_CHECK(checkStatus(status));
 
@@ -327,8 +327,8 @@ BOOST_AUTO_TEST_CASE(staticMessage)
 				unsigned blobLen;
 
 				while ((blobStatus = blob->getSegment(status, sizeof(blobBuffer),
-										blobBuffer, &blobLen)) == IStatus::FB_OK ||
-					   blobStatus == IStatus::FB_SEGMENT)
+										blobBuffer, &blobLen)) == IStatus::RESULT_OK ||
+					   blobStatus == IStatus::RESULT_SEGMENT)
 				{
 					msg.append(blobBuffer, blobLen);
 				}
@@ -394,11 +394,11 @@ BOOST_AUTO_TEST_CASE(staticMessage2)
 		input->c.set("123áé456");
 
 		IResultSet* rs = stmt->openCursor(status, transaction,
-			input.getMetadata(), input.getData(), output.getMetadata());
+			input.getMetadata(), input.getData(), output.getMetadata(), 0);
 		BOOST_CHECK(checkStatus(status));
 		BOOST_REQUIRE(rs);
 
-		bool ret = rs->fetchNext(status, output.getData()) == IStatus::FB_OK;
+		bool ret = rs->fetchNext(status, output.getData()) == IStatus::RESULT_OK;
 		BOOST_CHECK(checkStatus(status) && ret);
 
 		BOOST_CHECK_EQUAL(output->n, 8);	// CORE-3737
@@ -408,10 +408,10 @@ BOOST_AUTO_TEST_CASE(staticMessage2)
 
 		input->cNull = 1;
 		rs = stmt->openCursor(status, transaction,
-			input.getMetadata(), input.getData(), output.getMetadata());
+			input.getMetadata(), input.getData(), output.getMetadata(), 0);
 
 		if (rs)	// remote
-			BOOST_CHECK(rs->fetchNext(status, output.getData()) == IStatus::FB_ERROR);
+			BOOST_CHECK(rs->fetchNext(status, output.getData()) == IStatus::RESULT_ERROR);
 
 		BOOST_CHECK(!checkStatus(status) && status->getErrors()[1] == isc_not_valid_for_var);
 
@@ -501,18 +501,18 @@ BOOST_AUTO_TEST_CASE(staticMessage3)	// test for CORE-4184
 			output.clear();
 
 			IResultSet* rs = stmt->openCursor(status, transaction,
-				input.getMetadata(), input.getData(), output.getMetadata());
+				input.getMetadata(), input.getData(), output.getMetadata(), 0);
 			BOOST_CHECK(checkStatus(status));
 
 			if (i == 0)
 			{
-				BOOST_CHECK(rs->fetchNext(status, output.getData()) == IStatus::FB_OK);
+				BOOST_CHECK(rs->fetchNext(status, output.getData()) == IStatus::RESULT_OK);
 				BOOST_CHECK(checkStatus(status));
 				BOOST_CHECK_EQUAL(output->n, input->n);
 			}
 			else
 			{
-				BOOST_CHECK(rs->fetchNext(status, output.getData()) != IStatus::FB_OK);
+				BOOST_CHECK(rs->fetchNext(status, output.getData()) != IStatus::RESULT_OK);
 				BOOST_CHECK(!checkStatus(status));
 				BOOST_CHECK_EQUAL(status->getErrors()[1] , isc_not_valid_for_var);
 			}
@@ -541,10 +541,10 @@ BOOST_AUTO_TEST_CASE(staticMessage3)	// test for CORE-4184
 			output.clear();
 
 			IResultSet* rs = stmt->openCursor(status, transaction,
-				input.getMetadata(), input.getData(), output.getMetadata());
+				input.getMetadata(), input.getData(), output.getMetadata(), 0);
 			BOOST_CHECK(checkStatus(status));
 
-			BOOST_CHECK(rs->fetchNext(status, output.getData()) != IStatus::FB_OK);
+			BOOST_CHECK(rs->fetchNext(status, output.getData()) != IStatus::RESULT_OK);
 
 			if (i == 0 || version == 300)
 				BOOST_CHECK(checkStatus(status));

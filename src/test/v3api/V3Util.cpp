@@ -37,7 +37,7 @@ IProvider* dispatcher = master->getDispatcher();
 
 bool checkStatus(IStatus* status)
 {
-	return !(status->getStatus() & IStatus::FB_HAS_ERRORS);
+	return !(status->getState() & IStatus::STATE_ERRORS);
 }
 
 void getEngineVersion(Firebird::IAttachment* attachment, unsigned* major, unsigned* minor,
@@ -127,8 +127,8 @@ string valueToString(IAttachment* attachment, ITransaction* transaction,
 			unsigned blobLen;
 
 			while ((blobStatus = blob->getSegment(&statusWrapper, sizeof(blobBuffer),
-									blobBuffer, &blobLen)) == IStatus::FB_OK ||
-				   blobStatus == IStatus::FB_SEGMENT)
+									blobBuffer, &blobLen)) == IStatus::RESULT_OK ||
+				   blobStatus == IStatus::RESULT_SEGMENT)
 			{
 				str.append(blobBuffer, blobLen);
 			}
