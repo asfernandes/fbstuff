@@ -20,6 +20,7 @@
 #include "V3Util.h"
 #include <string>
 #include <boost/test/unit_test.hpp>
+#include <boost/atomic.hpp>
 #include <boost/thread.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/locks.hpp>
@@ -27,6 +28,7 @@
 using namespace V3Util;
 using namespace Firebird;
 using std::string;
+using boost::atomic;
 using boost::thread;
 using boost::mutex;
 using boost::lock_guard;
@@ -94,7 +96,7 @@ namespace
 		{
 			eveLen = isc_event_block(&eveBuffer, &eveResult, 1, "EVENT1");
 
-			// Make isc_wait_for_event wait instead of return counters before no event was happened.
+			// Make queEvents wait instead of return counters before no event was happened.
 			eveBuffer[eveLen - 4] = 1;
 
 			mut.lock();
@@ -105,8 +107,11 @@ namespace
 
 		~Event()
 		{
-			events->cancel(status);
-			BOOST_CHECK(checkStatus(status));
+			if (events)
+			{
+				events->cancel(status);
+				BOOST_CHECK(checkStatus(status));
+			}
 
 			status->dispose();
 
@@ -127,9 +132,12 @@ namespace
 		virtual int release()
 		{
 			if (--refCounter == 0)
+			{
 				delete this;
-
-			return refCounter;
+				return 0;
+			}
+			else
+				return 1;
 		}
 
 		virtual void eventCallbackFunction(unsigned int length, const ISC_UCHAR* events)
@@ -141,7 +149,7 @@ namespace
 			mut.unlock();
 		}
 
-		int refCounter;
+		atomic<int> refCounter;
 
 		IAttachment* attachment;
 		volatile int* counter;
