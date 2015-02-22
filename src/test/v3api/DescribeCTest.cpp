@@ -18,7 +18,7 @@
  */
 
 #include <ibase.h>
-#include "gen/FbCApi.c"
+#include "../../gen/FbCApi.c"
 #include "../FbTest.h"
 #include <string>
 #include <boost/test/unit_test.hpp>
