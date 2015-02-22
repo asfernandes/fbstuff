@@ -69,6 +69,7 @@ $(BIN_DIR)/fbtest: \
 	$(OBJ_DIR)/test/v3api/BlobTest.o \
 	$(OBJ_DIR)/test/v3api/CursorTest.o \
 	$(OBJ_DIR)/test/v3api/DescribeTest.o \
+	$(OBJ_DIR)/test/v3api/DescribeCTest.o \
 	$(OBJ_DIR)/test/v3api/DynamicMessageTest.o \
 	$(OBJ_DIR)/test/v3api/EventsTest.o \
 	$(OBJ_DIR)/test/v3api/MultiDbTransTest.o \
