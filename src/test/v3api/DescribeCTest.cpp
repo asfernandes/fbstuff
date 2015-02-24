@@ -23,15 +23,15 @@
 #include <string>
 #include <boost/test/unit_test.hpp>
 
-extern "C" struct Master* fb_get_master_interface();
+extern "C" struct FB_IMaster* fb_get_master_interface();
 
 using std::string;
 
 //------------------------------------------------------------------------------
 
-static bool checkStatus(Status* status)
+static bool checkStatus(FB_IStatus* status)
 {
-	return !(Status_getState(status) & Status_STATE_ERRORS);
+	return !(FB_IStatus_getState(status) & FB_IStatus_STATE_ERRORS);
 }
 
 //------------------------------------------------------------------------------
@@ -46,21 +46,21 @@ BOOST_AUTO_TEST_CASE(describeC)
 	unsigned testSubType[2] = {3, 2};
 	unsigned testLength[2] = {31 * 3, 31};
 
-	Master* master = fb_get_master_interface();
-	Provider* dispatcher = Master_getDispatcher(master);
+	FB_IMaster* master = fb_get_master_interface();
+	FB_IProvider* dispatcher = FB_IMaster_getDispatcher(master);
 
 	for (unsigned test = 0; test < 2; ++test)
 	{
 		const string location = FbTest::getLocation("describe.fdb");
 
-		Status* status = Master_getStatus(master);
+		FB_IStatus* status = FB_IMaster_getStatus(master);
 
-		Attachment* attachment = Provider_createDatabase(dispatcher, status, location.c_str(),
+		FB_IAttachment* attachment = FB_IProvider_createDatabase(dispatcher, status, location.c_str(),
 			testDpbLength[test], testDpb[test]);
 		BOOST_CHECK(checkStatus(status));
 		BOOST_REQUIRE(attachment);
 
-		Transaction* transaction = Attachment_startTransaction(attachment, status, 0, NULL);
+		FB_ITransaction* transaction = FB_IAttachment_startTransaction(attachment, status, 0, NULL);
 		BOOST_CHECK(checkStatus(status));
 		BOOST_REQUIRE(transaction);
 
@@ -69,25 +69,25 @@ BOOST_AUTO_TEST_CASE(describeC)
 		{
 			bool prefetch = (i == 0);
 
-			Statement* stmt = Attachment_prepare(attachment, status, transaction, 0,
+			FB_IStatement* stmt = FB_IAttachment_prepare(attachment, status, transaction, 0,
 				"select rdb$relation_id relid, rdb$character_set_name csname"
 				"  from rdb$database"
 				"  where rdb$relation_id < ?",
-				FbTest::DIALECT, (prefetch ? Statement_PREPARE_PREFETCH_ALL : 0));
+				FbTest::DIALECT, (prefetch ? FB_IStatement_PREPARE_PREFETCH_ALL : 0));
 			BOOST_CHECK(checkStatus(status));
 			BOOST_REQUIRE(stmt);
 
-			unsigned type = Statement_getType(stmt, status);
+			unsigned type = FB_IStatement_getType(stmt, status);
 			BOOST_CHECK(checkStatus(status));
 
-			string legacyPlan = Statement_getPlan(stmt, status, false);
+			string legacyPlan = FB_IStatement_getPlan(stmt, status, false);
 			BOOST_CHECK(checkStatus(status));
 
-			MessageMetadata* inputParams = Statement_getInputMetadata(stmt, status);
+			FB_IMessageMetadata* inputParams = FB_IStatement_getInputMetadata(stmt, status);
 			BOOST_CHECK(checkStatus(status));
 			BOOST_REQUIRE(inputParams);
 
-			MessageMetadata* outputParams = Statement_getOutputMetadata(stmt, status);
+			FB_IMessageMetadata* outputParams = FB_IStatement_getOutputMetadata(stmt, status);
 			BOOST_CHECK(checkStatus(status));
 			BOOST_REQUIRE(outputParams);
 
@@ -108,39 +108,39 @@ BOOST_AUTO_TEST_CASE(describeC)
 				unsigned length;
 				unsigned scale;
 
-				static void test(Status* status, MessageMetadata* params,
+				static void test(FB_IStatus* status, FB_IMessageMetadata* params,
 					unsigned count, FieldInfo* fieldInfo)
 				{
-					BOOST_CHECK_EQUAL(MessageMetadata_getCount(params, status), count);
+					BOOST_CHECK_EQUAL(FB_IMessageMetadata_getCount(params, status), count);
 					BOOST_CHECK(checkStatus(status));
 
 					for (unsigned i = 0; i < count; ++i)
 					{
-						BOOST_CHECK_EQUAL(MessageMetadata_getField(params, status, i), fieldInfo[i].field);
+						BOOST_CHECK_EQUAL(FB_IMessageMetadata_getField(params, status, i), fieldInfo[i].field);
 						BOOST_CHECK(checkStatus(status));
 
-						BOOST_CHECK_EQUAL(MessageMetadata_getRelation(params, status, i), fieldInfo[i].relation);
+						BOOST_CHECK_EQUAL(FB_IMessageMetadata_getRelation(params, status, i), fieldInfo[i].relation);
 						BOOST_CHECK(checkStatus(status));
 
-						BOOST_CHECK_EQUAL(MessageMetadata_getOwner(params, status, i), fieldInfo[i].owner);
+						BOOST_CHECK_EQUAL(FB_IMessageMetadata_getOwner(params, status, i), fieldInfo[i].owner);
 						BOOST_CHECK(checkStatus(status));
 
-						BOOST_CHECK_EQUAL(MessageMetadata_getAlias(params, status, i), fieldInfo[i].alias);
+						BOOST_CHECK_EQUAL(FB_IMessageMetadata_getAlias(params, status, i), fieldInfo[i].alias);
 						BOOST_CHECK(checkStatus(status));
 
-						BOOST_CHECK_EQUAL(MessageMetadata_getType(params, status, i), fieldInfo[i].type);
+						BOOST_CHECK_EQUAL(FB_IMessageMetadata_getType(params, status, i), fieldInfo[i].type);
 						BOOST_CHECK(checkStatus(status));
 
-						BOOST_CHECK_EQUAL(MessageMetadata_isNullable(params, status, i), fieldInfo[i].nullable);
+						BOOST_CHECK_EQUAL(FB_IMessageMetadata_isNullable(params, status, i), fieldInfo[i].nullable);
 						BOOST_CHECK(checkStatus(status));
 
-						BOOST_CHECK_EQUAL(MessageMetadata_getCharSet(params, status, i), fieldInfo[i].charSet);
+						BOOST_CHECK_EQUAL(FB_IMessageMetadata_getCharSet(params, status, i), fieldInfo[i].charSet);
 						BOOST_CHECK(checkStatus(status));
 
-						BOOST_CHECK_EQUAL(MessageMetadata_getLength(params, status, i), fieldInfo[i].length);
+						BOOST_CHECK_EQUAL(FB_IMessageMetadata_getLength(params, status, i), fieldInfo[i].length);
 						BOOST_CHECK(checkStatus(status));
 
-						BOOST_CHECK_EQUAL(MessageMetadata_getScale(params, status, i), fieldInfo[i].scale);
+						BOOST_CHECK_EQUAL(FB_IMessageMetadata_getScale(params, status, i), fieldInfo[i].scale);
 						BOOST_CHECK(checkStatus(status));
 					}
 				}
@@ -161,23 +161,23 @@ BOOST_AUTO_TEST_CASE(describeC)
 
 			FieldInfo::test(status, outputParams, sizeof(outputInfo) / sizeof(outputInfo[0]), outputInfo);
 
-			MessageMetadata_release(outputParams);
-			MessageMetadata_release(inputParams);
+			FB_IMessageMetadata_release(outputParams);
+			FB_IMessageMetadata_release(inputParams);
 
-			Statement_free(stmt, status);
+			FB_IStatement_free(stmt, status);
 			BOOST_CHECK(checkStatus(status));
 		}
 
-		Transaction_commit(transaction, status);
+		FB_ITransaction_commit(transaction, status);
 		BOOST_CHECK(checkStatus(status));
 
-		Attachment_dropDatabase(attachment, status);
+		FB_IAttachment_dropDatabase(attachment, status);
 		BOOST_CHECK(checkStatus(status));
 
-		Status_dispose(status);
+		FB_IStatus_dispose(status);
 	}
 
-	Provider_release(dispatcher);
+	FB_IProvider_release(dispatcher);
 }
 
 

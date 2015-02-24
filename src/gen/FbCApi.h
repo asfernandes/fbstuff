@@ -14,2545 +14,2545 @@
 #endif
 
 
-struct Versioned;
-struct ReferenceCounted;
-struct Disposable;
-struct Status;
-struct Master;
-struct PluginBase;
-struct PluginSet;
-struct ConfigEntry;
-struct Config;
-struct FirebirdConf;
-struct PluginConfig;
-struct PluginFactory;
-struct PluginModule;
-struct PluginManager;
-struct CryptKey;
-struct ConfigManager;
-struct EventCallback;
-struct Blob;
-struct Transaction;
-struct MessageMetadata;
-struct MetadataBuilder;
-struct ResultSet;
-struct Statement;
-struct Request;
-struct Events;
-struct Attachment;
-struct Service;
-struct Provider;
-struct DtcStart;
-struct Dtc;
-struct Auth;
-struct Writer;
-struct ServerBlock;
-struct ClientBlock;
-struct Server;
-struct Client;
-struct UserField;
-struct CharUserField;
-struct IntUserField;
-struct User;
-struct ListUsers;
-struct LogonInfo;
-struct Management;
-struct WireCryptPlugin;
-struct CryptKeyCallback;
-struct KeyHolderPlugin;
-struct DbCryptPlugin;
-struct ExternalContext;
-struct ExternalResultSet;
-struct ExternalFunction;
-struct ExternalProcedure;
-struct ExternalTrigger;
-struct RoutineMetadata;
-struct ExternalEngine;
-struct Timer;
-struct TimerControl;
-struct VersionCallback;
-struct Util;
-struct TraceConnection;
-struct TraceDatabaseConnection;
-struct TraceTransaction;
-struct TraceParams;
-struct TraceStatement;
-struct TraceSQLStatement;
-struct TraceBLRStatement;
-struct TraceDYNRequest;
-struct TraceContextVariable;
-struct TraceProcedure;
-struct TraceFunction;
-struct TraceTrigger;
-struct TraceServiceConnection;
-struct TraceStatusVector;
-struct TraceSweepInfo;
-struct TraceLogWriter;
-struct TraceInitInfo;
-struct TracePlugin;
-struct TraceFactory;
-struct UdrFunctionFactory;
-struct UdrProcedureFactory;
-struct UdrTriggerFactory;
-struct UdrPlugin;
+struct FB_IVersioned;
+struct FB_IReferenceCounted;
+struct FB_IDisposable;
+struct FB_IStatus;
+struct FB_IMaster;
+struct FB_IPluginBase;
+struct FB_IPluginSet;
+struct FB_IConfigEntry;
+struct FB_IConfig;
+struct FB_IFirebirdConf;
+struct FB_IPluginConfig;
+struct FB_IPluginFactory;
+struct FB_IPluginModule;
+struct FB_IPluginManager;
+struct FB_ICryptKey;
+struct FB_IConfigManager;
+struct FB_IEventCallback;
+struct FB_IBlob;
+struct FB_ITransaction;
+struct FB_IMessageMetadata;
+struct FB_IMetadataBuilder;
+struct FB_IResultSet;
+struct FB_IStatement;
+struct FB_IRequest;
+struct FB_IEvents;
+struct FB_IAttachment;
+struct FB_IService;
+struct FB_IProvider;
+struct FB_IDtcStart;
+struct FB_IDtc;
+struct FB_IAuth;
+struct FB_IWriter;
+struct FB_IServerBlock;
+struct FB_IClientBlock;
+struct FB_IServer;
+struct FB_IClient;
+struct FB_IUserField;
+struct FB_ICharUserField;
+struct FB_IIntUserField;
+struct FB_IUser;
+struct FB_IListUsers;
+struct FB_ILogonInfo;
+struct FB_IManagement;
+struct FB_IWireCryptPlugin;
+struct FB_ICryptKeyCallback;
+struct FB_IKeyHolderPlugin;
+struct FB_IDbCryptPlugin;
+struct FB_IExternalContext;
+struct FB_IExternalResultSet;
+struct FB_IExternalFunction;
+struct FB_IExternalProcedure;
+struct FB_IExternalTrigger;
+struct FB_IRoutineMetadata;
+struct FB_IExternalEngine;
+struct FB_ITimer;
+struct FB_ITimerControl;
+struct FB_IVersionCallback;
+struct FB_IUtil;
+struct FB_ITraceConnection;
+struct FB_ITraceDatabaseConnection;
+struct FB_ITraceTransaction;
+struct FB_ITraceParams;
+struct FB_ITraceStatement;
+struct FB_ITraceSQLStatement;
+struct FB_ITraceBLRStatement;
+struct FB_ITraceDYNRequest;
+struct FB_ITraceContextVariable;
+struct FB_ITraceProcedure;
+struct FB_ITraceFunction;
+struct FB_ITraceTrigger;
+struct FB_ITraceServiceConnection;
+struct FB_ITraceStatusVector;
+struct FB_ITraceSweepInfo;
+struct FB_ITraceLogWriter;
+struct FB_ITraceInitInfo;
+struct FB_ITracePlugin;
+struct FB_ITraceFactory;
+struct FB_IUdrFunctionFactory;
+struct FB_IUdrProcedureFactory;
+struct FB_IUdrTriggerFactory;
+struct FB_IUdrPlugin;
 
 
-#define Versioned_VERSION 0
+#define FB_IVersioned_VERSION 0
 
-struct Versioned;
+struct FB_IVersioned;
 
-struct VersionedVTable
+struct FB_IVersionedVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
 };
 
-struct Versioned
+struct FB_IVersioned
 {
 	void* cloopDummy[1];
-	struct VersionedVTable* vtable;
+	struct FB_IVersionedVTable* vtable;
 };
 
 
-#define ReferenceCounted_VERSION 2
+#define FB_IReferenceCounted_VERSION 2
 
-struct ReferenceCounted;
+struct FB_IReferenceCounted;
 
-struct ReferenceCountedVTable
+struct FB_IReferenceCountedVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*addRef)(struct ReferenceCounted* self);
-	int (*release)(struct ReferenceCounted* self);
+	void (*addRef)(struct FB_IReferenceCounted* self);
+	int (*release)(struct FB_IReferenceCounted* self);
 };
 
-struct ReferenceCounted
+struct FB_IReferenceCounted
 {
 	void* cloopDummy[1];
-	struct ReferenceCountedVTable* vtable;
+	struct FB_IReferenceCountedVTable* vtable;
 };
 
-CLOOP_EXTERN_C void ReferenceCounted_addRef(struct ReferenceCounted* self);
-CLOOP_EXTERN_C int ReferenceCounted_release(struct ReferenceCounted* self);
+CLOOP_EXTERN_C void FB_IReferenceCounted_addRef(struct FB_IReferenceCounted* self);
+CLOOP_EXTERN_C int FB_IReferenceCounted_release(struct FB_IReferenceCounted* self);
 
-#define Disposable_VERSION 1
+#define FB_IDisposable_VERSION 1
 
-struct Disposable;
+struct FB_IDisposable;
 
-struct DisposableVTable
+struct FB_IDisposableVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*dispose)(struct Disposable* self);
+	void (*dispose)(struct FB_IDisposable* self);
 };
 
-struct Disposable
+struct FB_IDisposable
 {
 	void* cloopDummy[1];
-	struct DisposableVTable* vtable;
+	struct FB_IDisposableVTable* vtable;
 };
 
-CLOOP_EXTERN_C void Disposable_dispose(struct Disposable* self);
+CLOOP_EXTERN_C void FB_IDisposable_dispose(struct FB_IDisposable* self);
 
-#define Status_VERSION 10
+#define FB_IStatus_VERSION 10
 
-#define Status_STATE_WARNINGS ((unsigned) (1))
-#define Status_STATE_ERRORS ((unsigned) (2))
-#define Status_RESULT_ERROR ((int) (-1))
-#define Status_RESULT_OK ((int) (0))
-#define Status_RESULT_NO_DATA ((int) (1))
-#define Status_RESULT_SEGMENT ((int) (2))
+#define FB_IStatus_STATE_WARNINGS ((unsigned) (1))
+#define FB_IStatus_STATE_ERRORS ((unsigned) (2))
+#define FB_IStatus_RESULT_ERROR ((int) (-1))
+#define FB_IStatus_RESULT_OK ((int) (0))
+#define FB_IStatus_RESULT_NO_DATA ((int) (1))
+#define FB_IStatus_RESULT_SEGMENT ((int) (2))
 
-struct Status;
+struct FB_IStatus;
 
-struct StatusVTable
+struct FB_IStatusVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*dispose)(struct Status* self);
-	void (*init)(struct Status* self);
-	unsigned (*getState)(const struct Status* self);
-	void (*setErrors2)(struct Status* self, unsigned length, const intptr_t* value);
-	void (*setWarnings2)(struct Status* self, unsigned length, const intptr_t* value);
-	void (*setErrors)(struct Status* self, const intptr_t* value);
-	void (*setWarnings)(struct Status* self, const intptr_t* value);
-	const intptr_t* (*getErrors)(const struct Status* self);
-	const intptr_t* (*getWarnings)(const struct Status* self);
-	struct Status* (*clone)(const struct Status* self);
+	void (*dispose)(struct FB_IStatus* self);
+	void (*init)(struct FB_IStatus* self);
+	unsigned (*getState)(const struct FB_IStatus* self);
+	void (*setErrors2)(struct FB_IStatus* self, unsigned length, const intptr_t* value);
+	void (*setWarnings2)(struct FB_IStatus* self, unsigned length, const intptr_t* value);
+	void (*setErrors)(struct FB_IStatus* self, const intptr_t* value);
+	void (*setWarnings)(struct FB_IStatus* self, const intptr_t* value);
+	const intptr_t* (*getErrors)(const struct FB_IStatus* self);
+	const intptr_t* (*getWarnings)(const struct FB_IStatus* self);
+	struct FB_IStatus* (*clone)(const struct FB_IStatus* self);
 };
 
-struct Status
+struct FB_IStatus
 {
 	void* cloopDummy[1];
-	struct StatusVTable* vtable;
+	struct FB_IStatusVTable* vtable;
 };
 
-CLOOP_EXTERN_C void Status_dispose(struct Status* self);
-CLOOP_EXTERN_C void Status_init(struct Status* self);
-CLOOP_EXTERN_C unsigned Status_getState(const struct Status* self);
-CLOOP_EXTERN_C void Status_setErrors2(struct Status* self, unsigned length, const intptr_t* value);
-CLOOP_EXTERN_C void Status_setWarnings2(struct Status* self, unsigned length, const intptr_t* value);
-CLOOP_EXTERN_C void Status_setErrors(struct Status* self, const intptr_t* value);
-CLOOP_EXTERN_C void Status_setWarnings(struct Status* self, const intptr_t* value);
-CLOOP_EXTERN_C const intptr_t* Status_getErrors(const struct Status* self);
-CLOOP_EXTERN_C const intptr_t* Status_getWarnings(const struct Status* self);
-CLOOP_EXTERN_C struct Status* Status_clone(const struct Status* self);
+CLOOP_EXTERN_C void FB_IStatus_dispose(struct FB_IStatus* self);
+CLOOP_EXTERN_C void FB_IStatus_init(struct FB_IStatus* self);
+CLOOP_EXTERN_C unsigned FB_IStatus_getState(const struct FB_IStatus* self);
+CLOOP_EXTERN_C void FB_IStatus_setErrors2(struct FB_IStatus* self, unsigned length, const intptr_t* value);
+CLOOP_EXTERN_C void FB_IStatus_setWarnings2(struct FB_IStatus* self, unsigned length, const intptr_t* value);
+CLOOP_EXTERN_C void FB_IStatus_setErrors(struct FB_IStatus* self, const intptr_t* value);
+CLOOP_EXTERN_C void FB_IStatus_setWarnings(struct FB_IStatus* self, const intptr_t* value);
+CLOOP_EXTERN_C const intptr_t* FB_IStatus_getErrors(const struct FB_IStatus* self);
+CLOOP_EXTERN_C const intptr_t* FB_IStatus_getWarnings(const struct FB_IStatus* self);
+CLOOP_EXTERN_C struct FB_IStatus* FB_IStatus_clone(const struct FB_IStatus* self);
 
-#define Master_VERSION 12
+#define FB_IMaster_VERSION 12
 
-struct Master;
+struct FB_IMaster;
 
-struct MasterVTable
+struct FB_IMasterVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	struct Status* (*getStatus)(struct Master* self);
-	struct Provider* (*getDispatcher)(struct Master* self);
-	struct PluginManager* (*getPluginManager)(struct Master* self);
-	const char* (*circularAlloc)(struct Master* self, const char* s, unsigned len, intptr_t thr);
-	struct TimerControl* (*getTimerControl)(struct Master* self);
-	struct Dtc* (*getDtc)(struct Master* self);
-	struct Attachment* (*registerAttachment)(struct Master* self, struct Provider* provider, struct Attachment* attachment);
-	struct Transaction* (*registerTransaction)(struct Master* self, struct Attachment* attachment, struct Transaction* transaction);
-	struct MetadataBuilder* (*getMetadataBuilder)(struct Master* self, struct Status* status, unsigned fieldCount);
-	int (*serverMode)(struct Master* self, int mode);
-	struct Util* (*getUtilInterface)(struct Master* self);
-	struct ConfigManager* (*getConfigManager)(struct Master* self);
+	struct FB_IStatus* (*getStatus)(struct FB_IMaster* self);
+	struct FB_IProvider* (*getDispatcher)(struct FB_IMaster* self);
+	struct FB_IPluginManager* (*getPluginManager)(struct FB_IMaster* self);
+	const char* (*circularAlloc)(struct FB_IMaster* self, const char* s, unsigned len, intptr_t thr);
+	struct FB_ITimerControl* (*getTimerControl)(struct FB_IMaster* self);
+	struct FB_IDtc* (*getDtc)(struct FB_IMaster* self);
+	struct FB_IAttachment* (*registerAttachment)(struct FB_IMaster* self, struct FB_IProvider* provider, struct FB_IAttachment* attachment);
+	struct FB_ITransaction* (*registerTransaction)(struct FB_IMaster* self, struct FB_IAttachment* attachment, struct FB_ITransaction* transaction);
+	struct FB_IMetadataBuilder* (*getMetadataBuilder)(struct FB_IMaster* self, struct FB_IStatus* status, unsigned fieldCount);
+	int (*serverMode)(struct FB_IMaster* self, int mode);
+	struct FB_IUtil* (*getUtilInterface)(struct FB_IMaster* self);
+	struct FB_IConfigManager* (*getConfigManager)(struct FB_IMaster* self);
 };
 
-struct Master
+struct FB_IMaster
 {
 	void* cloopDummy[1];
-	struct MasterVTable* vtable;
+	struct FB_IMasterVTable* vtable;
 };
 
-CLOOP_EXTERN_C struct Status* Master_getStatus(struct Master* self);
-CLOOP_EXTERN_C struct Provider* Master_getDispatcher(struct Master* self);
-CLOOP_EXTERN_C struct PluginManager* Master_getPluginManager(struct Master* self);
-CLOOP_EXTERN_C const char* Master_circularAlloc(struct Master* self, const char* s, unsigned len, intptr_t thr);
-CLOOP_EXTERN_C struct TimerControl* Master_getTimerControl(struct Master* self);
-CLOOP_EXTERN_C struct Dtc* Master_getDtc(struct Master* self);
-CLOOP_EXTERN_C struct Attachment* Master_registerAttachment(struct Master* self, struct Provider* provider, struct Attachment* attachment);
-CLOOP_EXTERN_C struct Transaction* Master_registerTransaction(struct Master* self, struct Attachment* attachment, struct Transaction* transaction);
-CLOOP_EXTERN_C struct MetadataBuilder* Master_getMetadataBuilder(struct Master* self, struct Status* status, unsigned fieldCount);
-CLOOP_EXTERN_C int Master_serverMode(struct Master* self, int mode);
-CLOOP_EXTERN_C struct Util* Master_getUtilInterface(struct Master* self);
-CLOOP_EXTERN_C struct ConfigManager* Master_getConfigManager(struct Master* self);
+CLOOP_EXTERN_C struct FB_IStatus* FB_IMaster_getStatus(struct FB_IMaster* self);
+CLOOP_EXTERN_C struct FB_IProvider* FB_IMaster_getDispatcher(struct FB_IMaster* self);
+CLOOP_EXTERN_C struct FB_IPluginManager* FB_IMaster_getPluginManager(struct FB_IMaster* self);
+CLOOP_EXTERN_C const char* FB_IMaster_circularAlloc(struct FB_IMaster* self, const char* s, unsigned len, intptr_t thr);
+CLOOP_EXTERN_C struct FB_ITimerControl* FB_IMaster_getTimerControl(struct FB_IMaster* self);
+CLOOP_EXTERN_C struct FB_IDtc* FB_IMaster_getDtc(struct FB_IMaster* self);
+CLOOP_EXTERN_C struct FB_IAttachment* FB_IMaster_registerAttachment(struct FB_IMaster* self, struct FB_IProvider* provider, struct FB_IAttachment* attachment);
+CLOOP_EXTERN_C struct FB_ITransaction* FB_IMaster_registerTransaction(struct FB_IMaster* self, struct FB_IAttachment* attachment, struct FB_ITransaction* transaction);
+CLOOP_EXTERN_C struct FB_IMetadataBuilder* FB_IMaster_getMetadataBuilder(struct FB_IMaster* self, struct FB_IStatus* status, unsigned fieldCount);
+CLOOP_EXTERN_C int FB_IMaster_serverMode(struct FB_IMaster* self, int mode);
+CLOOP_EXTERN_C struct FB_IUtil* FB_IMaster_getUtilInterface(struct FB_IMaster* self);
+CLOOP_EXTERN_C struct FB_IConfigManager* FB_IMaster_getConfigManager(struct FB_IMaster* self);
 
-#define PluginBase_VERSION 4
+#define FB_IPluginBase_VERSION 4
 
-struct PluginBase;
+struct FB_IPluginBase;
 
-struct PluginBaseVTable
+struct FB_IPluginBaseVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*addRef)(struct PluginBase* self);
-	int (*release)(struct PluginBase* self);
-	void (*setOwner)(struct PluginBase* self, struct ReferenceCounted* r);
-	struct ReferenceCounted* (*getOwner)(struct PluginBase* self);
+	void (*addRef)(struct FB_IPluginBase* self);
+	int (*release)(struct FB_IPluginBase* self);
+	void (*setOwner)(struct FB_IPluginBase* self, struct FB_IReferenceCounted* r);
+	struct FB_IReferenceCounted* (*getOwner)(struct FB_IPluginBase* self);
 };
 
-struct PluginBase
+struct FB_IPluginBase
 {
 	void* cloopDummy[1];
-	struct PluginBaseVTable* vtable;
+	struct FB_IPluginBaseVTable* vtable;
 };
 
-CLOOP_EXTERN_C void PluginBase_addRef(struct PluginBase* self);
-CLOOP_EXTERN_C int PluginBase_release(struct PluginBase* self);
-CLOOP_EXTERN_C void PluginBase_setOwner(struct PluginBase* self, struct ReferenceCounted* r);
-CLOOP_EXTERN_C struct ReferenceCounted* PluginBase_getOwner(struct PluginBase* self);
+CLOOP_EXTERN_C void FB_IPluginBase_addRef(struct FB_IPluginBase* self);
+CLOOP_EXTERN_C int FB_IPluginBase_release(struct FB_IPluginBase* self);
+CLOOP_EXTERN_C void FB_IPluginBase_setOwner(struct FB_IPluginBase* self, struct FB_IReferenceCounted* r);
+CLOOP_EXTERN_C struct FB_IReferenceCounted* FB_IPluginBase_getOwner(struct FB_IPluginBase* self);
 
-#define PluginSet_VERSION 7
+#define FB_IPluginSet_VERSION 7
 
-struct PluginSet;
+struct FB_IPluginSet;
 
-struct PluginSetVTable
+struct FB_IPluginSetVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*addRef)(struct PluginSet* self);
-	int (*release)(struct PluginSet* self);
-	const char* (*getName)(const struct PluginSet* self);
-	const char* (*getModuleName)(const struct PluginSet* self);
-	struct PluginBase* (*getPlugin)(struct PluginSet* self, struct Status* status);
-	void (*next)(struct PluginSet* self, struct Status* status);
-	void (*set)(struct PluginSet* self, struct Status* status, const char* s);
+	void (*addRef)(struct FB_IPluginSet* self);
+	int (*release)(struct FB_IPluginSet* self);
+	const char* (*getName)(const struct FB_IPluginSet* self);
+	const char* (*getModuleName)(const struct FB_IPluginSet* self);
+	struct FB_IPluginBase* (*getPlugin)(struct FB_IPluginSet* self, struct FB_IStatus* status);
+	void (*next)(struct FB_IPluginSet* self, struct FB_IStatus* status);
+	void (*set)(struct FB_IPluginSet* self, struct FB_IStatus* status, const char* s);
 };
 
-struct PluginSet
+struct FB_IPluginSet
 {
 	void* cloopDummy[1];
-	struct PluginSetVTable* vtable;
+	struct FB_IPluginSetVTable* vtable;
 };
 
-CLOOP_EXTERN_C void PluginSet_addRef(struct PluginSet* self);
-CLOOP_EXTERN_C int PluginSet_release(struct PluginSet* self);
-CLOOP_EXTERN_C const char* PluginSet_getName(const struct PluginSet* self);
-CLOOP_EXTERN_C const char* PluginSet_getModuleName(const struct PluginSet* self);
-CLOOP_EXTERN_C struct PluginBase* PluginSet_getPlugin(struct PluginSet* self, struct Status* status);
-CLOOP_EXTERN_C void PluginSet_next(struct PluginSet* self, struct Status* status);
-CLOOP_EXTERN_C void PluginSet_set(struct PluginSet* self, struct Status* status, const char* s);
+CLOOP_EXTERN_C void FB_IPluginSet_addRef(struct FB_IPluginSet* self);
+CLOOP_EXTERN_C int FB_IPluginSet_release(struct FB_IPluginSet* self);
+CLOOP_EXTERN_C const char* FB_IPluginSet_getName(const struct FB_IPluginSet* self);
+CLOOP_EXTERN_C const char* FB_IPluginSet_getModuleName(const struct FB_IPluginSet* self);
+CLOOP_EXTERN_C struct FB_IPluginBase* FB_IPluginSet_getPlugin(struct FB_IPluginSet* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C void FB_IPluginSet_next(struct FB_IPluginSet* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C void FB_IPluginSet_set(struct FB_IPluginSet* self, struct FB_IStatus* status, const char* s);
 
-#define ConfigEntry_VERSION 7
+#define FB_IConfigEntry_VERSION 7
 
-struct ConfigEntry;
+struct FB_IConfigEntry;
 
-struct ConfigEntryVTable
+struct FB_IConfigEntryVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*addRef)(struct ConfigEntry* self);
-	int (*release)(struct ConfigEntry* self);
-	const char* (*getName)(struct ConfigEntry* self);
-	const char* (*getValue)(struct ConfigEntry* self);
-	ISC_INT64 (*getIntValue)(struct ConfigEntry* self);
-	FB_BOOLEAN (*getBoolValue)(struct ConfigEntry* self);
-	struct Config* (*getSubConfig)(struct ConfigEntry* self, struct Status* status);
+	void (*addRef)(struct FB_IConfigEntry* self);
+	int (*release)(struct FB_IConfigEntry* self);
+	const char* (*getName)(struct FB_IConfigEntry* self);
+	const char* (*getValue)(struct FB_IConfigEntry* self);
+	ISC_INT64 (*getIntValue)(struct FB_IConfigEntry* self);
+	FB_BOOLEAN (*getBoolValue)(struct FB_IConfigEntry* self);
+	struct FB_IConfig* (*getSubConfig)(struct FB_IConfigEntry* self, struct FB_IStatus* status);
 };
 
-struct ConfigEntry
+struct FB_IConfigEntry
 {
 	void* cloopDummy[1];
-	struct ConfigEntryVTable* vtable;
+	struct FB_IConfigEntryVTable* vtable;
 };
 
-CLOOP_EXTERN_C void ConfigEntry_addRef(struct ConfigEntry* self);
-CLOOP_EXTERN_C int ConfigEntry_release(struct ConfigEntry* self);
-CLOOP_EXTERN_C const char* ConfigEntry_getName(struct ConfigEntry* self);
-CLOOP_EXTERN_C const char* ConfigEntry_getValue(struct ConfigEntry* self);
-CLOOP_EXTERN_C ISC_INT64 ConfigEntry_getIntValue(struct ConfigEntry* self);
-CLOOP_EXTERN_C FB_BOOLEAN ConfigEntry_getBoolValue(struct ConfigEntry* self);
-CLOOP_EXTERN_C struct Config* ConfigEntry_getSubConfig(struct ConfigEntry* self, struct Status* status);
+CLOOP_EXTERN_C void FB_IConfigEntry_addRef(struct FB_IConfigEntry* self);
+CLOOP_EXTERN_C int FB_IConfigEntry_release(struct FB_IConfigEntry* self);
+CLOOP_EXTERN_C const char* FB_IConfigEntry_getName(struct FB_IConfigEntry* self);
+CLOOP_EXTERN_C const char* FB_IConfigEntry_getValue(struct FB_IConfigEntry* self);
+CLOOP_EXTERN_C ISC_INT64 FB_IConfigEntry_getIntValue(struct FB_IConfigEntry* self);
+CLOOP_EXTERN_C FB_BOOLEAN FB_IConfigEntry_getBoolValue(struct FB_IConfigEntry* self);
+CLOOP_EXTERN_C struct FB_IConfig* FB_IConfigEntry_getSubConfig(struct FB_IConfigEntry* self, struct FB_IStatus* status);
 
-#define Config_VERSION 5
+#define FB_IConfig_VERSION 5
 
-struct Config;
+struct FB_IConfig;
 
-struct ConfigVTable
+struct FB_IConfigVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*addRef)(struct Config* self);
-	int (*release)(struct Config* self);
-	struct ConfigEntry* (*find)(struct Config* self, struct Status* status, const char* name);
-	struct ConfigEntry* (*findValue)(struct Config* self, struct Status* status, const char* name, const char* value);
-	struct ConfigEntry* (*findPos)(struct Config* self, struct Status* status, const char* name, unsigned pos);
+	void (*addRef)(struct FB_IConfig* self);
+	int (*release)(struct FB_IConfig* self);
+	struct FB_IConfigEntry* (*find)(struct FB_IConfig* self, struct FB_IStatus* status, const char* name);
+	struct FB_IConfigEntry* (*findValue)(struct FB_IConfig* self, struct FB_IStatus* status, const char* name, const char* value);
+	struct FB_IConfigEntry* (*findPos)(struct FB_IConfig* self, struct FB_IStatus* status, const char* name, unsigned pos);
 };
 
-struct Config
+struct FB_IConfig
 {
 	void* cloopDummy[1];
-	struct ConfigVTable* vtable;
+	struct FB_IConfigVTable* vtable;
 };
 
-CLOOP_EXTERN_C void Config_addRef(struct Config* self);
-CLOOP_EXTERN_C int Config_release(struct Config* self);
-CLOOP_EXTERN_C struct ConfigEntry* Config_find(struct Config* self, struct Status* status, const char* name);
-CLOOP_EXTERN_C struct ConfigEntry* Config_findValue(struct Config* self, struct Status* status, const char* name, const char* value);
-CLOOP_EXTERN_C struct ConfigEntry* Config_findPos(struct Config* self, struct Status* status, const char* name, unsigned pos);
+CLOOP_EXTERN_C void FB_IConfig_addRef(struct FB_IConfig* self);
+CLOOP_EXTERN_C int FB_IConfig_release(struct FB_IConfig* self);
+CLOOP_EXTERN_C struct FB_IConfigEntry* FB_IConfig_find(struct FB_IConfig* self, struct FB_IStatus* status, const char* name);
+CLOOP_EXTERN_C struct FB_IConfigEntry* FB_IConfig_findValue(struct FB_IConfig* self, struct FB_IStatus* status, const char* name, const char* value);
+CLOOP_EXTERN_C struct FB_IConfigEntry* FB_IConfig_findPos(struct FB_IConfig* self, struct FB_IStatus* status, const char* name, unsigned pos);
 
-#define FirebirdConf_VERSION 6
+#define FB_IFirebirdConf_VERSION 6
 
-struct FirebirdConf;
+struct FB_IFirebirdConf;
 
-struct FirebirdConfVTable
+struct FB_IFirebirdConfVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*addRef)(struct FirebirdConf* self);
-	int (*release)(struct FirebirdConf* self);
-	unsigned (*getKey)(struct FirebirdConf* self, const char* name);
-	ISC_INT64 (*asInteger)(struct FirebirdConf* self, unsigned key);
-	const char* (*asString)(struct FirebirdConf* self, unsigned key);
-	FB_BOOLEAN (*asBoolean)(struct FirebirdConf* self, unsigned key);
+	void (*addRef)(struct FB_IFirebirdConf* self);
+	int (*release)(struct FB_IFirebirdConf* self);
+	unsigned (*getKey)(struct FB_IFirebirdConf* self, const char* name);
+	ISC_INT64 (*asInteger)(struct FB_IFirebirdConf* self, unsigned key);
+	const char* (*asString)(struct FB_IFirebirdConf* self, unsigned key);
+	FB_BOOLEAN (*asBoolean)(struct FB_IFirebirdConf* self, unsigned key);
 };
 
-struct FirebirdConf
+struct FB_IFirebirdConf
 {
 	void* cloopDummy[1];
-	struct FirebirdConfVTable* vtable;
+	struct FB_IFirebirdConfVTable* vtable;
 };
 
-CLOOP_EXTERN_C void FirebirdConf_addRef(struct FirebirdConf* self);
-CLOOP_EXTERN_C int FirebirdConf_release(struct FirebirdConf* self);
-CLOOP_EXTERN_C unsigned FirebirdConf_getKey(struct FirebirdConf* self, const char* name);
-CLOOP_EXTERN_C ISC_INT64 FirebirdConf_asInteger(struct FirebirdConf* self, unsigned key);
-CLOOP_EXTERN_C const char* FirebirdConf_asString(struct FirebirdConf* self, unsigned key);
-CLOOP_EXTERN_C FB_BOOLEAN FirebirdConf_asBoolean(struct FirebirdConf* self, unsigned key);
+CLOOP_EXTERN_C void FB_IFirebirdConf_addRef(struct FB_IFirebirdConf* self);
+CLOOP_EXTERN_C int FB_IFirebirdConf_release(struct FB_IFirebirdConf* self);
+CLOOP_EXTERN_C unsigned FB_IFirebirdConf_getKey(struct FB_IFirebirdConf* self, const char* name);
+CLOOP_EXTERN_C ISC_INT64 FB_IFirebirdConf_asInteger(struct FB_IFirebirdConf* self, unsigned key);
+CLOOP_EXTERN_C const char* FB_IFirebirdConf_asString(struct FB_IFirebirdConf* self, unsigned key);
+CLOOP_EXTERN_C FB_BOOLEAN FB_IFirebirdConf_asBoolean(struct FB_IFirebirdConf* self, unsigned key);
 
-#define PluginConfig_VERSION 6
+#define FB_IPluginConfig_VERSION 6
 
-struct PluginConfig;
+struct FB_IPluginConfig;
 
-struct PluginConfigVTable
+struct FB_IPluginConfigVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*addRef)(struct PluginConfig* self);
-	int (*release)(struct PluginConfig* self);
-	const char* (*getConfigFileName)(struct PluginConfig* self);
-	struct Config* (*getDefaultConfig)(struct PluginConfig* self, struct Status* status);
-	struct FirebirdConf* (*getFirebirdConf)(struct PluginConfig* self, struct Status* status);
-	void (*setReleaseDelay)(struct PluginConfig* self, struct Status* status, ISC_UINT64 microSeconds);
+	void (*addRef)(struct FB_IPluginConfig* self);
+	int (*release)(struct FB_IPluginConfig* self);
+	const char* (*getConfigFileName)(struct FB_IPluginConfig* self);
+	struct FB_IConfig* (*getDefaultConfig)(struct FB_IPluginConfig* self, struct FB_IStatus* status);
+	struct FB_IFirebirdConf* (*getFirebirdConf)(struct FB_IPluginConfig* self, struct FB_IStatus* status);
+	void (*setReleaseDelay)(struct FB_IPluginConfig* self, struct FB_IStatus* status, ISC_UINT64 microSeconds);
 };
 
-struct PluginConfig
+struct FB_IPluginConfig
 {
 	void* cloopDummy[1];
-	struct PluginConfigVTable* vtable;
+	struct FB_IPluginConfigVTable* vtable;
 };
 
-CLOOP_EXTERN_C void PluginConfig_addRef(struct PluginConfig* self);
-CLOOP_EXTERN_C int PluginConfig_release(struct PluginConfig* self);
-CLOOP_EXTERN_C const char* PluginConfig_getConfigFileName(struct PluginConfig* self);
-CLOOP_EXTERN_C struct Config* PluginConfig_getDefaultConfig(struct PluginConfig* self, struct Status* status);
-CLOOP_EXTERN_C struct FirebirdConf* PluginConfig_getFirebirdConf(struct PluginConfig* self, struct Status* status);
-CLOOP_EXTERN_C void PluginConfig_setReleaseDelay(struct PluginConfig* self, struct Status* status, ISC_UINT64 microSeconds);
+CLOOP_EXTERN_C void FB_IPluginConfig_addRef(struct FB_IPluginConfig* self);
+CLOOP_EXTERN_C int FB_IPluginConfig_release(struct FB_IPluginConfig* self);
+CLOOP_EXTERN_C const char* FB_IPluginConfig_getConfigFileName(struct FB_IPluginConfig* self);
+CLOOP_EXTERN_C struct FB_IConfig* FB_IPluginConfig_getDefaultConfig(struct FB_IPluginConfig* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C struct FB_IFirebirdConf* FB_IPluginConfig_getFirebirdConf(struct FB_IPluginConfig* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C void FB_IPluginConfig_setReleaseDelay(struct FB_IPluginConfig* self, struct FB_IStatus* status, ISC_UINT64 microSeconds);
 
-#define PluginFactory_VERSION 1
+#define FB_IPluginFactory_VERSION 1
 
-struct PluginFactory;
+struct FB_IPluginFactory;
 
-struct PluginFactoryVTable
+struct FB_IPluginFactoryVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	struct PluginBase* (*createPlugin)(struct PluginFactory* self, struct Status* status, struct PluginConfig* factoryParameter);
+	struct FB_IPluginBase* (*createPlugin)(struct FB_IPluginFactory* self, struct FB_IStatus* status, struct FB_IPluginConfig* factoryParameter);
 };
 
-struct PluginFactory
+struct FB_IPluginFactory
 {
 	void* cloopDummy[1];
-	struct PluginFactoryVTable* vtable;
+	struct FB_IPluginFactoryVTable* vtable;
 };
 
-CLOOP_EXTERN_C struct PluginBase* PluginFactory_createPlugin(struct PluginFactory* self, struct Status* status, struct PluginConfig* factoryParameter);
+CLOOP_EXTERN_C struct FB_IPluginBase* FB_IPluginFactory_createPlugin(struct FB_IPluginFactory* self, struct FB_IStatus* status, struct FB_IPluginConfig* factoryParameter);
 
-#define PluginModule_VERSION 1
+#define FB_IPluginModule_VERSION 1
 
-struct PluginModule;
+struct FB_IPluginModule;
 
-struct PluginModuleVTable
+struct FB_IPluginModuleVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*doClean)(struct PluginModule* self);
+	void (*doClean)(struct FB_IPluginModule* self);
 };
 
-struct PluginModule
+struct FB_IPluginModule
 {
 	void* cloopDummy[1];
-	struct PluginModuleVTable* vtable;
+	struct FB_IPluginModuleVTable* vtable;
 };
 
-CLOOP_EXTERN_C void PluginModule_doClean(struct PluginModule* self);
+CLOOP_EXTERN_C void FB_IPluginModule_doClean(struct FB_IPluginModule* self);
 
-#define PluginManager_VERSION 6
+#define FB_IPluginManager_VERSION 6
 
-#define PluginManager_TYPE_PROVIDER ((unsigned) (1))
-#define PluginManager_TYPE_FIRST_NON_LIB ((unsigned) (2))
-#define PluginManager_TYPE_AUTH_SERVER ((unsigned) (3))
-#define PluginManager_TYPE_AUTH_CLIENT ((unsigned) (4))
-#define PluginManager_TYPE_AUTH_USER_MANAGEMENT ((unsigned) (5))
-#define PluginManager_TYPE_EXTERNAL_ENGINE ((unsigned) (6))
-#define PluginManager_TYPE_TRACE ((unsigned) (7))
-#define PluginManager_TYPE_WIRE_CRYPT ((unsigned) (8))
-#define PluginManager_TYPE_DB_CRYPT ((unsigned) (9))
-#define PluginManager_TYPE_KEY_HOLDER ((unsigned) (10))
-#define PluginManager_TYPE_COUNT ((unsigned) (11))
+#define FB_IPluginManager_TYPE_PROVIDER ((unsigned) (1))
+#define FB_IPluginManager_TYPE_FIRST_NON_LIB ((unsigned) (2))
+#define FB_IPluginManager_TYPE_AUTH_SERVER ((unsigned) (3))
+#define FB_IPluginManager_TYPE_AUTH_CLIENT ((unsigned) (4))
+#define FB_IPluginManager_TYPE_AUTH_USER_MANAGEMENT ((unsigned) (5))
+#define FB_IPluginManager_TYPE_EXTERNAL_ENGINE ((unsigned) (6))
+#define FB_IPluginManager_TYPE_TRACE ((unsigned) (7))
+#define FB_IPluginManager_TYPE_WIRE_CRYPT ((unsigned) (8))
+#define FB_IPluginManager_TYPE_DB_CRYPT ((unsigned) (9))
+#define FB_IPluginManager_TYPE_KEY_HOLDER ((unsigned) (10))
+#define FB_IPluginManager_TYPE_COUNT ((unsigned) (11))
 
-struct PluginManager;
+struct FB_IPluginManager;
 
-struct PluginManagerVTable
+struct FB_IPluginManagerVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*registerPluginFactory)(struct PluginManager* self, unsigned pluginType, const char* defaultName, struct PluginFactory* factory);
-	void (*registerModule)(struct PluginManager* self, struct PluginModule* cleanup);
-	void (*unregisterModule)(struct PluginManager* self, struct PluginModule* cleanup);
-	struct PluginSet* (*getPlugins)(struct PluginManager* self, struct Status* status, unsigned pluginType, const char* namesList, struct FirebirdConf* firebirdConf);
-	struct Config* (*getConfig)(struct PluginManager* self, struct Status* status, const char* filename);
-	void (*releasePlugin)(struct PluginManager* self, struct PluginBase* plugin);
+	void (*registerPluginFactory)(struct FB_IPluginManager* self, unsigned pluginType, const char* defaultName, struct FB_IPluginFactory* factory);
+	void (*registerModule)(struct FB_IPluginManager* self, struct FB_IPluginModule* cleanup);
+	void (*unregisterModule)(struct FB_IPluginManager* self, struct FB_IPluginModule* cleanup);
+	struct FB_IPluginSet* (*getPlugins)(struct FB_IPluginManager* self, struct FB_IStatus* status, unsigned pluginType, const char* namesList, struct FB_IFirebirdConf* firebirdConf);
+	struct FB_IConfig* (*getConfig)(struct FB_IPluginManager* self, struct FB_IStatus* status, const char* filename);
+	void (*releasePlugin)(struct FB_IPluginManager* self, struct FB_IPluginBase* plugin);
 };
 
-struct PluginManager
+struct FB_IPluginManager
 {
 	void* cloopDummy[1];
-	struct PluginManagerVTable* vtable;
+	struct FB_IPluginManagerVTable* vtable;
 };
 
-CLOOP_EXTERN_C void PluginManager_registerPluginFactory(struct PluginManager* self, unsigned pluginType, const char* defaultName, struct PluginFactory* factory);
-CLOOP_EXTERN_C void PluginManager_registerModule(struct PluginManager* self, struct PluginModule* cleanup);
-CLOOP_EXTERN_C void PluginManager_unregisterModule(struct PluginManager* self, struct PluginModule* cleanup);
-CLOOP_EXTERN_C struct PluginSet* PluginManager_getPlugins(struct PluginManager* self, struct Status* status, unsigned pluginType, const char* namesList, struct FirebirdConf* firebirdConf);
-CLOOP_EXTERN_C struct Config* PluginManager_getConfig(struct PluginManager* self, struct Status* status, const char* filename);
-CLOOP_EXTERN_C void PluginManager_releasePlugin(struct PluginManager* self, struct PluginBase* plugin);
+CLOOP_EXTERN_C void FB_IPluginManager_registerPluginFactory(struct FB_IPluginManager* self, unsigned pluginType, const char* defaultName, struct FB_IPluginFactory* factory);
+CLOOP_EXTERN_C void FB_IPluginManager_registerModule(struct FB_IPluginManager* self, struct FB_IPluginModule* cleanup);
+CLOOP_EXTERN_C void FB_IPluginManager_unregisterModule(struct FB_IPluginManager* self, struct FB_IPluginModule* cleanup);
+CLOOP_EXTERN_C struct FB_IPluginSet* FB_IPluginManager_getPlugins(struct FB_IPluginManager* self, struct FB_IStatus* status, unsigned pluginType, const char* namesList, struct FB_IFirebirdConf* firebirdConf);
+CLOOP_EXTERN_C struct FB_IConfig* FB_IPluginManager_getConfig(struct FB_IPluginManager* self, struct FB_IStatus* status, const char* filename);
+CLOOP_EXTERN_C void FB_IPluginManager_releasePlugin(struct FB_IPluginManager* self, struct FB_IPluginBase* plugin);
 
-#define CryptKey_VERSION 4
+#define FB_ICryptKey_VERSION 4
 
-struct CryptKey;
+struct FB_ICryptKey;
 
-struct CryptKeyVTable
+struct FB_ICryptKeyVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*setSymmetric)(struct CryptKey* self, struct Status* status, const char* type, unsigned keyLength, const void* key);
-	void (*setAsymmetric)(struct CryptKey* self, struct Status* status, const char* type, unsigned encryptKeyLength, const void* encryptKey, unsigned decryptKeyLength, const void* decryptKey);
-	const void* (*getEncryptKey)(struct CryptKey* self, unsigned* length);
-	const void* (*getDecryptKey)(struct CryptKey* self, unsigned* length);
+	void (*setSymmetric)(struct FB_ICryptKey* self, struct FB_IStatus* status, const char* type, unsigned keyLength, const void* key);
+	void (*setAsymmetric)(struct FB_ICryptKey* self, struct FB_IStatus* status, const char* type, unsigned encryptKeyLength, const void* encryptKey, unsigned decryptKeyLength, const void* decryptKey);
+	const void* (*getEncryptKey)(struct FB_ICryptKey* self, unsigned* length);
+	const void* (*getDecryptKey)(struct FB_ICryptKey* self, unsigned* length);
 };
 
-struct CryptKey
+struct FB_ICryptKey
 {
 	void* cloopDummy[1];
-	struct CryptKeyVTable* vtable;
+	struct FB_ICryptKeyVTable* vtable;
 };
 
-CLOOP_EXTERN_C void CryptKey_setSymmetric(struct CryptKey* self, struct Status* status, const char* type, unsigned keyLength, const void* key);
-CLOOP_EXTERN_C void CryptKey_setAsymmetric(struct CryptKey* self, struct Status* status, const char* type, unsigned encryptKeyLength, const void* encryptKey, unsigned decryptKeyLength, const void* decryptKey);
-CLOOP_EXTERN_C const void* CryptKey_getEncryptKey(struct CryptKey* self, unsigned* length);
-CLOOP_EXTERN_C const void* CryptKey_getDecryptKey(struct CryptKey* self, unsigned* length);
+CLOOP_EXTERN_C void FB_ICryptKey_setSymmetric(struct FB_ICryptKey* self, struct FB_IStatus* status, const char* type, unsigned keyLength, const void* key);
+CLOOP_EXTERN_C void FB_ICryptKey_setAsymmetric(struct FB_ICryptKey* self, struct FB_IStatus* status, const char* type, unsigned encryptKeyLength, const void* encryptKey, unsigned decryptKeyLength, const void* decryptKey);
+CLOOP_EXTERN_C const void* FB_ICryptKey_getEncryptKey(struct FB_ICryptKey* self, unsigned* length);
+CLOOP_EXTERN_C const void* FB_ICryptKey_getDecryptKey(struct FB_ICryptKey* self, unsigned* length);
 
-#define ConfigManager_VERSION 6
+#define FB_IConfigManager_VERSION 6
 
-#define ConfigManager_DIR_BIN ((unsigned) (0))
-#define ConfigManager_DIR_SBIN ((unsigned) (1))
-#define ConfigManager_DIR_CONF ((unsigned) (2))
-#define ConfigManager_DIR_LIB ((unsigned) (3))
-#define ConfigManager_DIR_INC ((unsigned) (4))
-#define ConfigManager_DIR_DOC ((unsigned) (5))
-#define ConfigManager_DIR_UDF ((unsigned) (6))
-#define ConfigManager_DIR_SAMPLE ((unsigned) (7))
-#define ConfigManager_DIR_SAMPLEDB ((unsigned) (8))
-#define ConfigManager_DIR_HELP ((unsigned) (9))
-#define ConfigManager_DIR_INTL ((unsigned) (10))
-#define ConfigManager_DIR_MISC ((unsigned) (11))
-#define ConfigManager_DIR_SECDB ((unsigned) (12))
-#define ConfigManager_DIR_MSG ((unsigned) (13))
-#define ConfigManager_DIR_LOG ((unsigned) (14))
-#define ConfigManager_DIR_GUARD ((unsigned) (15))
-#define ConfigManager_DIR_PLUGINS ((unsigned) (16))
-#define ConfigManager_DIR_COUNT ((unsigned) (17))
+#define FB_IConfigManager_DIR_BIN ((unsigned) (0))
+#define FB_IConfigManager_DIR_SBIN ((unsigned) (1))
+#define FB_IConfigManager_DIR_CONF ((unsigned) (2))
+#define FB_IConfigManager_DIR_LIB ((unsigned) (3))
+#define FB_IConfigManager_DIR_INC ((unsigned) (4))
+#define FB_IConfigManager_DIR_DOC ((unsigned) (5))
+#define FB_IConfigManager_DIR_UDF ((unsigned) (6))
+#define FB_IConfigManager_DIR_SAMPLE ((unsigned) (7))
+#define FB_IConfigManager_DIR_SAMPLEDB ((unsigned) (8))
+#define FB_IConfigManager_DIR_HELP ((unsigned) (9))
+#define FB_IConfigManager_DIR_INTL ((unsigned) (10))
+#define FB_IConfigManager_DIR_MISC ((unsigned) (11))
+#define FB_IConfigManager_DIR_SECDB ((unsigned) (12))
+#define FB_IConfigManager_DIR_MSG ((unsigned) (13))
+#define FB_IConfigManager_DIR_LOG ((unsigned) (14))
+#define FB_IConfigManager_DIR_GUARD ((unsigned) (15))
+#define FB_IConfigManager_DIR_PLUGINS ((unsigned) (16))
+#define FB_IConfigManager_DIR_COUNT ((unsigned) (17))
 
-struct ConfigManager;
+struct FB_IConfigManager;
 
-struct ConfigManagerVTable
+struct FB_IConfigManagerVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	const char* (*getDirectory)(struct ConfigManager* self, unsigned code);
-	struct FirebirdConf* (*getFirebirdConf)(struct ConfigManager* self);
-	struct FirebirdConf* (*getDatabaseConf)(struct ConfigManager* self, const char* dbName);
-	struct Config* (*getPluginConfig)(struct ConfigManager* self, const char* configuredPlugin);
-	const char* (*getInstallDirectory)(struct ConfigManager* self);
-	const char* (*getRootDirectory)(struct ConfigManager* self);
+	const char* (*getDirectory)(struct FB_IConfigManager* self, unsigned code);
+	struct FB_IFirebirdConf* (*getFirebirdConf)(struct FB_IConfigManager* self);
+	struct FB_IFirebirdConf* (*getDatabaseConf)(struct FB_IConfigManager* self, const char* dbName);
+	struct FB_IConfig* (*getPluginConfig)(struct FB_IConfigManager* self, const char* configuredPlugin);
+	const char* (*getInstallDirectory)(struct FB_IConfigManager* self);
+	const char* (*getRootDirectory)(struct FB_IConfigManager* self);
 };
 
-struct ConfigManager
+struct FB_IConfigManager
 {
 	void* cloopDummy[1];
-	struct ConfigManagerVTable* vtable;
+	struct FB_IConfigManagerVTable* vtable;
 };
 
-CLOOP_EXTERN_C const char* ConfigManager_getDirectory(struct ConfigManager* self, unsigned code);
-CLOOP_EXTERN_C struct FirebirdConf* ConfigManager_getFirebirdConf(struct ConfigManager* self);
-CLOOP_EXTERN_C struct FirebirdConf* ConfigManager_getDatabaseConf(struct ConfigManager* self, const char* dbName);
-CLOOP_EXTERN_C struct Config* ConfigManager_getPluginConfig(struct ConfigManager* self, const char* configuredPlugin);
-CLOOP_EXTERN_C const char* ConfigManager_getInstallDirectory(struct ConfigManager* self);
-CLOOP_EXTERN_C const char* ConfigManager_getRootDirectory(struct ConfigManager* self);
+CLOOP_EXTERN_C const char* FB_IConfigManager_getDirectory(struct FB_IConfigManager* self, unsigned code);
+CLOOP_EXTERN_C struct FB_IFirebirdConf* FB_IConfigManager_getFirebirdConf(struct FB_IConfigManager* self);
+CLOOP_EXTERN_C struct FB_IFirebirdConf* FB_IConfigManager_getDatabaseConf(struct FB_IConfigManager* self, const char* dbName);
+CLOOP_EXTERN_C struct FB_IConfig* FB_IConfigManager_getPluginConfig(struct FB_IConfigManager* self, const char* configuredPlugin);
+CLOOP_EXTERN_C const char* FB_IConfigManager_getInstallDirectory(struct FB_IConfigManager* self);
+CLOOP_EXTERN_C const char* FB_IConfigManager_getRootDirectory(struct FB_IConfigManager* self);
 
-#define EventCallback_VERSION 3
+#define FB_IEventCallback_VERSION 3
 
-struct EventCallback;
+struct FB_IEventCallback;
 
-struct EventCallbackVTable
+struct FB_IEventCallbackVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*addRef)(struct EventCallback* self);
-	int (*release)(struct EventCallback* self);
-	void (*eventCallbackFunction)(struct EventCallback* self, unsigned length, const unsigned char* events);
+	void (*addRef)(struct FB_IEventCallback* self);
+	int (*release)(struct FB_IEventCallback* self);
+	void (*eventCallbackFunction)(struct FB_IEventCallback* self, unsigned length, const unsigned char* events);
 };
 
-struct EventCallback
+struct FB_IEventCallback
 {
 	void* cloopDummy[1];
-	struct EventCallbackVTable* vtable;
+	struct FB_IEventCallbackVTable* vtable;
 };
 
-CLOOP_EXTERN_C void EventCallback_addRef(struct EventCallback* self);
-CLOOP_EXTERN_C int EventCallback_release(struct EventCallback* self);
-CLOOP_EXTERN_C void EventCallback_eventCallbackFunction(struct EventCallback* self, unsigned length, const unsigned char* events);
+CLOOP_EXTERN_C void FB_IEventCallback_addRef(struct FB_IEventCallback* self);
+CLOOP_EXTERN_C int FB_IEventCallback_release(struct FB_IEventCallback* self);
+CLOOP_EXTERN_C void FB_IEventCallback_eventCallbackFunction(struct FB_IEventCallback* self, unsigned length, const unsigned char* events);
 
-#define Blob_VERSION 8
+#define FB_IBlob_VERSION 8
 
-struct Blob;
+struct FB_IBlob;
 
-struct BlobVTable
+struct FB_IBlobVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*addRef)(struct Blob* self);
-	int (*release)(struct Blob* self);
-	void (*getInfo)(struct Blob* self, struct Status* status, unsigned itemsLength, const unsigned char* items, unsigned bufferLength, unsigned char* buffer);
-	int (*getSegment)(struct Blob* self, struct Status* status, unsigned bufferLength, void* buffer, unsigned* segmentLength);
-	void (*putSegment)(struct Blob* self, struct Status* status, unsigned length, const void* buffer);
-	void (*cancel)(struct Blob* self, struct Status* status);
-	void (*close)(struct Blob* self, struct Status* status);
-	int (*seek)(struct Blob* self, struct Status* status, int mode, int offset);
+	void (*addRef)(struct FB_IBlob* self);
+	int (*release)(struct FB_IBlob* self);
+	void (*getInfo)(struct FB_IBlob* self, struct FB_IStatus* status, unsigned itemsLength, const unsigned char* items, unsigned bufferLength, unsigned char* buffer);
+	int (*getSegment)(struct FB_IBlob* self, struct FB_IStatus* status, unsigned bufferLength, void* buffer, unsigned* segmentLength);
+	void (*putSegment)(struct FB_IBlob* self, struct FB_IStatus* status, unsigned length, const void* buffer);
+	void (*cancel)(struct FB_IBlob* self, struct FB_IStatus* status);
+	void (*close)(struct FB_IBlob* self, struct FB_IStatus* status);
+	int (*seek)(struct FB_IBlob* self, struct FB_IStatus* status, int mode, int offset);
 };
 
-struct Blob
+struct FB_IBlob
 {
 	void* cloopDummy[1];
-	struct BlobVTable* vtable;
+	struct FB_IBlobVTable* vtable;
 };
 
-CLOOP_EXTERN_C void Blob_addRef(struct Blob* self);
-CLOOP_EXTERN_C int Blob_release(struct Blob* self);
-CLOOP_EXTERN_C void Blob_getInfo(struct Blob* self, struct Status* status, unsigned itemsLength, const unsigned char* items, unsigned bufferLength, unsigned char* buffer);
-CLOOP_EXTERN_C int Blob_getSegment(struct Blob* self, struct Status* status, unsigned bufferLength, void* buffer, unsigned* segmentLength);
-CLOOP_EXTERN_C void Blob_putSegment(struct Blob* self, struct Status* status, unsigned length, const void* buffer);
-CLOOP_EXTERN_C void Blob_cancel(struct Blob* self, struct Status* status);
-CLOOP_EXTERN_C void Blob_close(struct Blob* self, struct Status* status);
-CLOOP_EXTERN_C int Blob_seek(struct Blob* self, struct Status* status, int mode, int offset);
+CLOOP_EXTERN_C void FB_IBlob_addRef(struct FB_IBlob* self);
+CLOOP_EXTERN_C int FB_IBlob_release(struct FB_IBlob* self);
+CLOOP_EXTERN_C void FB_IBlob_getInfo(struct FB_IBlob* self, struct FB_IStatus* status, unsigned itemsLength, const unsigned char* items, unsigned bufferLength, unsigned char* buffer);
+CLOOP_EXTERN_C int FB_IBlob_getSegment(struct FB_IBlob* self, struct FB_IStatus* status, unsigned bufferLength, void* buffer, unsigned* segmentLength);
+CLOOP_EXTERN_C void FB_IBlob_putSegment(struct FB_IBlob* self, struct FB_IStatus* status, unsigned length, const void* buffer);
+CLOOP_EXTERN_C void FB_IBlob_cancel(struct FB_IBlob* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C void FB_IBlob_close(struct FB_IBlob* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C int FB_IBlob_seek(struct FB_IBlob* self, struct FB_IStatus* status, int mode, int offset);
 
-#define Transaction_VERSION 12
+#define FB_ITransaction_VERSION 12
 
-struct Transaction;
+struct FB_ITransaction;
 
-struct TransactionVTable
+struct FB_ITransactionVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*addRef)(struct Transaction* self);
-	int (*release)(struct Transaction* self);
-	void (*getInfo)(struct Transaction* self, struct Status* status, unsigned itemsLength, const unsigned char* items, unsigned bufferLength, unsigned char* buffer);
-	void (*prepare)(struct Transaction* self, struct Status* status, unsigned msgLength, const unsigned char* message);
-	void (*commit)(struct Transaction* self, struct Status* status);
-	void (*commitRetaining)(struct Transaction* self, struct Status* status);
-	void (*rollback)(struct Transaction* self, struct Status* status);
-	void (*rollbackRetaining)(struct Transaction* self, struct Status* status);
-	void (*disconnect)(struct Transaction* self, struct Status* status);
-	struct Transaction* (*join)(struct Transaction* self, struct Status* status, struct Transaction* transaction);
-	struct Transaction* (*validate)(struct Transaction* self, struct Status* status, struct Attachment* attachment);
-	struct Transaction* (*enterDtc)(struct Transaction* self, struct Status* status);
+	void (*addRef)(struct FB_ITransaction* self);
+	int (*release)(struct FB_ITransaction* self);
+	void (*getInfo)(struct FB_ITransaction* self, struct FB_IStatus* status, unsigned itemsLength, const unsigned char* items, unsigned bufferLength, unsigned char* buffer);
+	void (*prepare)(struct FB_ITransaction* self, struct FB_IStatus* status, unsigned msgLength, const unsigned char* message);
+	void (*commit)(struct FB_ITransaction* self, struct FB_IStatus* status);
+	void (*commitRetaining)(struct FB_ITransaction* self, struct FB_IStatus* status);
+	void (*rollback)(struct FB_ITransaction* self, struct FB_IStatus* status);
+	void (*rollbackRetaining)(struct FB_ITransaction* self, struct FB_IStatus* status);
+	void (*disconnect)(struct FB_ITransaction* self, struct FB_IStatus* status);
+	struct FB_ITransaction* (*join)(struct FB_ITransaction* self, struct FB_IStatus* status, struct FB_ITransaction* transaction);
+	struct FB_ITransaction* (*validate)(struct FB_ITransaction* self, struct FB_IStatus* status, struct FB_IAttachment* attachment);
+	struct FB_ITransaction* (*enterDtc)(struct FB_ITransaction* self, struct FB_IStatus* status);
 };
 
-struct Transaction
+struct FB_ITransaction
 {
 	void* cloopDummy[1];
-	struct TransactionVTable* vtable;
+	struct FB_ITransactionVTable* vtable;
 };
 
-CLOOP_EXTERN_C void Transaction_addRef(struct Transaction* self);
-CLOOP_EXTERN_C int Transaction_release(struct Transaction* self);
-CLOOP_EXTERN_C void Transaction_getInfo(struct Transaction* self, struct Status* status, unsigned itemsLength, const unsigned char* items, unsigned bufferLength, unsigned char* buffer);
-CLOOP_EXTERN_C void Transaction_prepare(struct Transaction* self, struct Status* status, unsigned msgLength, const unsigned char* message);
-CLOOP_EXTERN_C void Transaction_commit(struct Transaction* self, struct Status* status);
-CLOOP_EXTERN_C void Transaction_commitRetaining(struct Transaction* self, struct Status* status);
-CLOOP_EXTERN_C void Transaction_rollback(struct Transaction* self, struct Status* status);
-CLOOP_EXTERN_C void Transaction_rollbackRetaining(struct Transaction* self, struct Status* status);
-CLOOP_EXTERN_C void Transaction_disconnect(struct Transaction* self, struct Status* status);
-CLOOP_EXTERN_C struct Transaction* Transaction_join(struct Transaction* self, struct Status* status, struct Transaction* transaction);
-CLOOP_EXTERN_C struct Transaction* Transaction_validate(struct Transaction* self, struct Status* status, struct Attachment* attachment);
-CLOOP_EXTERN_C struct Transaction* Transaction_enterDtc(struct Transaction* self, struct Status* status);
+CLOOP_EXTERN_C void FB_ITransaction_addRef(struct FB_ITransaction* self);
+CLOOP_EXTERN_C int FB_ITransaction_release(struct FB_ITransaction* self);
+CLOOP_EXTERN_C void FB_ITransaction_getInfo(struct FB_ITransaction* self, struct FB_IStatus* status, unsigned itemsLength, const unsigned char* items, unsigned bufferLength, unsigned char* buffer);
+CLOOP_EXTERN_C void FB_ITransaction_prepare(struct FB_ITransaction* self, struct FB_IStatus* status, unsigned msgLength, const unsigned char* message);
+CLOOP_EXTERN_C void FB_ITransaction_commit(struct FB_ITransaction* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C void FB_ITransaction_commitRetaining(struct FB_ITransaction* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C void FB_ITransaction_rollback(struct FB_ITransaction* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C void FB_ITransaction_rollbackRetaining(struct FB_ITransaction* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C void FB_ITransaction_disconnect(struct FB_ITransaction* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C struct FB_ITransaction* FB_ITransaction_join(struct FB_ITransaction* self, struct FB_IStatus* status, struct FB_ITransaction* transaction);
+CLOOP_EXTERN_C struct FB_ITransaction* FB_ITransaction_validate(struct FB_ITransaction* self, struct FB_IStatus* status, struct FB_IAttachment* attachment);
+CLOOP_EXTERN_C struct FB_ITransaction* FB_ITransaction_enterDtc(struct FB_ITransaction* self, struct FB_IStatus* status);
 
-#define MessageMetadata_VERSION 17
+#define FB_IMessageMetadata_VERSION 17
 
-struct MessageMetadata;
+struct FB_IMessageMetadata;
 
-struct MessageMetadataVTable
+struct FB_IMessageMetadataVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*addRef)(struct MessageMetadata* self);
-	int (*release)(struct MessageMetadata* self);
-	unsigned (*getCount)(struct MessageMetadata* self, struct Status* status);
-	const char* (*getField)(struct MessageMetadata* self, struct Status* status, unsigned index);
-	const char* (*getRelation)(struct MessageMetadata* self, struct Status* status, unsigned index);
-	const char* (*getOwner)(struct MessageMetadata* self, struct Status* status, unsigned index);
-	const char* (*getAlias)(struct MessageMetadata* self, struct Status* status, unsigned index);
-	unsigned (*getType)(struct MessageMetadata* self, struct Status* status, unsigned index);
-	FB_BOOLEAN (*isNullable)(struct MessageMetadata* self, struct Status* status, unsigned index);
-	int (*getSubType)(struct MessageMetadata* self, struct Status* status, unsigned index);
-	unsigned (*getLength)(struct MessageMetadata* self, struct Status* status, unsigned index);
-	int (*getScale)(struct MessageMetadata* self, struct Status* status, unsigned index);
-	unsigned (*getCharSet)(struct MessageMetadata* self, struct Status* status, unsigned index);
-	unsigned (*getOffset)(struct MessageMetadata* self, struct Status* status, unsigned index);
-	unsigned (*getNullOffset)(struct MessageMetadata* self, struct Status* status, unsigned index);
-	struct MetadataBuilder* (*getBuilder)(struct MessageMetadata* self, struct Status* status);
-	unsigned (*getMessageLength)(struct MessageMetadata* self, struct Status* status);
+	void (*addRef)(struct FB_IMessageMetadata* self);
+	int (*release)(struct FB_IMessageMetadata* self);
+	unsigned (*getCount)(struct FB_IMessageMetadata* self, struct FB_IStatus* status);
+	const char* (*getField)(struct FB_IMessageMetadata* self, struct FB_IStatus* status, unsigned index);
+	const char* (*getRelation)(struct FB_IMessageMetadata* self, struct FB_IStatus* status, unsigned index);
+	const char* (*getOwner)(struct FB_IMessageMetadata* self, struct FB_IStatus* status, unsigned index);
+	const char* (*getAlias)(struct FB_IMessageMetadata* self, struct FB_IStatus* status, unsigned index);
+	unsigned (*getType)(struct FB_IMessageMetadata* self, struct FB_IStatus* status, unsigned index);
+	FB_BOOLEAN (*isNullable)(struct FB_IMessageMetadata* self, struct FB_IStatus* status, unsigned index);
+	int (*getSubType)(struct FB_IMessageMetadata* self, struct FB_IStatus* status, unsigned index);
+	unsigned (*getLength)(struct FB_IMessageMetadata* self, struct FB_IStatus* status, unsigned index);
+	int (*getScale)(struct FB_IMessageMetadata* self, struct FB_IStatus* status, unsigned index);
+	unsigned (*getCharSet)(struct FB_IMessageMetadata* self, struct FB_IStatus* status, unsigned index);
+	unsigned (*getOffset)(struct FB_IMessageMetadata* self, struct FB_IStatus* status, unsigned index);
+	unsigned (*getNullOffset)(struct FB_IMessageMetadata* self, struct FB_IStatus* status, unsigned index);
+	struct FB_IMetadataBuilder* (*getBuilder)(struct FB_IMessageMetadata* self, struct FB_IStatus* status);
+	unsigned (*getMessageLength)(struct FB_IMessageMetadata* self, struct FB_IStatus* status);
 };
 
-struct MessageMetadata
+struct FB_IMessageMetadata
 {
 	void* cloopDummy[1];
-	struct MessageMetadataVTable* vtable;
+	struct FB_IMessageMetadataVTable* vtable;
 };
 
-CLOOP_EXTERN_C void MessageMetadata_addRef(struct MessageMetadata* self);
-CLOOP_EXTERN_C int MessageMetadata_release(struct MessageMetadata* self);
-CLOOP_EXTERN_C unsigned MessageMetadata_getCount(struct MessageMetadata* self, struct Status* status);
-CLOOP_EXTERN_C const char* MessageMetadata_getField(struct MessageMetadata* self, struct Status* status, unsigned index);
-CLOOP_EXTERN_C const char* MessageMetadata_getRelation(struct MessageMetadata* self, struct Status* status, unsigned index);
-CLOOP_EXTERN_C const char* MessageMetadata_getOwner(struct MessageMetadata* self, struct Status* status, unsigned index);
-CLOOP_EXTERN_C const char* MessageMetadata_getAlias(struct MessageMetadata* self, struct Status* status, unsigned index);
-CLOOP_EXTERN_C unsigned MessageMetadata_getType(struct MessageMetadata* self, struct Status* status, unsigned index);
-CLOOP_EXTERN_C FB_BOOLEAN MessageMetadata_isNullable(struct MessageMetadata* self, struct Status* status, unsigned index);
-CLOOP_EXTERN_C int MessageMetadata_getSubType(struct MessageMetadata* self, struct Status* status, unsigned index);
-CLOOP_EXTERN_C unsigned MessageMetadata_getLength(struct MessageMetadata* self, struct Status* status, unsigned index);
-CLOOP_EXTERN_C int MessageMetadata_getScale(struct MessageMetadata* self, struct Status* status, unsigned index);
-CLOOP_EXTERN_C unsigned MessageMetadata_getCharSet(struct MessageMetadata* self, struct Status* status, unsigned index);
-CLOOP_EXTERN_C unsigned MessageMetadata_getOffset(struct MessageMetadata* self, struct Status* status, unsigned index);
-CLOOP_EXTERN_C unsigned MessageMetadata_getNullOffset(struct MessageMetadata* self, struct Status* status, unsigned index);
-CLOOP_EXTERN_C struct MetadataBuilder* MessageMetadata_getBuilder(struct MessageMetadata* self, struct Status* status);
-CLOOP_EXTERN_C unsigned MessageMetadata_getMessageLength(struct MessageMetadata* self, struct Status* status);
+CLOOP_EXTERN_C void FB_IMessageMetadata_addRef(struct FB_IMessageMetadata* self);
+CLOOP_EXTERN_C int FB_IMessageMetadata_release(struct FB_IMessageMetadata* self);
+CLOOP_EXTERN_C unsigned FB_IMessageMetadata_getCount(struct FB_IMessageMetadata* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C const char* FB_IMessageMetadata_getField(struct FB_IMessageMetadata* self, struct FB_IStatus* status, unsigned index);
+CLOOP_EXTERN_C const char* FB_IMessageMetadata_getRelation(struct FB_IMessageMetadata* self, struct FB_IStatus* status, unsigned index);
+CLOOP_EXTERN_C const char* FB_IMessageMetadata_getOwner(struct FB_IMessageMetadata* self, struct FB_IStatus* status, unsigned index);
+CLOOP_EXTERN_C const char* FB_IMessageMetadata_getAlias(struct FB_IMessageMetadata* self, struct FB_IStatus* status, unsigned index);
+CLOOP_EXTERN_C unsigned FB_IMessageMetadata_getType(struct FB_IMessageMetadata* self, struct FB_IStatus* status, unsigned index);
+CLOOP_EXTERN_C FB_BOOLEAN FB_IMessageMetadata_isNullable(struct FB_IMessageMetadata* self, struct FB_IStatus* status, unsigned index);
+CLOOP_EXTERN_C int FB_IMessageMetadata_getSubType(struct FB_IMessageMetadata* self, struct FB_IStatus* status, unsigned index);
+CLOOP_EXTERN_C unsigned FB_IMessageMetadata_getLength(struct FB_IMessageMetadata* self, struct FB_IStatus* status, unsigned index);
+CLOOP_EXTERN_C int FB_IMessageMetadata_getScale(struct FB_IMessageMetadata* self, struct FB_IStatus* status, unsigned index);
+CLOOP_EXTERN_C unsigned FB_IMessageMetadata_getCharSet(struct FB_IMessageMetadata* self, struct FB_IStatus* status, unsigned index);
+CLOOP_EXTERN_C unsigned FB_IMessageMetadata_getOffset(struct FB_IMessageMetadata* self, struct FB_IStatus* status, unsigned index);
+CLOOP_EXTERN_C unsigned FB_IMessageMetadata_getNullOffset(struct FB_IMessageMetadata* self, struct FB_IStatus* status, unsigned index);
+CLOOP_EXTERN_C struct FB_IMetadataBuilder* FB_IMessageMetadata_getBuilder(struct FB_IMessageMetadata* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C unsigned FB_IMessageMetadata_getMessageLength(struct FB_IMessageMetadata* self, struct FB_IStatus* status);
 
-#define MetadataBuilder_VERSION 12
+#define FB_IMetadataBuilder_VERSION 12
 
-struct MetadataBuilder;
+struct FB_IMetadataBuilder;
 
-struct MetadataBuilderVTable
+struct FB_IMetadataBuilderVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*addRef)(struct MetadataBuilder* self);
-	int (*release)(struct MetadataBuilder* self);
-	void (*setType)(struct MetadataBuilder* self, struct Status* status, unsigned index, unsigned type);
-	void (*setSubType)(struct MetadataBuilder* self, struct Status* status, unsigned index, int subType);
-	void (*setLength)(struct MetadataBuilder* self, struct Status* status, unsigned index, unsigned length);
-	void (*setCharSet)(struct MetadataBuilder* self, struct Status* status, unsigned index, unsigned charSet);
-	void (*setScale)(struct MetadataBuilder* self, struct Status* status, unsigned index, unsigned scale);
-	void (*truncate)(struct MetadataBuilder* self, struct Status* status, unsigned count);
-	void (*moveNameToIndex)(struct MetadataBuilder* self, struct Status* status, const char* name, unsigned index);
-	void (*remove)(struct MetadataBuilder* self, struct Status* status, unsigned index);
-	unsigned (*addField)(struct MetadataBuilder* self, struct Status* status);
-	struct MessageMetadata* (*getMetadata)(struct MetadataBuilder* self, struct Status* status);
+	void (*addRef)(struct FB_IMetadataBuilder* self);
+	int (*release)(struct FB_IMetadataBuilder* self);
+	void (*setType)(struct FB_IMetadataBuilder* self, struct FB_IStatus* status, unsigned index, unsigned type);
+	void (*setSubType)(struct FB_IMetadataBuilder* self, struct FB_IStatus* status, unsigned index, int subType);
+	void (*setLength)(struct FB_IMetadataBuilder* self, struct FB_IStatus* status, unsigned index, unsigned length);
+	void (*setCharSet)(struct FB_IMetadataBuilder* self, struct FB_IStatus* status, unsigned index, unsigned charSet);
+	void (*setScale)(struct FB_IMetadataBuilder* self, struct FB_IStatus* status, unsigned index, unsigned scale);
+	void (*truncate)(struct FB_IMetadataBuilder* self, struct FB_IStatus* status, unsigned count);
+	void (*moveNameToIndex)(struct FB_IMetadataBuilder* self, struct FB_IStatus* status, const char* name, unsigned index);
+	void (*remove)(struct FB_IMetadataBuilder* self, struct FB_IStatus* status, unsigned index);
+	unsigned (*addField)(struct FB_IMetadataBuilder* self, struct FB_IStatus* status);
+	struct FB_IMessageMetadata* (*getMetadata)(struct FB_IMetadataBuilder* self, struct FB_IStatus* status);
 };
 
-struct MetadataBuilder
+struct FB_IMetadataBuilder
 {
 	void* cloopDummy[1];
-	struct MetadataBuilderVTable* vtable;
+	struct FB_IMetadataBuilderVTable* vtable;
 };
 
-CLOOP_EXTERN_C void MetadataBuilder_addRef(struct MetadataBuilder* self);
-CLOOP_EXTERN_C int MetadataBuilder_release(struct MetadataBuilder* self);
-CLOOP_EXTERN_C void MetadataBuilder_setType(struct MetadataBuilder* self, struct Status* status, unsigned index, unsigned type);
-CLOOP_EXTERN_C void MetadataBuilder_setSubType(struct MetadataBuilder* self, struct Status* status, unsigned index, int subType);
-CLOOP_EXTERN_C void MetadataBuilder_setLength(struct MetadataBuilder* self, struct Status* status, unsigned index, unsigned length);
-CLOOP_EXTERN_C void MetadataBuilder_setCharSet(struct MetadataBuilder* self, struct Status* status, unsigned index, unsigned charSet);
-CLOOP_EXTERN_C void MetadataBuilder_setScale(struct MetadataBuilder* self, struct Status* status, unsigned index, unsigned scale);
-CLOOP_EXTERN_C void MetadataBuilder_truncate(struct MetadataBuilder* self, struct Status* status, unsigned count);
-CLOOP_EXTERN_C void MetadataBuilder_moveNameToIndex(struct MetadataBuilder* self, struct Status* status, const char* name, unsigned index);
-CLOOP_EXTERN_C void MetadataBuilder_remove(struct MetadataBuilder* self, struct Status* status, unsigned index);
-CLOOP_EXTERN_C unsigned MetadataBuilder_addField(struct MetadataBuilder* self, struct Status* status);
-CLOOP_EXTERN_C struct MessageMetadata* MetadataBuilder_getMetadata(struct MetadataBuilder* self, struct Status* status);
+CLOOP_EXTERN_C void FB_IMetadataBuilder_addRef(struct FB_IMetadataBuilder* self);
+CLOOP_EXTERN_C int FB_IMetadataBuilder_release(struct FB_IMetadataBuilder* self);
+CLOOP_EXTERN_C void FB_IMetadataBuilder_setType(struct FB_IMetadataBuilder* self, struct FB_IStatus* status, unsigned index, unsigned type);
+CLOOP_EXTERN_C void FB_IMetadataBuilder_setSubType(struct FB_IMetadataBuilder* self, struct FB_IStatus* status, unsigned index, int subType);
+CLOOP_EXTERN_C void FB_IMetadataBuilder_setLength(struct FB_IMetadataBuilder* self, struct FB_IStatus* status, unsigned index, unsigned length);
+CLOOP_EXTERN_C void FB_IMetadataBuilder_setCharSet(struct FB_IMetadataBuilder* self, struct FB_IStatus* status, unsigned index, unsigned charSet);
+CLOOP_EXTERN_C void FB_IMetadataBuilder_setScale(struct FB_IMetadataBuilder* self, struct FB_IStatus* status, unsigned index, unsigned scale);
+CLOOP_EXTERN_C void FB_IMetadataBuilder_truncate(struct FB_IMetadataBuilder* self, struct FB_IStatus* status, unsigned count);
+CLOOP_EXTERN_C void FB_IMetadataBuilder_moveNameToIndex(struct FB_IMetadataBuilder* self, struct FB_IStatus* status, const char* name, unsigned index);
+CLOOP_EXTERN_C void FB_IMetadataBuilder_remove(struct FB_IMetadataBuilder* self, struct FB_IStatus* status, unsigned index);
+CLOOP_EXTERN_C unsigned FB_IMetadataBuilder_addField(struct FB_IMetadataBuilder* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C struct FB_IMessageMetadata* FB_IMetadataBuilder_getMetadata(struct FB_IMetadataBuilder* self, struct FB_IStatus* status);
 
-#define ResultSet_VERSION 13
+#define FB_IResultSet_VERSION 13
 
-struct ResultSet;
+struct FB_IResultSet;
 
-struct ResultSetVTable
+struct FB_IResultSetVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*addRef)(struct ResultSet* self);
-	int (*release)(struct ResultSet* self);
-	int (*fetchNext)(struct ResultSet* self, struct Status* status, void* message);
-	int (*fetchPrior)(struct ResultSet* self, struct Status* status, void* message);
-	int (*fetchFirst)(struct ResultSet* self, struct Status* status, void* message);
-	int (*fetchLast)(struct ResultSet* self, struct Status* status, void* message);
-	int (*fetchAbsolute)(struct ResultSet* self, struct Status* status, int position, void* message);
-	int (*fetchRelative)(struct ResultSet* self, struct Status* status, int offset, void* message);
-	FB_BOOLEAN (*isEof)(struct ResultSet* self, struct Status* status);
-	FB_BOOLEAN (*isBof)(struct ResultSet* self, struct Status* status);
-	struct MessageMetadata* (*getMetadata)(struct ResultSet* self, struct Status* status);
-	void (*close)(struct ResultSet* self, struct Status* status);
-	void (*setDelayedOutputFormat)(struct ResultSet* self, struct Status* status, struct MessageMetadata* format);
+	void (*addRef)(struct FB_IResultSet* self);
+	int (*release)(struct FB_IResultSet* self);
+	int (*fetchNext)(struct FB_IResultSet* self, struct FB_IStatus* status, void* message);
+	int (*fetchPrior)(struct FB_IResultSet* self, struct FB_IStatus* status, void* message);
+	int (*fetchFirst)(struct FB_IResultSet* self, struct FB_IStatus* status, void* message);
+	int (*fetchLast)(struct FB_IResultSet* self, struct FB_IStatus* status, void* message);
+	int (*fetchAbsolute)(struct FB_IResultSet* self, struct FB_IStatus* status, int position, void* message);
+	int (*fetchRelative)(struct FB_IResultSet* self, struct FB_IStatus* status, int offset, void* message);
+	FB_BOOLEAN (*isEof)(struct FB_IResultSet* self, struct FB_IStatus* status);
+	FB_BOOLEAN (*isBof)(struct FB_IResultSet* self, struct FB_IStatus* status);
+	struct FB_IMessageMetadata* (*getMetadata)(struct FB_IResultSet* self, struct FB_IStatus* status);
+	void (*close)(struct FB_IResultSet* self, struct FB_IStatus* status);
+	void (*setDelayedOutputFormat)(struct FB_IResultSet* self, struct FB_IStatus* status, struct FB_IMessageMetadata* format);
 };
 
-struct ResultSet
+struct FB_IResultSet
 {
 	void* cloopDummy[1];
-	struct ResultSetVTable* vtable;
+	struct FB_IResultSetVTable* vtable;
 };
 
-CLOOP_EXTERN_C void ResultSet_addRef(struct ResultSet* self);
-CLOOP_EXTERN_C int ResultSet_release(struct ResultSet* self);
-CLOOP_EXTERN_C int ResultSet_fetchNext(struct ResultSet* self, struct Status* status, void* message);
-CLOOP_EXTERN_C int ResultSet_fetchPrior(struct ResultSet* self, struct Status* status, void* message);
-CLOOP_EXTERN_C int ResultSet_fetchFirst(struct ResultSet* self, struct Status* status, void* message);
-CLOOP_EXTERN_C int ResultSet_fetchLast(struct ResultSet* self, struct Status* status, void* message);
-CLOOP_EXTERN_C int ResultSet_fetchAbsolute(struct ResultSet* self, struct Status* status, int position, void* message);
-CLOOP_EXTERN_C int ResultSet_fetchRelative(struct ResultSet* self, struct Status* status, int offset, void* message);
-CLOOP_EXTERN_C FB_BOOLEAN ResultSet_isEof(struct ResultSet* self, struct Status* status);
-CLOOP_EXTERN_C FB_BOOLEAN ResultSet_isBof(struct ResultSet* self, struct Status* status);
-CLOOP_EXTERN_C struct MessageMetadata* ResultSet_getMetadata(struct ResultSet* self, struct Status* status);
-CLOOP_EXTERN_C void ResultSet_close(struct ResultSet* self, struct Status* status);
-CLOOP_EXTERN_C void ResultSet_setDelayedOutputFormat(struct ResultSet* self, struct Status* status, struct MessageMetadata* format);
+CLOOP_EXTERN_C void FB_IResultSet_addRef(struct FB_IResultSet* self);
+CLOOP_EXTERN_C int FB_IResultSet_release(struct FB_IResultSet* self);
+CLOOP_EXTERN_C int FB_IResultSet_fetchNext(struct FB_IResultSet* self, struct FB_IStatus* status, void* message);
+CLOOP_EXTERN_C int FB_IResultSet_fetchPrior(struct FB_IResultSet* self, struct FB_IStatus* status, void* message);
+CLOOP_EXTERN_C int FB_IResultSet_fetchFirst(struct FB_IResultSet* self, struct FB_IStatus* status, void* message);
+CLOOP_EXTERN_C int FB_IResultSet_fetchLast(struct FB_IResultSet* self, struct FB_IStatus* status, void* message);
+CLOOP_EXTERN_C int FB_IResultSet_fetchAbsolute(struct FB_IResultSet* self, struct FB_IStatus* status, int position, void* message);
+CLOOP_EXTERN_C int FB_IResultSet_fetchRelative(struct FB_IResultSet* self, struct FB_IStatus* status, int offset, void* message);
+CLOOP_EXTERN_C FB_BOOLEAN FB_IResultSet_isEof(struct FB_IResultSet* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C FB_BOOLEAN FB_IResultSet_isBof(struct FB_IResultSet* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C struct FB_IMessageMetadata* FB_IResultSet_getMetadata(struct FB_IResultSet* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C void FB_IResultSet_close(struct FB_IResultSet* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C void FB_IResultSet_setDelayedOutputFormat(struct FB_IResultSet* self, struct FB_IStatus* status, struct FB_IMessageMetadata* format);
 
-#define Statement_VERSION 13
+#define FB_IStatement_VERSION 13
 
-#define Statement_PREPARE_PREFETCH_NONE ((unsigned) (0))
-#define Statement_PREPARE_PREFETCH_TYPE ((unsigned) (1))
-#define Statement_PREPARE_PREFETCH_INPUT_PARAMETERS ((unsigned) (2))
-#define Statement_PREPARE_PREFETCH_OUTPUT_PARAMETERS ((unsigned) (4))
-#define Statement_PREPARE_PREFETCH_LEGACY_PLAN ((unsigned) (8))
-#define Statement_PREPARE_PREFETCH_DETAILED_PLAN ((unsigned) (16))
-#define Statement_PREPARE_PREFETCH_AFFECTED_RECORDS ((unsigned) (32))
-#define Statement_PREPARE_PREFETCH_FLAGS ((unsigned) (64))
-#define Statement_PREPARE_PREFETCH_METADATA ((unsigned) (Statement_PREPARE_PREFETCH_TYPE | Statement_PREPARE_PREFETCH_FLAGS | Statement_PREPARE_PREFETCH_INPUT_PARAMETERS | Statement_PREPARE_PREFETCH_OUTPUT_PARAMETERS))
-#define Statement_PREPARE_PREFETCH_ALL ((unsigned) (Statement_PREPARE_PREFETCH_METADATA | Statement_PREPARE_PREFETCH_LEGACY_PLAN | Statement_PREPARE_PREFETCH_DETAILED_PLAN | Statement_PREPARE_PREFETCH_AFFECTED_RECORDS))
-#define Statement_FLAG_HAS_CURSOR ((unsigned) (1))
-#define Statement_FLAG_REPEAT_EXECUTE ((unsigned) (2))
-#define Statement_CURSOR_TYPE_SCROLLABLE ((unsigned) (1))
+#define FB_IStatement_PREPARE_PREFETCH_NONE ((unsigned) (0))
+#define FB_IStatement_PREPARE_PREFETCH_TYPE ((unsigned) (1))
+#define FB_IStatement_PREPARE_PREFETCH_INPUT_PARAMETERS ((unsigned) (2))
+#define FB_IStatement_PREPARE_PREFETCH_OUTPUT_PARAMETERS ((unsigned) (4))
+#define FB_IStatement_PREPARE_PREFETCH_LEGACY_PLAN ((unsigned) (8))
+#define FB_IStatement_PREPARE_PREFETCH_DETAILED_PLAN ((unsigned) (16))
+#define FB_IStatement_PREPARE_PREFETCH_AFFECTED_RECORDS ((unsigned) (32))
+#define FB_IStatement_PREPARE_PREFETCH_FLAGS ((unsigned) (64))
+#define FB_IStatement_PREPARE_PREFETCH_METADATA ((unsigned) (FB_IStatement_PREPARE_PREFETCH_TYPE | FB_IStatement_PREPARE_PREFETCH_FLAGS | FB_IStatement_PREPARE_PREFETCH_INPUT_PARAMETERS | FB_IStatement_PREPARE_PREFETCH_OUTPUT_PARAMETERS))
+#define FB_IStatement_PREPARE_PREFETCH_ALL ((unsigned) (FB_IStatement_PREPARE_PREFETCH_METADATA | FB_IStatement_PREPARE_PREFETCH_LEGACY_PLAN | FB_IStatement_PREPARE_PREFETCH_DETAILED_PLAN | FB_IStatement_PREPARE_PREFETCH_AFFECTED_RECORDS))
+#define FB_IStatement_FLAG_HAS_CURSOR ((unsigned) (1))
+#define FB_IStatement_FLAG_REPEAT_EXECUTE ((unsigned) (2))
+#define FB_IStatement_CURSOR_TYPE_SCROLLABLE ((unsigned) (1))
 
-struct Statement;
+struct FB_IStatement;
 
-struct StatementVTable
+struct FB_IStatementVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*addRef)(struct Statement* self);
-	int (*release)(struct Statement* self);
-	void (*getInfo)(struct Statement* self, struct Status* status, unsigned itemsLength, const unsigned char* items, unsigned bufferLength, unsigned char* buffer);
-	unsigned (*getType)(struct Statement* self, struct Status* status);
-	const char* (*getPlan)(struct Statement* self, struct Status* status, FB_BOOLEAN detailed);
-	ISC_UINT64 (*getAffectedRecords)(struct Statement* self, struct Status* status);
-	struct MessageMetadata* (*getInputMetadata)(struct Statement* self, struct Status* status);
-	struct MessageMetadata* (*getOutputMetadata)(struct Statement* self, struct Status* status);
-	struct Transaction* (*execute)(struct Statement* self, struct Status* status, struct Transaction* transaction, struct MessageMetadata* inMetadata, void* inBuffer, struct MessageMetadata* outMetadata, void* outBuffer);
-	struct ResultSet* (*openCursor)(struct Statement* self, struct Status* status, struct Transaction* transaction, struct MessageMetadata* inMetadata, void* inBuffer, struct MessageMetadata* outMetadata, unsigned flags);
-	void (*setCursorName)(struct Statement* self, struct Status* status, const char* name);
-	void (*free)(struct Statement* self, struct Status* status);
-	unsigned (*getFlags)(struct Statement* self, struct Status* status);
+	void (*addRef)(struct FB_IStatement* self);
+	int (*release)(struct FB_IStatement* self);
+	void (*getInfo)(struct FB_IStatement* self, struct FB_IStatus* status, unsigned itemsLength, const unsigned char* items, unsigned bufferLength, unsigned char* buffer);
+	unsigned (*getType)(struct FB_IStatement* self, struct FB_IStatus* status);
+	const char* (*getPlan)(struct FB_IStatement* self, struct FB_IStatus* status, FB_BOOLEAN detailed);
+	ISC_UINT64 (*getAffectedRecords)(struct FB_IStatement* self, struct FB_IStatus* status);
+	struct FB_IMessageMetadata* (*getInputMetadata)(struct FB_IStatement* self, struct FB_IStatus* status);
+	struct FB_IMessageMetadata* (*getOutputMetadata)(struct FB_IStatement* self, struct FB_IStatus* status);
+	struct FB_ITransaction* (*execute)(struct FB_IStatement* self, struct FB_IStatus* status, struct FB_ITransaction* transaction, struct FB_IMessageMetadata* inMetadata, void* inBuffer, struct FB_IMessageMetadata* outMetadata, void* outBuffer);
+	struct FB_IResultSet* (*openCursor)(struct FB_IStatement* self, struct FB_IStatus* status, struct FB_ITransaction* transaction, struct FB_IMessageMetadata* inMetadata, void* inBuffer, struct FB_IMessageMetadata* outMetadata, unsigned flags);
+	void (*setCursorName)(struct FB_IStatement* self, struct FB_IStatus* status, const char* name);
+	void (*free)(struct FB_IStatement* self, struct FB_IStatus* status);
+	unsigned (*getFlags)(struct FB_IStatement* self, struct FB_IStatus* status);
 };
 
-struct Statement
+struct FB_IStatement
 {
 	void* cloopDummy[1];
-	struct StatementVTable* vtable;
+	struct FB_IStatementVTable* vtable;
 };
 
-CLOOP_EXTERN_C void Statement_addRef(struct Statement* self);
-CLOOP_EXTERN_C int Statement_release(struct Statement* self);
-CLOOP_EXTERN_C void Statement_getInfo(struct Statement* self, struct Status* status, unsigned itemsLength, const unsigned char* items, unsigned bufferLength, unsigned char* buffer);
-CLOOP_EXTERN_C unsigned Statement_getType(struct Statement* self, struct Status* status);
-CLOOP_EXTERN_C const char* Statement_getPlan(struct Statement* self, struct Status* status, FB_BOOLEAN detailed);
-CLOOP_EXTERN_C ISC_UINT64 Statement_getAffectedRecords(struct Statement* self, struct Status* status);
-CLOOP_EXTERN_C struct MessageMetadata* Statement_getInputMetadata(struct Statement* self, struct Status* status);
-CLOOP_EXTERN_C struct MessageMetadata* Statement_getOutputMetadata(struct Statement* self, struct Status* status);
-CLOOP_EXTERN_C struct Transaction* Statement_execute(struct Statement* self, struct Status* status, struct Transaction* transaction, struct MessageMetadata* inMetadata, void* inBuffer, struct MessageMetadata* outMetadata, void* outBuffer);
-CLOOP_EXTERN_C struct ResultSet* Statement_openCursor(struct Statement* self, struct Status* status, struct Transaction* transaction, struct MessageMetadata* inMetadata, void* inBuffer, struct MessageMetadata* outMetadata, unsigned flags);
-CLOOP_EXTERN_C void Statement_setCursorName(struct Statement* self, struct Status* status, const char* name);
-CLOOP_EXTERN_C void Statement_free(struct Statement* self, struct Status* status);
-CLOOP_EXTERN_C unsigned Statement_getFlags(struct Statement* self, struct Status* status);
+CLOOP_EXTERN_C void FB_IStatement_addRef(struct FB_IStatement* self);
+CLOOP_EXTERN_C int FB_IStatement_release(struct FB_IStatement* self);
+CLOOP_EXTERN_C void FB_IStatement_getInfo(struct FB_IStatement* self, struct FB_IStatus* status, unsigned itemsLength, const unsigned char* items, unsigned bufferLength, unsigned char* buffer);
+CLOOP_EXTERN_C unsigned FB_IStatement_getType(struct FB_IStatement* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C const char* FB_IStatement_getPlan(struct FB_IStatement* self, struct FB_IStatus* status, FB_BOOLEAN detailed);
+CLOOP_EXTERN_C ISC_UINT64 FB_IStatement_getAffectedRecords(struct FB_IStatement* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C struct FB_IMessageMetadata* FB_IStatement_getInputMetadata(struct FB_IStatement* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C struct FB_IMessageMetadata* FB_IStatement_getOutputMetadata(struct FB_IStatement* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C struct FB_ITransaction* FB_IStatement_execute(struct FB_IStatement* self, struct FB_IStatus* status, struct FB_ITransaction* transaction, struct FB_IMessageMetadata* inMetadata, void* inBuffer, struct FB_IMessageMetadata* outMetadata, void* outBuffer);
+CLOOP_EXTERN_C struct FB_IResultSet* FB_IStatement_openCursor(struct FB_IStatement* self, struct FB_IStatus* status, struct FB_ITransaction* transaction, struct FB_IMessageMetadata* inMetadata, void* inBuffer, struct FB_IMessageMetadata* outMetadata, unsigned flags);
+CLOOP_EXTERN_C void FB_IStatement_setCursorName(struct FB_IStatement* self, struct FB_IStatus* status, const char* name);
+CLOOP_EXTERN_C void FB_IStatement_free(struct FB_IStatement* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C unsigned FB_IStatement_getFlags(struct FB_IStatement* self, struct FB_IStatus* status);
 
-#define Request_VERSION 9
+#define FB_IRequest_VERSION 9
 
-struct Request;
+struct FB_IRequest;
 
-struct RequestVTable
+struct FB_IRequestVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*addRef)(struct Request* self);
-	int (*release)(struct Request* self);
-	void (*receive)(struct Request* self, struct Status* status, int level, unsigned msgType, unsigned length, unsigned char* message);
-	void (*send)(struct Request* self, struct Status* status, int level, unsigned msgType, unsigned length, const unsigned char* message);
-	void (*getInfo)(struct Request* self, struct Status* status, int level, unsigned itemsLength, const unsigned char* items, unsigned bufferLength, unsigned char* buffer);
-	void (*start)(struct Request* self, struct Status* status, struct Transaction* tra, int level);
-	void (*startAndSend)(struct Request* self, struct Status* status, struct Transaction* tra, int level, unsigned msgType, unsigned length, const unsigned char* message);
-	void (*unwind)(struct Request* self, struct Status* status, int level);
-	void (*free)(struct Request* self, struct Status* status);
+	void (*addRef)(struct FB_IRequest* self);
+	int (*release)(struct FB_IRequest* self);
+	void (*receive)(struct FB_IRequest* self, struct FB_IStatus* status, int level, unsigned msgType, unsigned length, unsigned char* message);
+	void (*send)(struct FB_IRequest* self, struct FB_IStatus* status, int level, unsigned msgType, unsigned length, const unsigned char* message);
+	void (*getInfo)(struct FB_IRequest* self, struct FB_IStatus* status, int level, unsigned itemsLength, const unsigned char* items, unsigned bufferLength, unsigned char* buffer);
+	void (*start)(struct FB_IRequest* self, struct FB_IStatus* status, struct FB_ITransaction* tra, int level);
+	void (*startAndSend)(struct FB_IRequest* self, struct FB_IStatus* status, struct FB_ITransaction* tra, int level, unsigned msgType, unsigned length, const unsigned char* message);
+	void (*unwind)(struct FB_IRequest* self, struct FB_IStatus* status, int level);
+	void (*free)(struct FB_IRequest* self, struct FB_IStatus* status);
 };
 
-struct Request
+struct FB_IRequest
 {
 	void* cloopDummy[1];
-	struct RequestVTable* vtable;
+	struct FB_IRequestVTable* vtable;
 };
 
-CLOOP_EXTERN_C void Request_addRef(struct Request* self);
-CLOOP_EXTERN_C int Request_release(struct Request* self);
-CLOOP_EXTERN_C void Request_receive(struct Request* self, struct Status* status, int level, unsigned msgType, unsigned length, unsigned char* message);
-CLOOP_EXTERN_C void Request_send(struct Request* self, struct Status* status, int level, unsigned msgType, unsigned length, const unsigned char* message);
-CLOOP_EXTERN_C void Request_getInfo(struct Request* self, struct Status* status, int level, unsigned itemsLength, const unsigned char* items, unsigned bufferLength, unsigned char* buffer);
-CLOOP_EXTERN_C void Request_start(struct Request* self, struct Status* status, struct Transaction* tra, int level);
-CLOOP_EXTERN_C void Request_startAndSend(struct Request* self, struct Status* status, struct Transaction* tra, int level, unsigned msgType, unsigned length, const unsigned char* message);
-CLOOP_EXTERN_C void Request_unwind(struct Request* self, struct Status* status, int level);
-CLOOP_EXTERN_C void Request_free(struct Request* self, struct Status* status);
+CLOOP_EXTERN_C void FB_IRequest_addRef(struct FB_IRequest* self);
+CLOOP_EXTERN_C int FB_IRequest_release(struct FB_IRequest* self);
+CLOOP_EXTERN_C void FB_IRequest_receive(struct FB_IRequest* self, struct FB_IStatus* status, int level, unsigned msgType, unsigned length, unsigned char* message);
+CLOOP_EXTERN_C void FB_IRequest_send(struct FB_IRequest* self, struct FB_IStatus* status, int level, unsigned msgType, unsigned length, const unsigned char* message);
+CLOOP_EXTERN_C void FB_IRequest_getInfo(struct FB_IRequest* self, struct FB_IStatus* status, int level, unsigned itemsLength, const unsigned char* items, unsigned bufferLength, unsigned char* buffer);
+CLOOP_EXTERN_C void FB_IRequest_start(struct FB_IRequest* self, struct FB_IStatus* status, struct FB_ITransaction* tra, int level);
+CLOOP_EXTERN_C void FB_IRequest_startAndSend(struct FB_IRequest* self, struct FB_IStatus* status, struct FB_ITransaction* tra, int level, unsigned msgType, unsigned length, const unsigned char* message);
+CLOOP_EXTERN_C void FB_IRequest_unwind(struct FB_IRequest* self, struct FB_IStatus* status, int level);
+CLOOP_EXTERN_C void FB_IRequest_free(struct FB_IRequest* self, struct FB_IStatus* status);
 
-#define Events_VERSION 3
+#define FB_IEvents_VERSION 3
 
-struct Events;
+struct FB_IEvents;
 
-struct EventsVTable
+struct FB_IEventsVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*addRef)(struct Events* self);
-	int (*release)(struct Events* self);
-	void (*cancel)(struct Events* self, struct Status* status);
+	void (*addRef)(struct FB_IEvents* self);
+	int (*release)(struct FB_IEvents* self);
+	void (*cancel)(struct FB_IEvents* self, struct FB_IStatus* status);
 };
 
-struct Events
+struct FB_IEvents
 {
 	void* cloopDummy[1];
-	struct EventsVTable* vtable;
+	struct FB_IEventsVTable* vtable;
 };
 
-CLOOP_EXTERN_C void Events_addRef(struct Events* self);
-CLOOP_EXTERN_C int Events_release(struct Events* self);
-CLOOP_EXTERN_C void Events_cancel(struct Events* self, struct Status* status);
+CLOOP_EXTERN_C void FB_IEvents_addRef(struct FB_IEvents* self);
+CLOOP_EXTERN_C int FB_IEvents_release(struct FB_IEvents* self);
+CLOOP_EXTERN_C void FB_IEvents_cancel(struct FB_IEvents* self, struct FB_IStatus* status);
 
-#define Attachment_VERSION 20
+#define FB_IAttachment_VERSION 20
 
-struct Attachment;
+struct FB_IAttachment;
 
-struct AttachmentVTable
+struct FB_IAttachmentVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*addRef)(struct Attachment* self);
-	int (*release)(struct Attachment* self);
-	void (*getInfo)(struct Attachment* self, struct Status* status, unsigned itemsLength, const unsigned char* items, unsigned bufferLength, unsigned char* buffer);
-	struct Transaction* (*startTransaction)(struct Attachment* self, struct Status* status, unsigned tpbLength, const unsigned char* tpb);
-	struct Transaction* (*reconnectTransaction)(struct Attachment* self, struct Status* status, unsigned length, const unsigned char* id);
-	struct Request* (*compileRequest)(struct Attachment* self, struct Status* status, unsigned blrLength, const unsigned char* blr);
-	void (*transactRequest)(struct Attachment* self, struct Status* status, struct Transaction* transaction, unsigned blrLength, const unsigned char* blr, unsigned inMsgLength, const unsigned char* inMsg, unsigned outMsgLength, unsigned char* outMsg);
-	struct Blob* (*createBlob)(struct Attachment* self, struct Status* status, struct Transaction* transaction, ISC_QUAD* id, unsigned bpbLength, const unsigned char* bpb);
-	struct Blob* (*openBlob)(struct Attachment* self, struct Status* status, struct Transaction* transaction, ISC_QUAD* id, unsigned bpbLength, const unsigned char* bpb);
-	int (*getSlice)(struct Attachment* self, struct Status* status, struct Transaction* transaction, ISC_QUAD* id, unsigned sdlLength, const unsigned char* sdl, unsigned paramLength, const unsigned char* param, int sliceLength, unsigned char* slice);
-	void (*putSlice)(struct Attachment* self, struct Status* status, struct Transaction* transaction, ISC_QUAD* id, unsigned sdlLength, const unsigned char* sdl, unsigned paramLength, const unsigned char* param, int sliceLength, unsigned char* slice);
-	void (*executeDyn)(struct Attachment* self, struct Status* status, struct Transaction* transaction, unsigned length, const unsigned char* dyn);
-	struct Statement* (*prepare)(struct Attachment* self, struct Status* status, struct Transaction* tra, unsigned stmtLength, const char* sqlStmt, unsigned dialect, unsigned flags);
-	struct Transaction* (*execute)(struct Attachment* self, struct Status* status, struct Transaction* transaction, unsigned stmtLength, const char* sqlStmt, unsigned dialect, struct MessageMetadata* inMetadata, void* inBuffer, struct MessageMetadata* outMetadata, void* outBuffer);
-	struct ResultSet* (*openCursor)(struct Attachment* self, struct Status* status, struct Transaction* transaction, unsigned stmtLength, const char* sqlStmt, unsigned dialect, struct MessageMetadata* inMetadata, void* inBuffer, struct MessageMetadata* outMetadata, const char* cursorName, unsigned cursorFlags);
-	struct Events* (*queEvents)(struct Attachment* self, struct Status* status, struct EventCallback* callback, unsigned length, const unsigned char* events);
-	void (*cancelOperation)(struct Attachment* self, struct Status* status, int option);
-	void (*ping)(struct Attachment* self, struct Status* status);
-	void (*detach)(struct Attachment* self, struct Status* status);
-	void (*dropDatabase)(struct Attachment* self, struct Status* status);
+	void (*addRef)(struct FB_IAttachment* self);
+	int (*release)(struct FB_IAttachment* self);
+	void (*getInfo)(struct FB_IAttachment* self, struct FB_IStatus* status, unsigned itemsLength, const unsigned char* items, unsigned bufferLength, unsigned char* buffer);
+	struct FB_ITransaction* (*startTransaction)(struct FB_IAttachment* self, struct FB_IStatus* status, unsigned tpbLength, const unsigned char* tpb);
+	struct FB_ITransaction* (*reconnectTransaction)(struct FB_IAttachment* self, struct FB_IStatus* status, unsigned length, const unsigned char* id);
+	struct FB_IRequest* (*compileRequest)(struct FB_IAttachment* self, struct FB_IStatus* status, unsigned blrLength, const unsigned char* blr);
+	void (*transactRequest)(struct FB_IAttachment* self, struct FB_IStatus* status, struct FB_ITransaction* transaction, unsigned blrLength, const unsigned char* blr, unsigned inMsgLength, const unsigned char* inMsg, unsigned outMsgLength, unsigned char* outMsg);
+	struct FB_IBlob* (*createBlob)(struct FB_IAttachment* self, struct FB_IStatus* status, struct FB_ITransaction* transaction, ISC_QUAD* id, unsigned bpbLength, const unsigned char* bpb);
+	struct FB_IBlob* (*openBlob)(struct FB_IAttachment* self, struct FB_IStatus* status, struct FB_ITransaction* transaction, ISC_QUAD* id, unsigned bpbLength, const unsigned char* bpb);
+	int (*getSlice)(struct FB_IAttachment* self, struct FB_IStatus* status, struct FB_ITransaction* transaction, ISC_QUAD* id, unsigned sdlLength, const unsigned char* sdl, unsigned paramLength, const unsigned char* param, int sliceLength, unsigned char* slice);
+	void (*putSlice)(struct FB_IAttachment* self, struct FB_IStatus* status, struct FB_ITransaction* transaction, ISC_QUAD* id, unsigned sdlLength, const unsigned char* sdl, unsigned paramLength, const unsigned char* param, int sliceLength, unsigned char* slice);
+	void (*executeDyn)(struct FB_IAttachment* self, struct FB_IStatus* status, struct FB_ITransaction* transaction, unsigned length, const unsigned char* dyn);
+	struct FB_IStatement* (*prepare)(struct FB_IAttachment* self, struct FB_IStatus* status, struct FB_ITransaction* tra, unsigned stmtLength, const char* sqlStmt, unsigned dialect, unsigned flags);
+	struct FB_ITransaction* (*execute)(struct FB_IAttachment* self, struct FB_IStatus* status, struct FB_ITransaction* transaction, unsigned stmtLength, const char* sqlStmt, unsigned dialect, struct FB_IMessageMetadata* inMetadata, void* inBuffer, struct FB_IMessageMetadata* outMetadata, void* outBuffer);
+	struct FB_IResultSet* (*openCursor)(struct FB_IAttachment* self, struct FB_IStatus* status, struct FB_ITransaction* transaction, unsigned stmtLength, const char* sqlStmt, unsigned dialect, struct FB_IMessageMetadata* inMetadata, void* inBuffer, struct FB_IMessageMetadata* outMetadata, const char* cursorName, unsigned cursorFlags);
+	struct FB_IEvents* (*queEvents)(struct FB_IAttachment* self, struct FB_IStatus* status, struct FB_IEventCallback* callback, unsigned length, const unsigned char* events);
+	void (*cancelOperation)(struct FB_IAttachment* self, struct FB_IStatus* status, int option);
+	void (*ping)(struct FB_IAttachment* self, struct FB_IStatus* status);
+	void (*detach)(struct FB_IAttachment* self, struct FB_IStatus* status);
+	void (*dropDatabase)(struct FB_IAttachment* self, struct FB_IStatus* status);
 };
 
-struct Attachment
+struct FB_IAttachment
 {
 	void* cloopDummy[1];
-	struct AttachmentVTable* vtable;
+	struct FB_IAttachmentVTable* vtable;
 };
 
-CLOOP_EXTERN_C void Attachment_addRef(struct Attachment* self);
-CLOOP_EXTERN_C int Attachment_release(struct Attachment* self);
-CLOOP_EXTERN_C void Attachment_getInfo(struct Attachment* self, struct Status* status, unsigned itemsLength, const unsigned char* items, unsigned bufferLength, unsigned char* buffer);
-CLOOP_EXTERN_C struct Transaction* Attachment_startTransaction(struct Attachment* self, struct Status* status, unsigned tpbLength, const unsigned char* tpb);
-CLOOP_EXTERN_C struct Transaction* Attachment_reconnectTransaction(struct Attachment* self, struct Status* status, unsigned length, const unsigned char* id);
-CLOOP_EXTERN_C struct Request* Attachment_compileRequest(struct Attachment* self, struct Status* status, unsigned blrLength, const unsigned char* blr);
-CLOOP_EXTERN_C void Attachment_transactRequest(struct Attachment* self, struct Status* status, struct Transaction* transaction, unsigned blrLength, const unsigned char* blr, unsigned inMsgLength, const unsigned char* inMsg, unsigned outMsgLength, unsigned char* outMsg);
-CLOOP_EXTERN_C struct Blob* Attachment_createBlob(struct Attachment* self, struct Status* status, struct Transaction* transaction, ISC_QUAD* id, unsigned bpbLength, const unsigned char* bpb);
-CLOOP_EXTERN_C struct Blob* Attachment_openBlob(struct Attachment* self, struct Status* status, struct Transaction* transaction, ISC_QUAD* id, unsigned bpbLength, const unsigned char* bpb);
-CLOOP_EXTERN_C int Attachment_getSlice(struct Attachment* self, struct Status* status, struct Transaction* transaction, ISC_QUAD* id, unsigned sdlLength, const unsigned char* sdl, unsigned paramLength, const unsigned char* param, int sliceLength, unsigned char* slice);
-CLOOP_EXTERN_C void Attachment_putSlice(struct Attachment* self, struct Status* status, struct Transaction* transaction, ISC_QUAD* id, unsigned sdlLength, const unsigned char* sdl, unsigned paramLength, const unsigned char* param, int sliceLength, unsigned char* slice);
-CLOOP_EXTERN_C void Attachment_executeDyn(struct Attachment* self, struct Status* status, struct Transaction* transaction, unsigned length, const unsigned char* dyn);
-CLOOP_EXTERN_C struct Statement* Attachment_prepare(struct Attachment* self, struct Status* status, struct Transaction* tra, unsigned stmtLength, const char* sqlStmt, unsigned dialect, unsigned flags);
-CLOOP_EXTERN_C struct Transaction* Attachment_execute(struct Attachment* self, struct Status* status, struct Transaction* transaction, unsigned stmtLength, const char* sqlStmt, unsigned dialect, struct MessageMetadata* inMetadata, void* inBuffer, struct MessageMetadata* outMetadata, void* outBuffer);
-CLOOP_EXTERN_C struct ResultSet* Attachment_openCursor(struct Attachment* self, struct Status* status, struct Transaction* transaction, unsigned stmtLength, const char* sqlStmt, unsigned dialect, struct MessageMetadata* inMetadata, void* inBuffer, struct MessageMetadata* outMetadata, const char* cursorName, unsigned cursorFlags);
-CLOOP_EXTERN_C struct Events* Attachment_queEvents(struct Attachment* self, struct Status* status, struct EventCallback* callback, unsigned length, const unsigned char* events);
-CLOOP_EXTERN_C void Attachment_cancelOperation(struct Attachment* self, struct Status* status, int option);
-CLOOP_EXTERN_C void Attachment_ping(struct Attachment* self, struct Status* status);
-CLOOP_EXTERN_C void Attachment_detach(struct Attachment* self, struct Status* status);
-CLOOP_EXTERN_C void Attachment_dropDatabase(struct Attachment* self, struct Status* status);
+CLOOP_EXTERN_C void FB_IAttachment_addRef(struct FB_IAttachment* self);
+CLOOP_EXTERN_C int FB_IAttachment_release(struct FB_IAttachment* self);
+CLOOP_EXTERN_C void FB_IAttachment_getInfo(struct FB_IAttachment* self, struct FB_IStatus* status, unsigned itemsLength, const unsigned char* items, unsigned bufferLength, unsigned char* buffer);
+CLOOP_EXTERN_C struct FB_ITransaction* FB_IAttachment_startTransaction(struct FB_IAttachment* self, struct FB_IStatus* status, unsigned tpbLength, const unsigned char* tpb);
+CLOOP_EXTERN_C struct FB_ITransaction* FB_IAttachment_reconnectTransaction(struct FB_IAttachment* self, struct FB_IStatus* status, unsigned length, const unsigned char* id);
+CLOOP_EXTERN_C struct FB_IRequest* FB_IAttachment_compileRequest(struct FB_IAttachment* self, struct FB_IStatus* status, unsigned blrLength, const unsigned char* blr);
+CLOOP_EXTERN_C void FB_IAttachment_transactRequest(struct FB_IAttachment* self, struct FB_IStatus* status, struct FB_ITransaction* transaction, unsigned blrLength, const unsigned char* blr, unsigned inMsgLength, const unsigned char* inMsg, unsigned outMsgLength, unsigned char* outMsg);
+CLOOP_EXTERN_C struct FB_IBlob* FB_IAttachment_createBlob(struct FB_IAttachment* self, struct FB_IStatus* status, struct FB_ITransaction* transaction, ISC_QUAD* id, unsigned bpbLength, const unsigned char* bpb);
+CLOOP_EXTERN_C struct FB_IBlob* FB_IAttachment_openBlob(struct FB_IAttachment* self, struct FB_IStatus* status, struct FB_ITransaction* transaction, ISC_QUAD* id, unsigned bpbLength, const unsigned char* bpb);
+CLOOP_EXTERN_C int FB_IAttachment_getSlice(struct FB_IAttachment* self, struct FB_IStatus* status, struct FB_ITransaction* transaction, ISC_QUAD* id, unsigned sdlLength, const unsigned char* sdl, unsigned paramLength, const unsigned char* param, int sliceLength, unsigned char* slice);
+CLOOP_EXTERN_C void FB_IAttachment_putSlice(struct FB_IAttachment* self, struct FB_IStatus* status, struct FB_ITransaction* transaction, ISC_QUAD* id, unsigned sdlLength, const unsigned char* sdl, unsigned paramLength, const unsigned char* param, int sliceLength, unsigned char* slice);
+CLOOP_EXTERN_C void FB_IAttachment_executeDyn(struct FB_IAttachment* self, struct FB_IStatus* status, struct FB_ITransaction* transaction, unsigned length, const unsigned char* dyn);
+CLOOP_EXTERN_C struct FB_IStatement* FB_IAttachment_prepare(struct FB_IAttachment* self, struct FB_IStatus* status, struct FB_ITransaction* tra, unsigned stmtLength, const char* sqlStmt, unsigned dialect, unsigned flags);
+CLOOP_EXTERN_C struct FB_ITransaction* FB_IAttachment_execute(struct FB_IAttachment* self, struct FB_IStatus* status, struct FB_ITransaction* transaction, unsigned stmtLength, const char* sqlStmt, unsigned dialect, struct FB_IMessageMetadata* inMetadata, void* inBuffer, struct FB_IMessageMetadata* outMetadata, void* outBuffer);
+CLOOP_EXTERN_C struct FB_IResultSet* FB_IAttachment_openCursor(struct FB_IAttachment* self, struct FB_IStatus* status, struct FB_ITransaction* transaction, unsigned stmtLength, const char* sqlStmt, unsigned dialect, struct FB_IMessageMetadata* inMetadata, void* inBuffer, struct FB_IMessageMetadata* outMetadata, const char* cursorName, unsigned cursorFlags);
+CLOOP_EXTERN_C struct FB_IEvents* FB_IAttachment_queEvents(struct FB_IAttachment* self, struct FB_IStatus* status, struct FB_IEventCallback* callback, unsigned length, const unsigned char* events);
+CLOOP_EXTERN_C void FB_IAttachment_cancelOperation(struct FB_IAttachment* self, struct FB_IStatus* status, int option);
+CLOOP_EXTERN_C void FB_IAttachment_ping(struct FB_IAttachment* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C void FB_IAttachment_detach(struct FB_IAttachment* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C void FB_IAttachment_dropDatabase(struct FB_IAttachment* self, struct FB_IStatus* status);
 
-#define Service_VERSION 5
+#define FB_IService_VERSION 5
 
-struct Service;
+struct FB_IService;
 
-struct ServiceVTable
+struct FB_IServiceVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*addRef)(struct Service* self);
-	int (*release)(struct Service* self);
-	void (*detach)(struct Service* self, struct Status* status);
-	void (*query)(struct Service* self, struct Status* status, unsigned sendLength, const unsigned char* sendItems, unsigned receiveLength, const unsigned char* receiveItems, unsigned bufferLength, unsigned char* buffer);
-	void (*start)(struct Service* self, struct Status* status, unsigned spbLength, const unsigned char* spb);
+	void (*addRef)(struct FB_IService* self);
+	int (*release)(struct FB_IService* self);
+	void (*detach)(struct FB_IService* self, struct FB_IStatus* status);
+	void (*query)(struct FB_IService* self, struct FB_IStatus* status, unsigned sendLength, const unsigned char* sendItems, unsigned receiveLength, const unsigned char* receiveItems, unsigned bufferLength, unsigned char* buffer);
+	void (*start)(struct FB_IService* self, struct FB_IStatus* status, unsigned spbLength, const unsigned char* spb);
 };
 
-struct Service
+struct FB_IService
 {
 	void* cloopDummy[1];
-	struct ServiceVTable* vtable;
+	struct FB_IServiceVTable* vtable;
 };
 
-CLOOP_EXTERN_C void Service_addRef(struct Service* self);
-CLOOP_EXTERN_C int Service_release(struct Service* self);
-CLOOP_EXTERN_C void Service_detach(struct Service* self, struct Status* status);
-CLOOP_EXTERN_C void Service_query(struct Service* self, struct Status* status, unsigned sendLength, const unsigned char* sendItems, unsigned receiveLength, const unsigned char* receiveItems, unsigned bufferLength, unsigned char* buffer);
-CLOOP_EXTERN_C void Service_start(struct Service* self, struct Status* status, unsigned spbLength, const unsigned char* spb);
+CLOOP_EXTERN_C void FB_IService_addRef(struct FB_IService* self);
+CLOOP_EXTERN_C int FB_IService_release(struct FB_IService* self);
+CLOOP_EXTERN_C void FB_IService_detach(struct FB_IService* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C void FB_IService_query(struct FB_IService* self, struct FB_IStatus* status, unsigned sendLength, const unsigned char* sendItems, unsigned receiveLength, const unsigned char* receiveItems, unsigned bufferLength, unsigned char* buffer);
+CLOOP_EXTERN_C void FB_IService_start(struct FB_IService* self, struct FB_IStatus* status, unsigned spbLength, const unsigned char* spb);
 
-#define Provider_VERSION 9
+#define FB_IProvider_VERSION 9
 
-struct Provider;
+struct FB_IProvider;
 
-struct ProviderVTable
+struct FB_IProviderVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*addRef)(struct Provider* self);
-	int (*release)(struct Provider* self);
-	void (*setOwner)(struct Provider* self, struct ReferenceCounted* r);
-	struct ReferenceCounted* (*getOwner)(struct Provider* self);
-	struct Attachment* (*attachDatabase)(struct Provider* self, struct Status* status, const char* fileName, unsigned dpbLength, const unsigned char* dpb);
-	struct Attachment* (*createDatabase)(struct Provider* self, struct Status* status, const char* fileName, unsigned dpbLength, const unsigned char* dpb);
-	struct Service* (*attachServiceManager)(struct Provider* self, struct Status* status, const char* service, unsigned spbLength, const unsigned char* spb);
-	void (*shutdown)(struct Provider* self, struct Status* status, unsigned timeout, const int reason);
-	void (*setDbCryptCallback)(struct Provider* self, struct Status* status, struct CryptKeyCallback* cryptCallback);
+	void (*addRef)(struct FB_IProvider* self);
+	int (*release)(struct FB_IProvider* self);
+	void (*setOwner)(struct FB_IProvider* self, struct FB_IReferenceCounted* r);
+	struct FB_IReferenceCounted* (*getOwner)(struct FB_IProvider* self);
+	struct FB_IAttachment* (*attachDatabase)(struct FB_IProvider* self, struct FB_IStatus* status, const char* fileName, unsigned dpbLength, const unsigned char* dpb);
+	struct FB_IAttachment* (*createDatabase)(struct FB_IProvider* self, struct FB_IStatus* status, const char* fileName, unsigned dpbLength, const unsigned char* dpb);
+	struct FB_IService* (*attachServiceManager)(struct FB_IProvider* self, struct FB_IStatus* status, const char* service, unsigned spbLength, const unsigned char* spb);
+	void (*shutdown)(struct FB_IProvider* self, struct FB_IStatus* status, unsigned timeout, const int reason);
+	void (*setDbCryptCallback)(struct FB_IProvider* self, struct FB_IStatus* status, struct FB_ICryptKeyCallback* cryptCallback);
 };
 
-struct Provider
+struct FB_IProvider
 {
 	void* cloopDummy[1];
-	struct ProviderVTable* vtable;
+	struct FB_IProviderVTable* vtable;
 };
 
-CLOOP_EXTERN_C void Provider_addRef(struct Provider* self);
-CLOOP_EXTERN_C int Provider_release(struct Provider* self);
-CLOOP_EXTERN_C void Provider_setOwner(struct Provider* self, struct ReferenceCounted* r);
-CLOOP_EXTERN_C struct ReferenceCounted* Provider_getOwner(struct Provider* self);
-CLOOP_EXTERN_C struct Attachment* Provider_attachDatabase(struct Provider* self, struct Status* status, const char* fileName, unsigned dpbLength, const unsigned char* dpb);
-CLOOP_EXTERN_C struct Attachment* Provider_createDatabase(struct Provider* self, struct Status* status, const char* fileName, unsigned dpbLength, const unsigned char* dpb);
-CLOOP_EXTERN_C struct Service* Provider_attachServiceManager(struct Provider* self, struct Status* status, const char* service, unsigned spbLength, const unsigned char* spb);
-CLOOP_EXTERN_C void Provider_shutdown(struct Provider* self, struct Status* status, unsigned timeout, const int reason);
-CLOOP_EXTERN_C void Provider_setDbCryptCallback(struct Provider* self, struct Status* status, struct CryptKeyCallback* cryptCallback);
+CLOOP_EXTERN_C void FB_IProvider_addRef(struct FB_IProvider* self);
+CLOOP_EXTERN_C int FB_IProvider_release(struct FB_IProvider* self);
+CLOOP_EXTERN_C void FB_IProvider_setOwner(struct FB_IProvider* self, struct FB_IReferenceCounted* r);
+CLOOP_EXTERN_C struct FB_IReferenceCounted* FB_IProvider_getOwner(struct FB_IProvider* self);
+CLOOP_EXTERN_C struct FB_IAttachment* FB_IProvider_attachDatabase(struct FB_IProvider* self, struct FB_IStatus* status, const char* fileName, unsigned dpbLength, const unsigned char* dpb);
+CLOOP_EXTERN_C struct FB_IAttachment* FB_IProvider_createDatabase(struct FB_IProvider* self, struct FB_IStatus* status, const char* fileName, unsigned dpbLength, const unsigned char* dpb);
+CLOOP_EXTERN_C struct FB_IService* FB_IProvider_attachServiceManager(struct FB_IProvider* self, struct FB_IStatus* status, const char* service, unsigned spbLength, const unsigned char* spb);
+CLOOP_EXTERN_C void FB_IProvider_shutdown(struct FB_IProvider* self, struct FB_IStatus* status, unsigned timeout, const int reason);
+CLOOP_EXTERN_C void FB_IProvider_setDbCryptCallback(struct FB_IProvider* self, struct FB_IStatus* status, struct FB_ICryptKeyCallback* cryptCallback);
 
-#define DtcStart_VERSION 4
+#define FB_IDtcStart_VERSION 4
 
-struct DtcStart;
+struct FB_IDtcStart;
 
-struct DtcStartVTable
+struct FB_IDtcStartVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*dispose)(struct DtcStart* self);
-	void (*addAttachment)(struct DtcStart* self, struct Status* status, struct Attachment* att);
-	void (*addWithTpb)(struct DtcStart* self, struct Status* status, struct Attachment* att, unsigned length, const unsigned char* tpb);
-	struct Transaction* (*start)(struct DtcStart* self, struct Status* status);
+	void (*dispose)(struct FB_IDtcStart* self);
+	void (*addAttachment)(struct FB_IDtcStart* self, struct FB_IStatus* status, struct FB_IAttachment* att);
+	void (*addWithTpb)(struct FB_IDtcStart* self, struct FB_IStatus* status, struct FB_IAttachment* att, unsigned length, const unsigned char* tpb);
+	struct FB_ITransaction* (*start)(struct FB_IDtcStart* self, struct FB_IStatus* status);
 };
 
-struct DtcStart
+struct FB_IDtcStart
 {
 	void* cloopDummy[1];
-	struct DtcStartVTable* vtable;
+	struct FB_IDtcStartVTable* vtable;
 };
 
-CLOOP_EXTERN_C void DtcStart_dispose(struct DtcStart* self);
-CLOOP_EXTERN_C void DtcStart_addAttachment(struct DtcStart* self, struct Status* status, struct Attachment* att);
-CLOOP_EXTERN_C void DtcStart_addWithTpb(struct DtcStart* self, struct Status* status, struct Attachment* att, unsigned length, const unsigned char* tpb);
-CLOOP_EXTERN_C struct Transaction* DtcStart_start(struct DtcStart* self, struct Status* status);
+CLOOP_EXTERN_C void FB_IDtcStart_dispose(struct FB_IDtcStart* self);
+CLOOP_EXTERN_C void FB_IDtcStart_addAttachment(struct FB_IDtcStart* self, struct FB_IStatus* status, struct FB_IAttachment* att);
+CLOOP_EXTERN_C void FB_IDtcStart_addWithTpb(struct FB_IDtcStart* self, struct FB_IStatus* status, struct FB_IAttachment* att, unsigned length, const unsigned char* tpb);
+CLOOP_EXTERN_C struct FB_ITransaction* FB_IDtcStart_start(struct FB_IDtcStart* self, struct FB_IStatus* status);
 
-#define Dtc_VERSION 2
+#define FB_IDtc_VERSION 2
 
-struct Dtc;
+struct FB_IDtc;
 
-struct DtcVTable
+struct FB_IDtcVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	struct Transaction* (*join)(struct Dtc* self, struct Status* status, struct Transaction* one, struct Transaction* two);
-	struct DtcStart* (*startBuilder)(struct Dtc* self, struct Status* status);
+	struct FB_ITransaction* (*join)(struct FB_IDtc* self, struct FB_IStatus* status, struct FB_ITransaction* one, struct FB_ITransaction* two);
+	struct FB_IDtcStart* (*startBuilder)(struct FB_IDtc* self, struct FB_IStatus* status);
 };
 
-struct Dtc
+struct FB_IDtc
 {
 	void* cloopDummy[1];
-	struct DtcVTable* vtable;
+	struct FB_IDtcVTable* vtable;
 };
 
-CLOOP_EXTERN_C struct Transaction* Dtc_join(struct Dtc* self, struct Status* status, struct Transaction* one, struct Transaction* two);
-CLOOP_EXTERN_C struct DtcStart* Dtc_startBuilder(struct Dtc* self, struct Status* status);
+CLOOP_EXTERN_C struct FB_ITransaction* FB_IDtc_join(struct FB_IDtc* self, struct FB_IStatus* status, struct FB_ITransaction* one, struct FB_ITransaction* two);
+CLOOP_EXTERN_C struct FB_IDtcStart* FB_IDtc_startBuilder(struct FB_IDtc* self, struct FB_IStatus* status);
 
-#define Auth_VERSION 4
+#define FB_IAuth_VERSION 4
 
-#define Auth_AUTH_FAILED ((int) (-1))
-#define Auth_AUTH_SUCCESS ((int) (0))
-#define Auth_AUTH_MORE_DATA ((int) (1))
-#define Auth_AUTH_CONTINUE ((int) (2))
+#define FB_IAuth_AUTH_FAILED ((int) (-1))
+#define FB_IAuth_AUTH_SUCCESS ((int) (0))
+#define FB_IAuth_AUTH_MORE_DATA ((int) (1))
+#define FB_IAuth_AUTH_CONTINUE ((int) (2))
 
-struct Auth;
+struct FB_IAuth;
 
-struct AuthVTable
+struct FB_IAuthVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*addRef)(struct Auth* self);
-	int (*release)(struct Auth* self);
-	void (*setOwner)(struct Auth* self, struct ReferenceCounted* r);
-	struct ReferenceCounted* (*getOwner)(struct Auth* self);
+	void (*addRef)(struct FB_IAuth* self);
+	int (*release)(struct FB_IAuth* self);
+	void (*setOwner)(struct FB_IAuth* self, struct FB_IReferenceCounted* r);
+	struct FB_IReferenceCounted* (*getOwner)(struct FB_IAuth* self);
 };
 
-struct Auth
+struct FB_IAuth
 {
 	void* cloopDummy[1];
-	struct AuthVTable* vtable;
+	struct FB_IAuthVTable* vtable;
 };
 
-CLOOP_EXTERN_C void Auth_addRef(struct Auth* self);
-CLOOP_EXTERN_C int Auth_release(struct Auth* self);
-CLOOP_EXTERN_C void Auth_setOwner(struct Auth* self, struct ReferenceCounted* r);
-CLOOP_EXTERN_C struct ReferenceCounted* Auth_getOwner(struct Auth* self);
+CLOOP_EXTERN_C void FB_IAuth_addRef(struct FB_IAuth* self);
+CLOOP_EXTERN_C int FB_IAuth_release(struct FB_IAuth* self);
+CLOOP_EXTERN_C void FB_IAuth_setOwner(struct FB_IAuth* self, struct FB_IReferenceCounted* r);
+CLOOP_EXTERN_C struct FB_IReferenceCounted* FB_IAuth_getOwner(struct FB_IAuth* self);
 
-#define Writer_VERSION 4
+#define FB_IWriter_VERSION 4
 
-struct Writer;
+struct FB_IWriter;
 
-struct WriterVTable
+struct FB_IWriterVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*reset)(struct Writer* self);
-	void (*add)(struct Writer* self, struct Status* status, const char* name);
-	void (*setType)(struct Writer* self, struct Status* status, const char* value);
-	void (*setDb)(struct Writer* self, struct Status* status, const char* value);
+	void (*reset)(struct FB_IWriter* self);
+	void (*add)(struct FB_IWriter* self, struct FB_IStatus* status, const char* name);
+	void (*setType)(struct FB_IWriter* self, struct FB_IStatus* status, const char* value);
+	void (*setDb)(struct FB_IWriter* self, struct FB_IStatus* status, const char* value);
 };
 
-struct Writer
+struct FB_IWriter
 {
 	void* cloopDummy[1];
-	struct WriterVTable* vtable;
+	struct FB_IWriterVTable* vtable;
 };
 
-CLOOP_EXTERN_C void Writer_reset(struct Writer* self);
-CLOOP_EXTERN_C void Writer_add(struct Writer* self, struct Status* status, const char* name);
-CLOOP_EXTERN_C void Writer_setType(struct Writer* self, struct Status* status, const char* value);
-CLOOP_EXTERN_C void Writer_setDb(struct Writer* self, struct Status* status, const char* value);
+CLOOP_EXTERN_C void FB_IWriter_reset(struct FB_IWriter* self);
+CLOOP_EXTERN_C void FB_IWriter_add(struct FB_IWriter* self, struct FB_IStatus* status, const char* name);
+CLOOP_EXTERN_C void FB_IWriter_setType(struct FB_IWriter* self, struct FB_IStatus* status, const char* value);
+CLOOP_EXTERN_C void FB_IWriter_setDb(struct FB_IWriter* self, struct FB_IStatus* status, const char* value);
 
-#define ServerBlock_VERSION 4
+#define FB_IServerBlock_VERSION 4
 
-struct ServerBlock;
+struct FB_IServerBlock;
 
-struct ServerBlockVTable
+struct FB_IServerBlockVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	const char* (*getLogin)(struct ServerBlock* self);
-	const unsigned char* (*getData)(struct ServerBlock* self, unsigned* length);
-	void (*putData)(struct ServerBlock* self, struct Status* status, unsigned length, const void* data);
-	struct CryptKey* (*newKey)(struct ServerBlock* self, struct Status* status);
+	const char* (*getLogin)(struct FB_IServerBlock* self);
+	const unsigned char* (*getData)(struct FB_IServerBlock* self, unsigned* length);
+	void (*putData)(struct FB_IServerBlock* self, struct FB_IStatus* status, unsigned length, const void* data);
+	struct FB_ICryptKey* (*newKey)(struct FB_IServerBlock* self, struct FB_IStatus* status);
 };
 
-struct ServerBlock
+struct FB_IServerBlock
 {
 	void* cloopDummy[1];
-	struct ServerBlockVTable* vtable;
+	struct FB_IServerBlockVTable* vtable;
 };
 
-CLOOP_EXTERN_C const char* ServerBlock_getLogin(struct ServerBlock* self);
-CLOOP_EXTERN_C const unsigned char* ServerBlock_getData(struct ServerBlock* self, unsigned* length);
-CLOOP_EXTERN_C void ServerBlock_putData(struct ServerBlock* self, struct Status* status, unsigned length, const void* data);
-CLOOP_EXTERN_C struct CryptKey* ServerBlock_newKey(struct ServerBlock* self, struct Status* status);
+CLOOP_EXTERN_C const char* FB_IServerBlock_getLogin(struct FB_IServerBlock* self);
+CLOOP_EXTERN_C const unsigned char* FB_IServerBlock_getData(struct FB_IServerBlock* self, unsigned* length);
+CLOOP_EXTERN_C void FB_IServerBlock_putData(struct FB_IServerBlock* self, struct FB_IStatus* status, unsigned length, const void* data);
+CLOOP_EXTERN_C struct FB_ICryptKey* FB_IServerBlock_newKey(struct FB_IServerBlock* self, struct FB_IStatus* status);
 
-#define ClientBlock_VERSION 7
+#define FB_IClientBlock_VERSION 7
 
-struct ClientBlock;
+struct FB_IClientBlock;
 
-struct ClientBlockVTable
+struct FB_IClientBlockVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*addRef)(struct ClientBlock* self);
-	int (*release)(struct ClientBlock* self);
-	const char* (*getLogin)(struct ClientBlock* self);
-	const char* (*getPassword)(struct ClientBlock* self);
-	const unsigned char* (*getData)(struct ClientBlock* self, unsigned* length);
-	void (*putData)(struct ClientBlock* self, struct Status* status, unsigned length, const void* data);
-	struct CryptKey* (*newKey)(struct ClientBlock* self, struct Status* status);
+	void (*addRef)(struct FB_IClientBlock* self);
+	int (*release)(struct FB_IClientBlock* self);
+	const char* (*getLogin)(struct FB_IClientBlock* self);
+	const char* (*getPassword)(struct FB_IClientBlock* self);
+	const unsigned char* (*getData)(struct FB_IClientBlock* self, unsigned* length);
+	void (*putData)(struct FB_IClientBlock* self, struct FB_IStatus* status, unsigned length, const void* data);
+	struct FB_ICryptKey* (*newKey)(struct FB_IClientBlock* self, struct FB_IStatus* status);
 };
 
-struct ClientBlock
+struct FB_IClientBlock
 {
 	void* cloopDummy[1];
-	struct ClientBlockVTable* vtable;
+	struct FB_IClientBlockVTable* vtable;
 };
 
-CLOOP_EXTERN_C void ClientBlock_addRef(struct ClientBlock* self);
-CLOOP_EXTERN_C int ClientBlock_release(struct ClientBlock* self);
-CLOOP_EXTERN_C const char* ClientBlock_getLogin(struct ClientBlock* self);
-CLOOP_EXTERN_C const char* ClientBlock_getPassword(struct ClientBlock* self);
-CLOOP_EXTERN_C const unsigned char* ClientBlock_getData(struct ClientBlock* self, unsigned* length);
-CLOOP_EXTERN_C void ClientBlock_putData(struct ClientBlock* self, struct Status* status, unsigned length, const void* data);
-CLOOP_EXTERN_C struct CryptKey* ClientBlock_newKey(struct ClientBlock* self, struct Status* status);
+CLOOP_EXTERN_C void FB_IClientBlock_addRef(struct FB_IClientBlock* self);
+CLOOP_EXTERN_C int FB_IClientBlock_release(struct FB_IClientBlock* self);
+CLOOP_EXTERN_C const char* FB_IClientBlock_getLogin(struct FB_IClientBlock* self);
+CLOOP_EXTERN_C const char* FB_IClientBlock_getPassword(struct FB_IClientBlock* self);
+CLOOP_EXTERN_C const unsigned char* FB_IClientBlock_getData(struct FB_IClientBlock* self, unsigned* length);
+CLOOP_EXTERN_C void FB_IClientBlock_putData(struct FB_IClientBlock* self, struct FB_IStatus* status, unsigned length, const void* data);
+CLOOP_EXTERN_C struct FB_ICryptKey* FB_IClientBlock_newKey(struct FB_IClientBlock* self, struct FB_IStatus* status);
 
-#define Server_VERSION 5
+#define FB_IServer_VERSION 5
 
-struct Server;
+struct FB_IServer;
 
-struct ServerVTable
+struct FB_IServerVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*addRef)(struct Server* self);
-	int (*release)(struct Server* self);
-	void (*setOwner)(struct Server* self, struct ReferenceCounted* r);
-	struct ReferenceCounted* (*getOwner)(struct Server* self);
-	int (*authenticate)(struct Server* self, struct Status* status, struct ServerBlock* sBlock, struct Writer* writerInterface);
+	void (*addRef)(struct FB_IServer* self);
+	int (*release)(struct FB_IServer* self);
+	void (*setOwner)(struct FB_IServer* self, struct FB_IReferenceCounted* r);
+	struct FB_IReferenceCounted* (*getOwner)(struct FB_IServer* self);
+	int (*authenticate)(struct FB_IServer* self, struct FB_IStatus* status, struct FB_IServerBlock* sBlock, struct FB_IWriter* writerInterface);
 };
 
-struct Server
+struct FB_IServer
 {
 	void* cloopDummy[1];
-	struct ServerVTable* vtable;
+	struct FB_IServerVTable* vtable;
 };
 
-CLOOP_EXTERN_C void Server_addRef(struct Server* self);
-CLOOP_EXTERN_C int Server_release(struct Server* self);
-CLOOP_EXTERN_C void Server_setOwner(struct Server* self, struct ReferenceCounted* r);
-CLOOP_EXTERN_C struct ReferenceCounted* Server_getOwner(struct Server* self);
-CLOOP_EXTERN_C int Server_authenticate(struct Server* self, struct Status* status, struct ServerBlock* sBlock, struct Writer* writerInterface);
+CLOOP_EXTERN_C void FB_IServer_addRef(struct FB_IServer* self);
+CLOOP_EXTERN_C int FB_IServer_release(struct FB_IServer* self);
+CLOOP_EXTERN_C void FB_IServer_setOwner(struct FB_IServer* self, struct FB_IReferenceCounted* r);
+CLOOP_EXTERN_C struct FB_IReferenceCounted* FB_IServer_getOwner(struct FB_IServer* self);
+CLOOP_EXTERN_C int FB_IServer_authenticate(struct FB_IServer* self, struct FB_IStatus* status, struct FB_IServerBlock* sBlock, struct FB_IWriter* writerInterface);
 
-#define Client_VERSION 5
+#define FB_IClient_VERSION 5
 
-struct Client;
+struct FB_IClient;
 
-struct ClientVTable
+struct FB_IClientVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*addRef)(struct Client* self);
-	int (*release)(struct Client* self);
-	void (*setOwner)(struct Client* self, struct ReferenceCounted* r);
-	struct ReferenceCounted* (*getOwner)(struct Client* self);
-	int (*authenticate)(struct Client* self, struct Status* status, struct ClientBlock* cBlock);
+	void (*addRef)(struct FB_IClient* self);
+	int (*release)(struct FB_IClient* self);
+	void (*setOwner)(struct FB_IClient* self, struct FB_IReferenceCounted* r);
+	struct FB_IReferenceCounted* (*getOwner)(struct FB_IClient* self);
+	int (*authenticate)(struct FB_IClient* self, struct FB_IStatus* status, struct FB_IClientBlock* cBlock);
 };
 
-struct Client
+struct FB_IClient
 {
 	void* cloopDummy[1];
-	struct ClientVTable* vtable;
+	struct FB_IClientVTable* vtable;
 };
 
-CLOOP_EXTERN_C void Client_addRef(struct Client* self);
-CLOOP_EXTERN_C int Client_release(struct Client* self);
-CLOOP_EXTERN_C void Client_setOwner(struct Client* self, struct ReferenceCounted* r);
-CLOOP_EXTERN_C struct ReferenceCounted* Client_getOwner(struct Client* self);
-CLOOP_EXTERN_C int Client_authenticate(struct Client* self, struct Status* status, struct ClientBlock* cBlock);
+CLOOP_EXTERN_C void FB_IClient_addRef(struct FB_IClient* self);
+CLOOP_EXTERN_C int FB_IClient_release(struct FB_IClient* self);
+CLOOP_EXTERN_C void FB_IClient_setOwner(struct FB_IClient* self, struct FB_IReferenceCounted* r);
+CLOOP_EXTERN_C struct FB_IReferenceCounted* FB_IClient_getOwner(struct FB_IClient* self);
+CLOOP_EXTERN_C int FB_IClient_authenticate(struct FB_IClient* self, struct FB_IStatus* status, struct FB_IClientBlock* cBlock);
 
-#define UserField_VERSION 3
+#define FB_IUserField_VERSION 3
 
-struct UserField;
+struct FB_IUserField;
 
-struct UserFieldVTable
+struct FB_IUserFieldVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	int (*entered)(struct UserField* self);
-	int (*specified)(struct UserField* self);
-	void (*setEntered)(struct UserField* self, struct Status* status, int newValue);
+	int (*entered)(struct FB_IUserField* self);
+	int (*specified)(struct FB_IUserField* self);
+	void (*setEntered)(struct FB_IUserField* self, struct FB_IStatus* status, int newValue);
 };
 
-struct UserField
+struct FB_IUserField
 {
 	void* cloopDummy[1];
-	struct UserFieldVTable* vtable;
+	struct FB_IUserFieldVTable* vtable;
 };
 
-CLOOP_EXTERN_C int UserField_entered(struct UserField* self);
-CLOOP_EXTERN_C int UserField_specified(struct UserField* self);
-CLOOP_EXTERN_C void UserField_setEntered(struct UserField* self, struct Status* status, int newValue);
+CLOOP_EXTERN_C int FB_IUserField_entered(struct FB_IUserField* self);
+CLOOP_EXTERN_C int FB_IUserField_specified(struct FB_IUserField* self);
+CLOOP_EXTERN_C void FB_IUserField_setEntered(struct FB_IUserField* self, struct FB_IStatus* status, int newValue);
 
-#define CharUserField_VERSION 5
+#define FB_ICharUserField_VERSION 5
 
-struct CharUserField;
+struct FB_ICharUserField;
 
-struct CharUserFieldVTable
+struct FB_ICharUserFieldVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	int (*entered)(struct CharUserField* self);
-	int (*specified)(struct CharUserField* self);
-	void (*setEntered)(struct CharUserField* self, struct Status* status, int newValue);
-	const char* (*get)(struct CharUserField* self);
-	void (*set)(struct CharUserField* self, struct Status* status, const char* newValue);
+	int (*entered)(struct FB_ICharUserField* self);
+	int (*specified)(struct FB_ICharUserField* self);
+	void (*setEntered)(struct FB_ICharUserField* self, struct FB_IStatus* status, int newValue);
+	const char* (*get)(struct FB_ICharUserField* self);
+	void (*set)(struct FB_ICharUserField* self, struct FB_IStatus* status, const char* newValue);
 };
 
-struct CharUserField
+struct FB_ICharUserField
 {
 	void* cloopDummy[1];
-	struct CharUserFieldVTable* vtable;
+	struct FB_ICharUserFieldVTable* vtable;
 };
 
-CLOOP_EXTERN_C int CharUserField_entered(struct CharUserField* self);
-CLOOP_EXTERN_C int CharUserField_specified(struct CharUserField* self);
-CLOOP_EXTERN_C void CharUserField_setEntered(struct CharUserField* self, struct Status* status, int newValue);
-CLOOP_EXTERN_C const char* CharUserField_get(struct CharUserField* self);
-CLOOP_EXTERN_C void CharUserField_set(struct CharUserField* self, struct Status* status, const char* newValue);
+CLOOP_EXTERN_C int FB_ICharUserField_entered(struct FB_ICharUserField* self);
+CLOOP_EXTERN_C int FB_ICharUserField_specified(struct FB_ICharUserField* self);
+CLOOP_EXTERN_C void FB_ICharUserField_setEntered(struct FB_ICharUserField* self, struct FB_IStatus* status, int newValue);
+CLOOP_EXTERN_C const char* FB_ICharUserField_get(struct FB_ICharUserField* self);
+CLOOP_EXTERN_C void FB_ICharUserField_set(struct FB_ICharUserField* self, struct FB_IStatus* status, const char* newValue);
 
-#define IntUserField_VERSION 5
+#define FB_IIntUserField_VERSION 5
 
-struct IntUserField;
+struct FB_IIntUserField;
 
-struct IntUserFieldVTable
+struct FB_IIntUserFieldVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	int (*entered)(struct IntUserField* self);
-	int (*specified)(struct IntUserField* self);
-	void (*setEntered)(struct IntUserField* self, struct Status* status, int newValue);
-	int (*get)(struct IntUserField* self);
-	void (*set)(struct IntUserField* self, struct Status* status, int newValue);
+	int (*entered)(struct FB_IIntUserField* self);
+	int (*specified)(struct FB_IIntUserField* self);
+	void (*setEntered)(struct FB_IIntUserField* self, struct FB_IStatus* status, int newValue);
+	int (*get)(struct FB_IIntUserField* self);
+	void (*set)(struct FB_IIntUserField* self, struct FB_IStatus* status, int newValue);
 };
 
-struct IntUserField
+struct FB_IIntUserField
 {
 	void* cloopDummy[1];
-	struct IntUserFieldVTable* vtable;
+	struct FB_IIntUserFieldVTable* vtable;
 };
 
-CLOOP_EXTERN_C int IntUserField_entered(struct IntUserField* self);
-CLOOP_EXTERN_C int IntUserField_specified(struct IntUserField* self);
-CLOOP_EXTERN_C void IntUserField_setEntered(struct IntUserField* self, struct Status* status, int newValue);
-CLOOP_EXTERN_C int IntUserField_get(struct IntUserField* self);
-CLOOP_EXTERN_C void IntUserField_set(struct IntUserField* self, struct Status* status, int newValue);
+CLOOP_EXTERN_C int FB_IIntUserField_entered(struct FB_IIntUserField* self);
+CLOOP_EXTERN_C int FB_IIntUserField_specified(struct FB_IIntUserField* self);
+CLOOP_EXTERN_C void FB_IIntUserField_setEntered(struct FB_IIntUserField* self, struct FB_IStatus* status, int newValue);
+CLOOP_EXTERN_C int FB_IIntUserField_get(struct FB_IIntUserField* self);
+CLOOP_EXTERN_C void FB_IIntUserField_set(struct FB_IIntUserField* self, struct FB_IStatus* status, int newValue);
 
-#define User_VERSION 11
+#define FB_IUser_VERSION 11
 
-struct User;
+struct FB_IUser;
 
-struct UserVTable
+struct FB_IUserVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	int (*operation)(struct User* self);
-	struct CharUserField* (*userName)(struct User* self);
-	struct CharUserField* (*password)(struct User* self);
-	struct CharUserField* (*firstName)(struct User* self);
-	struct CharUserField* (*lastName)(struct User* self);
-	struct CharUserField* (*middleName)(struct User* self);
-	struct CharUserField* (*comment)(struct User* self);
-	struct CharUserField* (*attributes)(struct User* self);
-	struct IntUserField* (*active)(struct User* self);
-	struct IntUserField* (*admin)(struct User* self);
-	void (*clear)(struct User* self, struct Status* status);
+	int (*operation)(struct FB_IUser* self);
+	struct FB_ICharUserField* (*userName)(struct FB_IUser* self);
+	struct FB_ICharUserField* (*password)(struct FB_IUser* self);
+	struct FB_ICharUserField* (*firstName)(struct FB_IUser* self);
+	struct FB_ICharUserField* (*lastName)(struct FB_IUser* self);
+	struct FB_ICharUserField* (*middleName)(struct FB_IUser* self);
+	struct FB_ICharUserField* (*comment)(struct FB_IUser* self);
+	struct FB_ICharUserField* (*attributes)(struct FB_IUser* self);
+	struct FB_IIntUserField* (*active)(struct FB_IUser* self);
+	struct FB_IIntUserField* (*admin)(struct FB_IUser* self);
+	void (*clear)(struct FB_IUser* self, struct FB_IStatus* status);
 };
 
-struct User
+struct FB_IUser
 {
 	void* cloopDummy[1];
-	struct UserVTable* vtable;
+	struct FB_IUserVTable* vtable;
 };
 
-CLOOP_EXTERN_C int User_operation(struct User* self);
-CLOOP_EXTERN_C struct CharUserField* User_userName(struct User* self);
-CLOOP_EXTERN_C struct CharUserField* User_password(struct User* self);
-CLOOP_EXTERN_C struct CharUserField* User_firstName(struct User* self);
-CLOOP_EXTERN_C struct CharUserField* User_lastName(struct User* self);
-CLOOP_EXTERN_C struct CharUserField* User_middleName(struct User* self);
-CLOOP_EXTERN_C struct CharUserField* User_comment(struct User* self);
-CLOOP_EXTERN_C struct CharUserField* User_attributes(struct User* self);
-CLOOP_EXTERN_C struct IntUserField* User_active(struct User* self);
-CLOOP_EXTERN_C struct IntUserField* User_admin(struct User* self);
-CLOOP_EXTERN_C void User_clear(struct User* self, struct Status* status);
+CLOOP_EXTERN_C int FB_IUser_operation(struct FB_IUser* self);
+CLOOP_EXTERN_C struct FB_ICharUserField* FB_IUser_userName(struct FB_IUser* self);
+CLOOP_EXTERN_C struct FB_ICharUserField* FB_IUser_password(struct FB_IUser* self);
+CLOOP_EXTERN_C struct FB_ICharUserField* FB_IUser_firstName(struct FB_IUser* self);
+CLOOP_EXTERN_C struct FB_ICharUserField* FB_IUser_lastName(struct FB_IUser* self);
+CLOOP_EXTERN_C struct FB_ICharUserField* FB_IUser_middleName(struct FB_IUser* self);
+CLOOP_EXTERN_C struct FB_ICharUserField* FB_IUser_comment(struct FB_IUser* self);
+CLOOP_EXTERN_C struct FB_ICharUserField* FB_IUser_attributes(struct FB_IUser* self);
+CLOOP_EXTERN_C struct FB_IIntUserField* FB_IUser_active(struct FB_IUser* self);
+CLOOP_EXTERN_C struct FB_IIntUserField* FB_IUser_admin(struct FB_IUser* self);
+CLOOP_EXTERN_C void FB_IUser_clear(struct FB_IUser* self, struct FB_IStatus* status);
 
-#define ListUsers_VERSION 1
+#define FB_IListUsers_VERSION 1
 
-struct ListUsers;
+struct FB_IListUsers;
 
-struct ListUsersVTable
+struct FB_IListUsersVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*list)(struct ListUsers* self, struct Status* status, struct User* user);
+	void (*list)(struct FB_IListUsers* self, struct FB_IStatus* status, struct FB_IUser* user);
 };
 
-struct ListUsers
+struct FB_IListUsers
 {
 	void* cloopDummy[1];
-	struct ListUsersVTable* vtable;
+	struct FB_IListUsersVTable* vtable;
 };
 
-CLOOP_EXTERN_C void ListUsers_list(struct ListUsers* self, struct Status* status, struct User* user);
+CLOOP_EXTERN_C void FB_IListUsers_list(struct FB_IListUsers* self, struct FB_IStatus* status, struct FB_IUser* user);
 
-#define LogonInfo_VERSION 5
+#define FB_ILogonInfo_VERSION 5
 
-struct LogonInfo;
+struct FB_ILogonInfo;
 
-struct LogonInfoVTable
+struct FB_ILogonInfoVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	const char* (*name)(struct LogonInfo* self);
-	const char* (*role)(struct LogonInfo* self);
-	const char* (*networkProtocol)(struct LogonInfo* self);
-	const char* (*remoteAddress)(struct LogonInfo* self);
-	const unsigned char* (*authBlock)(struct LogonInfo* self, unsigned* length);
+	const char* (*name)(struct FB_ILogonInfo* self);
+	const char* (*role)(struct FB_ILogonInfo* self);
+	const char* (*networkProtocol)(struct FB_ILogonInfo* self);
+	const char* (*remoteAddress)(struct FB_ILogonInfo* self);
+	const unsigned char* (*authBlock)(struct FB_ILogonInfo* self, unsigned* length);
 };
 
-struct LogonInfo
+struct FB_ILogonInfo
 {
 	void* cloopDummy[1];
-	struct LogonInfoVTable* vtable;
+	struct FB_ILogonInfoVTable* vtable;
 };
 
-CLOOP_EXTERN_C const char* LogonInfo_name(struct LogonInfo* self);
-CLOOP_EXTERN_C const char* LogonInfo_role(struct LogonInfo* self);
-CLOOP_EXTERN_C const char* LogonInfo_networkProtocol(struct LogonInfo* self);
-CLOOP_EXTERN_C const char* LogonInfo_remoteAddress(struct LogonInfo* self);
-CLOOP_EXTERN_C const unsigned char* LogonInfo_authBlock(struct LogonInfo* self, unsigned* length);
+CLOOP_EXTERN_C const char* FB_ILogonInfo_name(struct FB_ILogonInfo* self);
+CLOOP_EXTERN_C const char* FB_ILogonInfo_role(struct FB_ILogonInfo* self);
+CLOOP_EXTERN_C const char* FB_ILogonInfo_networkProtocol(struct FB_ILogonInfo* self);
+CLOOP_EXTERN_C const char* FB_ILogonInfo_remoteAddress(struct FB_ILogonInfo* self);
+CLOOP_EXTERN_C const unsigned char* FB_ILogonInfo_authBlock(struct FB_ILogonInfo* self, unsigned* length);
 
-#define Management_VERSION 8
+#define FB_IManagement_VERSION 8
 
-struct Management;
+struct FB_IManagement;
 
-struct ManagementVTable
+struct FB_IManagementVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*addRef)(struct Management* self);
-	int (*release)(struct Management* self);
-	void (*setOwner)(struct Management* self, struct ReferenceCounted* r);
-	struct ReferenceCounted* (*getOwner)(struct Management* self);
-	void (*start)(struct Management* self, struct Status* status, struct LogonInfo* logonInfo);
-	int (*execute)(struct Management* self, struct Status* status, struct User* user, struct ListUsers* callback);
-	void (*commit)(struct Management* self, struct Status* status);
-	void (*rollback)(struct Management* self, struct Status* status);
+	void (*addRef)(struct FB_IManagement* self);
+	int (*release)(struct FB_IManagement* self);
+	void (*setOwner)(struct FB_IManagement* self, struct FB_IReferenceCounted* r);
+	struct FB_IReferenceCounted* (*getOwner)(struct FB_IManagement* self);
+	void (*start)(struct FB_IManagement* self, struct FB_IStatus* status, struct FB_ILogonInfo* logonInfo);
+	int (*execute)(struct FB_IManagement* self, struct FB_IStatus* status, struct FB_IUser* user, struct FB_IListUsers* callback);
+	void (*commit)(struct FB_IManagement* self, struct FB_IStatus* status);
+	void (*rollback)(struct FB_IManagement* self, struct FB_IStatus* status);
 };
 
-struct Management
+struct FB_IManagement
 {
 	void* cloopDummy[1];
-	struct ManagementVTable* vtable;
+	struct FB_IManagementVTable* vtable;
 };
 
-CLOOP_EXTERN_C void Management_addRef(struct Management* self);
-CLOOP_EXTERN_C int Management_release(struct Management* self);
-CLOOP_EXTERN_C void Management_setOwner(struct Management* self, struct ReferenceCounted* r);
-CLOOP_EXTERN_C struct ReferenceCounted* Management_getOwner(struct Management* self);
-CLOOP_EXTERN_C void Management_start(struct Management* self, struct Status* status, struct LogonInfo* logonInfo);
-CLOOP_EXTERN_C int Management_execute(struct Management* self, struct Status* status, struct User* user, struct ListUsers* callback);
-CLOOP_EXTERN_C void Management_commit(struct Management* self, struct Status* status);
-CLOOP_EXTERN_C void Management_rollback(struct Management* self, struct Status* status);
+CLOOP_EXTERN_C void FB_IManagement_addRef(struct FB_IManagement* self);
+CLOOP_EXTERN_C int FB_IManagement_release(struct FB_IManagement* self);
+CLOOP_EXTERN_C void FB_IManagement_setOwner(struct FB_IManagement* self, struct FB_IReferenceCounted* r);
+CLOOP_EXTERN_C struct FB_IReferenceCounted* FB_IManagement_getOwner(struct FB_IManagement* self);
+CLOOP_EXTERN_C void FB_IManagement_start(struct FB_IManagement* self, struct FB_IStatus* status, struct FB_ILogonInfo* logonInfo);
+CLOOP_EXTERN_C int FB_IManagement_execute(struct FB_IManagement* self, struct FB_IStatus* status, struct FB_IUser* user, struct FB_IListUsers* callback);
+CLOOP_EXTERN_C void FB_IManagement_commit(struct FB_IManagement* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C void FB_IManagement_rollback(struct FB_IManagement* self, struct FB_IStatus* status);
 
-#define WireCryptPlugin_VERSION 8
+#define FB_IWireCryptPlugin_VERSION 8
 
-struct WireCryptPlugin;
+struct FB_IWireCryptPlugin;
 
-struct WireCryptPluginVTable
+struct FB_IWireCryptPluginVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*addRef)(struct WireCryptPlugin* self);
-	int (*release)(struct WireCryptPlugin* self);
-	void (*setOwner)(struct WireCryptPlugin* self, struct ReferenceCounted* r);
-	struct ReferenceCounted* (*getOwner)(struct WireCryptPlugin* self);
-	const char* (*getKnownTypes)(struct WireCryptPlugin* self, struct Status* status);
-	void (*setKey)(struct WireCryptPlugin* self, struct Status* status, struct CryptKey* key);
-	void (*encrypt)(struct WireCryptPlugin* self, struct Status* status, unsigned length, const void* from, void* to);
-	void (*decrypt)(struct WireCryptPlugin* self, struct Status* status, unsigned length, const void* from, void* to);
+	void (*addRef)(struct FB_IWireCryptPlugin* self);
+	int (*release)(struct FB_IWireCryptPlugin* self);
+	void (*setOwner)(struct FB_IWireCryptPlugin* self, struct FB_IReferenceCounted* r);
+	struct FB_IReferenceCounted* (*getOwner)(struct FB_IWireCryptPlugin* self);
+	const char* (*getKnownTypes)(struct FB_IWireCryptPlugin* self, struct FB_IStatus* status);
+	void (*setKey)(struct FB_IWireCryptPlugin* self, struct FB_IStatus* status, struct FB_ICryptKey* key);
+	void (*encrypt)(struct FB_IWireCryptPlugin* self, struct FB_IStatus* status, unsigned length, const void* from, void* to);
+	void (*decrypt)(struct FB_IWireCryptPlugin* self, struct FB_IStatus* status, unsigned length, const void* from, void* to);
 };
 
-struct WireCryptPlugin
+struct FB_IWireCryptPlugin
 {
 	void* cloopDummy[1];
-	struct WireCryptPluginVTable* vtable;
+	struct FB_IWireCryptPluginVTable* vtable;
 };
 
-CLOOP_EXTERN_C void WireCryptPlugin_addRef(struct WireCryptPlugin* self);
-CLOOP_EXTERN_C int WireCryptPlugin_release(struct WireCryptPlugin* self);
-CLOOP_EXTERN_C void WireCryptPlugin_setOwner(struct WireCryptPlugin* self, struct ReferenceCounted* r);
-CLOOP_EXTERN_C struct ReferenceCounted* WireCryptPlugin_getOwner(struct WireCryptPlugin* self);
-CLOOP_EXTERN_C const char* WireCryptPlugin_getKnownTypes(struct WireCryptPlugin* self, struct Status* status);
-CLOOP_EXTERN_C void WireCryptPlugin_setKey(struct WireCryptPlugin* self, struct Status* status, struct CryptKey* key);
-CLOOP_EXTERN_C void WireCryptPlugin_encrypt(struct WireCryptPlugin* self, struct Status* status, unsigned length, const void* from, void* to);
-CLOOP_EXTERN_C void WireCryptPlugin_decrypt(struct WireCryptPlugin* self, struct Status* status, unsigned length, const void* from, void* to);
+CLOOP_EXTERN_C void FB_IWireCryptPlugin_addRef(struct FB_IWireCryptPlugin* self);
+CLOOP_EXTERN_C int FB_IWireCryptPlugin_release(struct FB_IWireCryptPlugin* self);
+CLOOP_EXTERN_C void FB_IWireCryptPlugin_setOwner(struct FB_IWireCryptPlugin* self, struct FB_IReferenceCounted* r);
+CLOOP_EXTERN_C struct FB_IReferenceCounted* FB_IWireCryptPlugin_getOwner(struct FB_IWireCryptPlugin* self);
+CLOOP_EXTERN_C const char* FB_IWireCryptPlugin_getKnownTypes(struct FB_IWireCryptPlugin* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C void FB_IWireCryptPlugin_setKey(struct FB_IWireCryptPlugin* self, struct FB_IStatus* status, struct FB_ICryptKey* key);
+CLOOP_EXTERN_C void FB_IWireCryptPlugin_encrypt(struct FB_IWireCryptPlugin* self, struct FB_IStatus* status, unsigned length, const void* from, void* to);
+CLOOP_EXTERN_C void FB_IWireCryptPlugin_decrypt(struct FB_IWireCryptPlugin* self, struct FB_IStatus* status, unsigned length, const void* from, void* to);
 
-#define CryptKeyCallback_VERSION 1
+#define FB_ICryptKeyCallback_VERSION 1
 
-struct CryptKeyCallback;
+struct FB_ICryptKeyCallback;
 
-struct CryptKeyCallbackVTable
+struct FB_ICryptKeyCallbackVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	unsigned (*callback)(struct CryptKeyCallback* self, unsigned dataLength, const void* data, unsigned bufferLength, void* buffer);
+	unsigned (*callback)(struct FB_ICryptKeyCallback* self, unsigned dataLength, const void* data, unsigned bufferLength, void* buffer);
 };
 
-struct CryptKeyCallback
+struct FB_ICryptKeyCallback
 {
 	void* cloopDummy[1];
-	struct CryptKeyCallbackVTable* vtable;
+	struct FB_ICryptKeyCallbackVTable* vtable;
 };
 
-CLOOP_EXTERN_C unsigned CryptKeyCallback_callback(struct CryptKeyCallback* self, unsigned dataLength, const void* data, unsigned bufferLength, void* buffer);
+CLOOP_EXTERN_C unsigned FB_ICryptKeyCallback_callback(struct FB_ICryptKeyCallback* self, unsigned dataLength, const void* data, unsigned bufferLength, void* buffer);
 
-#define KeyHolderPlugin_VERSION 6
+#define FB_IKeyHolderPlugin_VERSION 6
 
-struct KeyHolderPlugin;
+struct FB_IKeyHolderPlugin;
 
-struct KeyHolderPluginVTable
+struct FB_IKeyHolderPluginVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*addRef)(struct KeyHolderPlugin* self);
-	int (*release)(struct KeyHolderPlugin* self);
-	void (*setOwner)(struct KeyHolderPlugin* self, struct ReferenceCounted* r);
-	struct ReferenceCounted* (*getOwner)(struct KeyHolderPlugin* self);
-	int (*keyCallback)(struct KeyHolderPlugin* self, struct Status* status, struct CryptKeyCallback* callback);
-	struct CryptKeyCallback* (*keyHandle)(struct KeyHolderPlugin* self, struct Status* status, const char* keyName);
+	void (*addRef)(struct FB_IKeyHolderPlugin* self);
+	int (*release)(struct FB_IKeyHolderPlugin* self);
+	void (*setOwner)(struct FB_IKeyHolderPlugin* self, struct FB_IReferenceCounted* r);
+	struct FB_IReferenceCounted* (*getOwner)(struct FB_IKeyHolderPlugin* self);
+	int (*keyCallback)(struct FB_IKeyHolderPlugin* self, struct FB_IStatus* status, struct FB_ICryptKeyCallback* callback);
+	struct FB_ICryptKeyCallback* (*keyHandle)(struct FB_IKeyHolderPlugin* self, struct FB_IStatus* status, const char* keyName);
 };
 
-struct KeyHolderPlugin
+struct FB_IKeyHolderPlugin
 {
 	void* cloopDummy[1];
-	struct KeyHolderPluginVTable* vtable;
+	struct FB_IKeyHolderPluginVTable* vtable;
 };
 
-CLOOP_EXTERN_C void KeyHolderPlugin_addRef(struct KeyHolderPlugin* self);
-CLOOP_EXTERN_C int KeyHolderPlugin_release(struct KeyHolderPlugin* self);
-CLOOP_EXTERN_C void KeyHolderPlugin_setOwner(struct KeyHolderPlugin* self, struct ReferenceCounted* r);
-CLOOP_EXTERN_C struct ReferenceCounted* KeyHolderPlugin_getOwner(struct KeyHolderPlugin* self);
-CLOOP_EXTERN_C int KeyHolderPlugin_keyCallback(struct KeyHolderPlugin* self, struct Status* status, struct CryptKeyCallback* callback);
-CLOOP_EXTERN_C struct CryptKeyCallback* KeyHolderPlugin_keyHandle(struct KeyHolderPlugin* self, struct Status* status, const char* keyName);
+CLOOP_EXTERN_C void FB_IKeyHolderPlugin_addRef(struct FB_IKeyHolderPlugin* self);
+CLOOP_EXTERN_C int FB_IKeyHolderPlugin_release(struct FB_IKeyHolderPlugin* self);
+CLOOP_EXTERN_C void FB_IKeyHolderPlugin_setOwner(struct FB_IKeyHolderPlugin* self, struct FB_IReferenceCounted* r);
+CLOOP_EXTERN_C struct FB_IReferenceCounted* FB_IKeyHolderPlugin_getOwner(struct FB_IKeyHolderPlugin* self);
+CLOOP_EXTERN_C int FB_IKeyHolderPlugin_keyCallback(struct FB_IKeyHolderPlugin* self, struct FB_IStatus* status, struct FB_ICryptKeyCallback* callback);
+CLOOP_EXTERN_C struct FB_ICryptKeyCallback* FB_IKeyHolderPlugin_keyHandle(struct FB_IKeyHolderPlugin* self, struct FB_IStatus* status, const char* keyName);
 
-#define DbCryptPlugin_VERSION 7
+#define FB_IDbCryptPlugin_VERSION 7
 
-struct DbCryptPlugin;
+struct FB_IDbCryptPlugin;
 
-struct DbCryptPluginVTable
+struct FB_IDbCryptPluginVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*addRef)(struct DbCryptPlugin* self);
-	int (*release)(struct DbCryptPlugin* self);
-	void (*setOwner)(struct DbCryptPlugin* self, struct ReferenceCounted* r);
-	struct ReferenceCounted* (*getOwner)(struct DbCryptPlugin* self);
-	void (*setKey)(struct DbCryptPlugin* self, struct Status* status, unsigned length, struct KeyHolderPlugin** sources);
-	void (*encrypt)(struct DbCryptPlugin* self, struct Status* status, unsigned length, const void* from, void* to);
-	void (*decrypt)(struct DbCryptPlugin* self, struct Status* status, unsigned length, const void* from, void* to);
+	void (*addRef)(struct FB_IDbCryptPlugin* self);
+	int (*release)(struct FB_IDbCryptPlugin* self);
+	void (*setOwner)(struct FB_IDbCryptPlugin* self, struct FB_IReferenceCounted* r);
+	struct FB_IReferenceCounted* (*getOwner)(struct FB_IDbCryptPlugin* self);
+	void (*setKey)(struct FB_IDbCryptPlugin* self, struct FB_IStatus* status, unsigned length, struct FB_IKeyHolderPlugin** sources);
+	void (*encrypt)(struct FB_IDbCryptPlugin* self, struct FB_IStatus* status, unsigned length, const void* from, void* to);
+	void (*decrypt)(struct FB_IDbCryptPlugin* self, struct FB_IStatus* status, unsigned length, const void* from, void* to);
 };
 
-struct DbCryptPlugin
+struct FB_IDbCryptPlugin
 {
 	void* cloopDummy[1];
-	struct DbCryptPluginVTable* vtable;
+	struct FB_IDbCryptPluginVTable* vtable;
 };
 
-CLOOP_EXTERN_C void DbCryptPlugin_addRef(struct DbCryptPlugin* self);
-CLOOP_EXTERN_C int DbCryptPlugin_release(struct DbCryptPlugin* self);
-CLOOP_EXTERN_C void DbCryptPlugin_setOwner(struct DbCryptPlugin* self, struct ReferenceCounted* r);
-CLOOP_EXTERN_C struct ReferenceCounted* DbCryptPlugin_getOwner(struct DbCryptPlugin* self);
-CLOOP_EXTERN_C void DbCryptPlugin_setKey(struct DbCryptPlugin* self, struct Status* status, unsigned length, struct KeyHolderPlugin** sources);
-CLOOP_EXTERN_C void DbCryptPlugin_encrypt(struct DbCryptPlugin* self, struct Status* status, unsigned length, const void* from, void* to);
-CLOOP_EXTERN_C void DbCryptPlugin_decrypt(struct DbCryptPlugin* self, struct Status* status, unsigned length, const void* from, void* to);
+CLOOP_EXTERN_C void FB_IDbCryptPlugin_addRef(struct FB_IDbCryptPlugin* self);
+CLOOP_EXTERN_C int FB_IDbCryptPlugin_release(struct FB_IDbCryptPlugin* self);
+CLOOP_EXTERN_C void FB_IDbCryptPlugin_setOwner(struct FB_IDbCryptPlugin* self, struct FB_IReferenceCounted* r);
+CLOOP_EXTERN_C struct FB_IReferenceCounted* FB_IDbCryptPlugin_getOwner(struct FB_IDbCryptPlugin* self);
+CLOOP_EXTERN_C void FB_IDbCryptPlugin_setKey(struct FB_IDbCryptPlugin* self, struct FB_IStatus* status, unsigned length, struct FB_IKeyHolderPlugin** sources);
+CLOOP_EXTERN_C void FB_IDbCryptPlugin_encrypt(struct FB_IDbCryptPlugin* self, struct FB_IStatus* status, unsigned length, const void* from, void* to);
+CLOOP_EXTERN_C void FB_IDbCryptPlugin_decrypt(struct FB_IDbCryptPlugin* self, struct FB_IStatus* status, unsigned length, const void* from, void* to);
 
-#define ExternalContext_VERSION 10
+#define FB_IExternalContext_VERSION 10
 
-struct ExternalContext;
+struct FB_IExternalContext;
 
-struct ExternalContextVTable
+struct FB_IExternalContextVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	struct Master* (*getMaster)(struct ExternalContext* self);
-	struct ExternalEngine* (*getEngine)(struct ExternalContext* self, struct Status* status);
-	struct Attachment* (*getAttachment)(struct ExternalContext* self, struct Status* status);
-	struct Transaction* (*getTransaction)(struct ExternalContext* self, struct Status* status);
-	const char* (*getUserName)(struct ExternalContext* self);
-	const char* (*getDatabaseName)(struct ExternalContext* self);
-	const char* (*getClientCharSet)(struct ExternalContext* self);
-	int (*obtainInfoCode)(struct ExternalContext* self);
-	void* (*getInfo)(struct ExternalContext* self, int code);
-	void* (*setInfo)(struct ExternalContext* self, int code, void* value);
+	struct FB_IMaster* (*getMaster)(struct FB_IExternalContext* self);
+	struct FB_IExternalEngine* (*getEngine)(struct FB_IExternalContext* self, struct FB_IStatus* status);
+	struct FB_IAttachment* (*getAttachment)(struct FB_IExternalContext* self, struct FB_IStatus* status);
+	struct FB_ITransaction* (*getTransaction)(struct FB_IExternalContext* self, struct FB_IStatus* status);
+	const char* (*getUserName)(struct FB_IExternalContext* self);
+	const char* (*getDatabaseName)(struct FB_IExternalContext* self);
+	const char* (*getClientCharSet)(struct FB_IExternalContext* self);
+	int (*obtainInfoCode)(struct FB_IExternalContext* self);
+	void* (*getInfo)(struct FB_IExternalContext* self, int code);
+	void* (*setInfo)(struct FB_IExternalContext* self, int code, void* value);
 };
 
-struct ExternalContext
+struct FB_IExternalContext
 {
 	void* cloopDummy[1];
-	struct ExternalContextVTable* vtable;
+	struct FB_IExternalContextVTable* vtable;
 };
 
-CLOOP_EXTERN_C struct Master* ExternalContext_getMaster(struct ExternalContext* self);
-CLOOP_EXTERN_C struct ExternalEngine* ExternalContext_getEngine(struct ExternalContext* self, struct Status* status);
-CLOOP_EXTERN_C struct Attachment* ExternalContext_getAttachment(struct ExternalContext* self, struct Status* status);
-CLOOP_EXTERN_C struct Transaction* ExternalContext_getTransaction(struct ExternalContext* self, struct Status* status);
-CLOOP_EXTERN_C const char* ExternalContext_getUserName(struct ExternalContext* self);
-CLOOP_EXTERN_C const char* ExternalContext_getDatabaseName(struct ExternalContext* self);
-CLOOP_EXTERN_C const char* ExternalContext_getClientCharSet(struct ExternalContext* self);
-CLOOP_EXTERN_C int ExternalContext_obtainInfoCode(struct ExternalContext* self);
-CLOOP_EXTERN_C void* ExternalContext_getInfo(struct ExternalContext* self, int code);
-CLOOP_EXTERN_C void* ExternalContext_setInfo(struct ExternalContext* self, int code, void* value);
+CLOOP_EXTERN_C struct FB_IMaster* FB_IExternalContext_getMaster(struct FB_IExternalContext* self);
+CLOOP_EXTERN_C struct FB_IExternalEngine* FB_IExternalContext_getEngine(struct FB_IExternalContext* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C struct FB_IAttachment* FB_IExternalContext_getAttachment(struct FB_IExternalContext* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C struct FB_ITransaction* FB_IExternalContext_getTransaction(struct FB_IExternalContext* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C const char* FB_IExternalContext_getUserName(struct FB_IExternalContext* self);
+CLOOP_EXTERN_C const char* FB_IExternalContext_getDatabaseName(struct FB_IExternalContext* self);
+CLOOP_EXTERN_C const char* FB_IExternalContext_getClientCharSet(struct FB_IExternalContext* self);
+CLOOP_EXTERN_C int FB_IExternalContext_obtainInfoCode(struct FB_IExternalContext* self);
+CLOOP_EXTERN_C void* FB_IExternalContext_getInfo(struct FB_IExternalContext* self, int code);
+CLOOP_EXTERN_C void* FB_IExternalContext_setInfo(struct FB_IExternalContext* self, int code, void* value);
 
-#define ExternalResultSet_VERSION 2
+#define FB_IExternalResultSet_VERSION 2
 
-struct ExternalResultSet;
+struct FB_IExternalResultSet;
 
-struct ExternalResultSetVTable
+struct FB_IExternalResultSetVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*dispose)(struct ExternalResultSet* self);
-	FB_BOOLEAN (*fetch)(struct ExternalResultSet* self, struct Status* status);
+	void (*dispose)(struct FB_IExternalResultSet* self);
+	FB_BOOLEAN (*fetch)(struct FB_IExternalResultSet* self, struct FB_IStatus* status);
 };
 
-struct ExternalResultSet
+struct FB_IExternalResultSet
 {
 	void* cloopDummy[1];
-	struct ExternalResultSetVTable* vtable;
+	struct FB_IExternalResultSetVTable* vtable;
 };
 
-CLOOP_EXTERN_C void ExternalResultSet_dispose(struct ExternalResultSet* self);
-CLOOP_EXTERN_C FB_BOOLEAN ExternalResultSet_fetch(struct ExternalResultSet* self, struct Status* status);
+CLOOP_EXTERN_C void FB_IExternalResultSet_dispose(struct FB_IExternalResultSet* self);
+CLOOP_EXTERN_C FB_BOOLEAN FB_IExternalResultSet_fetch(struct FB_IExternalResultSet* self, struct FB_IStatus* status);
 
-#define ExternalFunction_VERSION 3
+#define FB_IExternalFunction_VERSION 3
 
-struct ExternalFunction;
+struct FB_IExternalFunction;
 
-struct ExternalFunctionVTable
+struct FB_IExternalFunctionVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*dispose)(struct ExternalFunction* self);
-	void (*getCharSet)(struct ExternalFunction* self, struct Status* status, struct ExternalContext* context, char* name, unsigned nameSize);
-	void (*execute)(struct ExternalFunction* self, struct Status* status, struct ExternalContext* context, void* inMsg, void* outMsg);
+	void (*dispose)(struct FB_IExternalFunction* self);
+	void (*getCharSet)(struct FB_IExternalFunction* self, struct FB_IStatus* status, struct FB_IExternalContext* context, char* name, unsigned nameSize);
+	void (*execute)(struct FB_IExternalFunction* self, struct FB_IStatus* status, struct FB_IExternalContext* context, void* inMsg, void* outMsg);
 };
 
-struct ExternalFunction
+struct FB_IExternalFunction
 {
 	void* cloopDummy[1];
-	struct ExternalFunctionVTable* vtable;
+	struct FB_IExternalFunctionVTable* vtable;
 };
 
-CLOOP_EXTERN_C void ExternalFunction_dispose(struct ExternalFunction* self);
-CLOOP_EXTERN_C void ExternalFunction_getCharSet(struct ExternalFunction* self, struct Status* status, struct ExternalContext* context, char* name, unsigned nameSize);
-CLOOP_EXTERN_C void ExternalFunction_execute(struct ExternalFunction* self, struct Status* status, struct ExternalContext* context, void* inMsg, void* outMsg);
+CLOOP_EXTERN_C void FB_IExternalFunction_dispose(struct FB_IExternalFunction* self);
+CLOOP_EXTERN_C void FB_IExternalFunction_getCharSet(struct FB_IExternalFunction* self, struct FB_IStatus* status, struct FB_IExternalContext* context, char* name, unsigned nameSize);
+CLOOP_EXTERN_C void FB_IExternalFunction_execute(struct FB_IExternalFunction* self, struct FB_IStatus* status, struct FB_IExternalContext* context, void* inMsg, void* outMsg);
 
-#define ExternalProcedure_VERSION 3
+#define FB_IExternalProcedure_VERSION 3
 
-struct ExternalProcedure;
+struct FB_IExternalProcedure;
 
-struct ExternalProcedureVTable
+struct FB_IExternalProcedureVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*dispose)(struct ExternalProcedure* self);
-	void (*getCharSet)(struct ExternalProcedure* self, struct Status* status, struct ExternalContext* context, char* name, unsigned nameSize);
-	struct ExternalResultSet* (*open)(struct ExternalProcedure* self, struct Status* status, struct ExternalContext* context, void* inMsg, void* outMsg);
+	void (*dispose)(struct FB_IExternalProcedure* self);
+	void (*getCharSet)(struct FB_IExternalProcedure* self, struct FB_IStatus* status, struct FB_IExternalContext* context, char* name, unsigned nameSize);
+	struct FB_IExternalResultSet* (*open)(struct FB_IExternalProcedure* self, struct FB_IStatus* status, struct FB_IExternalContext* context, void* inMsg, void* outMsg);
 };
 
-struct ExternalProcedure
+struct FB_IExternalProcedure
 {
 	void* cloopDummy[1];
-	struct ExternalProcedureVTable* vtable;
+	struct FB_IExternalProcedureVTable* vtable;
 };
 
-CLOOP_EXTERN_C void ExternalProcedure_dispose(struct ExternalProcedure* self);
-CLOOP_EXTERN_C void ExternalProcedure_getCharSet(struct ExternalProcedure* self, struct Status* status, struct ExternalContext* context, char* name, unsigned nameSize);
-CLOOP_EXTERN_C struct ExternalResultSet* ExternalProcedure_open(struct ExternalProcedure* self, struct Status* status, struct ExternalContext* context, void* inMsg, void* outMsg);
+CLOOP_EXTERN_C void FB_IExternalProcedure_dispose(struct FB_IExternalProcedure* self);
+CLOOP_EXTERN_C void FB_IExternalProcedure_getCharSet(struct FB_IExternalProcedure* self, struct FB_IStatus* status, struct FB_IExternalContext* context, char* name, unsigned nameSize);
+CLOOP_EXTERN_C struct FB_IExternalResultSet* FB_IExternalProcedure_open(struct FB_IExternalProcedure* self, struct FB_IStatus* status, struct FB_IExternalContext* context, void* inMsg, void* outMsg);
 
-#define ExternalTrigger_VERSION 3
+#define FB_IExternalTrigger_VERSION 3
 
-#define ExternalTrigger_TYPE_BEFORE ((unsigned) (1))
-#define ExternalTrigger_TYPE_AFTER ((unsigned) (2))
-#define ExternalTrigger_TYPE_DATABASE ((unsigned) (3))
-#define ExternalTrigger_ACTION_INSERT ((unsigned) (1))
-#define ExternalTrigger_ACTION_UPDATE ((unsigned) (2))
-#define ExternalTrigger_ACTION_DELETE ((unsigned) (3))
-#define ExternalTrigger_ACTION_CONNECT ((unsigned) (4))
-#define ExternalTrigger_ACTION_DISCONNECT ((unsigned) (5))
-#define ExternalTrigger_ACTION_TRANS_START ((unsigned) (6))
-#define ExternalTrigger_ACTION_TRANS_COMMIT ((unsigned) (7))
-#define ExternalTrigger_ACTION_TRANS_ROLLBACK ((unsigned) (8))
-#define ExternalTrigger_ACTION_DDL ((unsigned) (9))
+#define FB_IExternalTrigger_TYPE_BEFORE ((unsigned) (1))
+#define FB_IExternalTrigger_TYPE_AFTER ((unsigned) (2))
+#define FB_IExternalTrigger_TYPE_DATABASE ((unsigned) (3))
+#define FB_IExternalTrigger_ACTION_INSERT ((unsigned) (1))
+#define FB_IExternalTrigger_ACTION_UPDATE ((unsigned) (2))
+#define FB_IExternalTrigger_ACTION_DELETE ((unsigned) (3))
+#define FB_IExternalTrigger_ACTION_CONNECT ((unsigned) (4))
+#define FB_IExternalTrigger_ACTION_DISCONNECT ((unsigned) (5))
+#define FB_IExternalTrigger_ACTION_TRANS_START ((unsigned) (6))
+#define FB_IExternalTrigger_ACTION_TRANS_COMMIT ((unsigned) (7))
+#define FB_IExternalTrigger_ACTION_TRANS_ROLLBACK ((unsigned) (8))
+#define FB_IExternalTrigger_ACTION_DDL ((unsigned) (9))
 
-struct ExternalTrigger;
+struct FB_IExternalTrigger;
 
-struct ExternalTriggerVTable
+struct FB_IExternalTriggerVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*dispose)(struct ExternalTrigger* self);
-	void (*getCharSet)(struct ExternalTrigger* self, struct Status* status, struct ExternalContext* context, char* name, unsigned nameSize);
-	void (*execute)(struct ExternalTrigger* self, struct Status* status, struct ExternalContext* context, unsigned action, void* oldMsg, void* newMsg);
+	void (*dispose)(struct FB_IExternalTrigger* self);
+	void (*getCharSet)(struct FB_IExternalTrigger* self, struct FB_IStatus* status, struct FB_IExternalContext* context, char* name, unsigned nameSize);
+	void (*execute)(struct FB_IExternalTrigger* self, struct FB_IStatus* status, struct FB_IExternalContext* context, unsigned action, void* oldMsg, void* newMsg);
 };
 
-struct ExternalTrigger
+struct FB_IExternalTrigger
 {
 	void* cloopDummy[1];
-	struct ExternalTriggerVTable* vtable;
+	struct FB_IExternalTriggerVTable* vtable;
 };
 
-CLOOP_EXTERN_C void ExternalTrigger_dispose(struct ExternalTrigger* self);
-CLOOP_EXTERN_C void ExternalTrigger_getCharSet(struct ExternalTrigger* self, struct Status* status, struct ExternalContext* context, char* name, unsigned nameSize);
-CLOOP_EXTERN_C void ExternalTrigger_execute(struct ExternalTrigger* self, struct Status* status, struct ExternalContext* context, unsigned action, void* oldMsg, void* newMsg);
+CLOOP_EXTERN_C void FB_IExternalTrigger_dispose(struct FB_IExternalTrigger* self);
+CLOOP_EXTERN_C void FB_IExternalTrigger_getCharSet(struct FB_IExternalTrigger* self, struct FB_IStatus* status, struct FB_IExternalContext* context, char* name, unsigned nameSize);
+CLOOP_EXTERN_C void FB_IExternalTrigger_execute(struct FB_IExternalTrigger* self, struct FB_IStatus* status, struct FB_IExternalContext* context, unsigned action, void* oldMsg, void* newMsg);
 
-#define RoutineMetadata_VERSION 9
+#define FB_IRoutineMetadata_VERSION 9
 
-struct RoutineMetadata;
+struct FB_IRoutineMetadata;
 
-struct RoutineMetadataVTable
+struct FB_IRoutineMetadataVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	const char* (*getPackage)(const struct RoutineMetadata* self, struct Status* status);
-	const char* (*getName)(const struct RoutineMetadata* self, struct Status* status);
-	const char* (*getEntryPoint)(const struct RoutineMetadata* self, struct Status* status);
-	const char* (*getBody)(const struct RoutineMetadata* self, struct Status* status);
-	struct MessageMetadata* (*getInputMetadata)(const struct RoutineMetadata* self, struct Status* status);
-	struct MessageMetadata* (*getOutputMetadata)(const struct RoutineMetadata* self, struct Status* status);
-	struct MessageMetadata* (*getTriggerMetadata)(const struct RoutineMetadata* self, struct Status* status);
-	const char* (*getTriggerTable)(const struct RoutineMetadata* self, struct Status* status);
-	unsigned (*getTriggerType)(const struct RoutineMetadata* self, struct Status* status);
+	const char* (*getPackage)(const struct FB_IRoutineMetadata* self, struct FB_IStatus* status);
+	const char* (*getName)(const struct FB_IRoutineMetadata* self, struct FB_IStatus* status);
+	const char* (*getEntryPoint)(const struct FB_IRoutineMetadata* self, struct FB_IStatus* status);
+	const char* (*getBody)(const struct FB_IRoutineMetadata* self, struct FB_IStatus* status);
+	struct FB_IMessageMetadata* (*getInputMetadata)(const struct FB_IRoutineMetadata* self, struct FB_IStatus* status);
+	struct FB_IMessageMetadata* (*getOutputMetadata)(const struct FB_IRoutineMetadata* self, struct FB_IStatus* status);
+	struct FB_IMessageMetadata* (*getTriggerMetadata)(const struct FB_IRoutineMetadata* self, struct FB_IStatus* status);
+	const char* (*getTriggerTable)(const struct FB_IRoutineMetadata* self, struct FB_IStatus* status);
+	unsigned (*getTriggerType)(const struct FB_IRoutineMetadata* self, struct FB_IStatus* status);
 };
 
-struct RoutineMetadata
+struct FB_IRoutineMetadata
 {
 	void* cloopDummy[1];
-	struct RoutineMetadataVTable* vtable;
+	struct FB_IRoutineMetadataVTable* vtable;
 };
 
-CLOOP_EXTERN_C const char* RoutineMetadata_getPackage(const struct RoutineMetadata* self, struct Status* status);
-CLOOP_EXTERN_C const char* RoutineMetadata_getName(const struct RoutineMetadata* self, struct Status* status);
-CLOOP_EXTERN_C const char* RoutineMetadata_getEntryPoint(const struct RoutineMetadata* self, struct Status* status);
-CLOOP_EXTERN_C const char* RoutineMetadata_getBody(const struct RoutineMetadata* self, struct Status* status);
-CLOOP_EXTERN_C struct MessageMetadata* RoutineMetadata_getInputMetadata(const struct RoutineMetadata* self, struct Status* status);
-CLOOP_EXTERN_C struct MessageMetadata* RoutineMetadata_getOutputMetadata(const struct RoutineMetadata* self, struct Status* status);
-CLOOP_EXTERN_C struct MessageMetadata* RoutineMetadata_getTriggerMetadata(const struct RoutineMetadata* self, struct Status* status);
-CLOOP_EXTERN_C const char* RoutineMetadata_getTriggerTable(const struct RoutineMetadata* self, struct Status* status);
-CLOOP_EXTERN_C unsigned RoutineMetadata_getTriggerType(const struct RoutineMetadata* self, struct Status* status);
+CLOOP_EXTERN_C const char* FB_IRoutineMetadata_getPackage(const struct FB_IRoutineMetadata* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C const char* FB_IRoutineMetadata_getName(const struct FB_IRoutineMetadata* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C const char* FB_IRoutineMetadata_getEntryPoint(const struct FB_IRoutineMetadata* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C const char* FB_IRoutineMetadata_getBody(const struct FB_IRoutineMetadata* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C struct FB_IMessageMetadata* FB_IRoutineMetadata_getInputMetadata(const struct FB_IRoutineMetadata* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C struct FB_IMessageMetadata* FB_IRoutineMetadata_getOutputMetadata(const struct FB_IRoutineMetadata* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C struct FB_IMessageMetadata* FB_IRoutineMetadata_getTriggerMetadata(const struct FB_IRoutineMetadata* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C const char* FB_IRoutineMetadata_getTriggerTable(const struct FB_IRoutineMetadata* self, struct FB_IStatus* status);
+CLOOP_EXTERN_C unsigned FB_IRoutineMetadata_getTriggerType(const struct FB_IRoutineMetadata* self, struct FB_IStatus* status);
 
-#define ExternalEngine_VERSION 10
+#define FB_IExternalEngine_VERSION 10
 
-struct ExternalEngine;
+struct FB_IExternalEngine;
 
-struct ExternalEngineVTable
+struct FB_IExternalEngineVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*addRef)(struct ExternalEngine* self);
-	int (*release)(struct ExternalEngine* self);
-	void (*setOwner)(struct ExternalEngine* self, struct ReferenceCounted* r);
-	struct ReferenceCounted* (*getOwner)(struct ExternalEngine* self);
-	void (*open)(struct ExternalEngine* self, struct Status* status, struct ExternalContext* context, char* charSet, unsigned charSetSize);
-	void (*openAttachment)(struct ExternalEngine* self, struct Status* status, struct ExternalContext* context);
-	void (*closeAttachment)(struct ExternalEngine* self, struct Status* status, struct ExternalContext* context);
-	struct ExternalFunction* (*makeFunction)(struct ExternalEngine* self, struct Status* status, struct ExternalContext* context, struct RoutineMetadata* metadata, struct MetadataBuilder* inBuilder, struct MetadataBuilder* outBuilder);
-	struct ExternalProcedure* (*makeProcedure)(struct ExternalEngine* self, struct Status* status, struct ExternalContext* context, struct RoutineMetadata* metadata, struct MetadataBuilder* inBuilder, struct MetadataBuilder* outBuilder);
-	struct ExternalTrigger* (*makeTrigger)(struct ExternalEngine* self, struct Status* status, struct ExternalContext* context, struct RoutineMetadata* metadata, struct MetadataBuilder* fieldsBuilder);
+	void (*addRef)(struct FB_IExternalEngine* self);
+	int (*release)(struct FB_IExternalEngine* self);
+	void (*setOwner)(struct FB_IExternalEngine* self, struct FB_IReferenceCounted* r);
+	struct FB_IReferenceCounted* (*getOwner)(struct FB_IExternalEngine* self);
+	void (*open)(struct FB_IExternalEngine* self, struct FB_IStatus* status, struct FB_IExternalContext* context, char* charSet, unsigned charSetSize);
+	void (*openAttachment)(struct FB_IExternalEngine* self, struct FB_IStatus* status, struct FB_IExternalContext* context);
+	void (*closeAttachment)(struct FB_IExternalEngine* self, struct FB_IStatus* status, struct FB_IExternalContext* context);
+	struct FB_IExternalFunction* (*makeFunction)(struct FB_IExternalEngine* self, struct FB_IStatus* status, struct FB_IExternalContext* context, struct FB_IRoutineMetadata* metadata, struct FB_IMetadataBuilder* inBuilder, struct FB_IMetadataBuilder* outBuilder);
+	struct FB_IExternalProcedure* (*makeProcedure)(struct FB_IExternalEngine* self, struct FB_IStatus* status, struct FB_IExternalContext* context, struct FB_IRoutineMetadata* metadata, struct FB_IMetadataBuilder* inBuilder, struct FB_IMetadataBuilder* outBuilder);
+	struct FB_IExternalTrigger* (*makeTrigger)(struct FB_IExternalEngine* self, struct FB_IStatus* status, struct FB_IExternalContext* context, struct FB_IRoutineMetadata* metadata, struct FB_IMetadataBuilder* fieldsBuilder);
 };
 
-struct ExternalEngine
+struct FB_IExternalEngine
 {
 	void* cloopDummy[1];
-	struct ExternalEngineVTable* vtable;
+	struct FB_IExternalEngineVTable* vtable;
 };
 
-CLOOP_EXTERN_C void ExternalEngine_addRef(struct ExternalEngine* self);
-CLOOP_EXTERN_C int ExternalEngine_release(struct ExternalEngine* self);
-CLOOP_EXTERN_C void ExternalEngine_setOwner(struct ExternalEngine* self, struct ReferenceCounted* r);
-CLOOP_EXTERN_C struct ReferenceCounted* ExternalEngine_getOwner(struct ExternalEngine* self);
-CLOOP_EXTERN_C void ExternalEngine_open(struct ExternalEngine* self, struct Status* status, struct ExternalContext* context, char* charSet, unsigned charSetSize);
-CLOOP_EXTERN_C void ExternalEngine_openAttachment(struct ExternalEngine* self, struct Status* status, struct ExternalContext* context);
-CLOOP_EXTERN_C void ExternalEngine_closeAttachment(struct ExternalEngine* self, struct Status* status, struct ExternalContext* context);
-CLOOP_EXTERN_C struct ExternalFunction* ExternalEngine_makeFunction(struct ExternalEngine* self, struct Status* status, struct ExternalContext* context, struct RoutineMetadata* metadata, struct MetadataBuilder* inBuilder, struct MetadataBuilder* outBuilder);
-CLOOP_EXTERN_C struct ExternalProcedure* ExternalEngine_makeProcedure(struct ExternalEngine* self, struct Status* status, struct ExternalContext* context, struct RoutineMetadata* metadata, struct MetadataBuilder* inBuilder, struct MetadataBuilder* outBuilder);
-CLOOP_EXTERN_C struct ExternalTrigger* ExternalEngine_makeTrigger(struct ExternalEngine* self, struct Status* status, struct ExternalContext* context, struct RoutineMetadata* metadata, struct MetadataBuilder* fieldsBuilder);
+CLOOP_EXTERN_C void FB_IExternalEngine_addRef(struct FB_IExternalEngine* self);
+CLOOP_EXTERN_C int FB_IExternalEngine_release(struct FB_IExternalEngine* self);
+CLOOP_EXTERN_C void FB_IExternalEngine_setOwner(struct FB_IExternalEngine* self, struct FB_IReferenceCounted* r);
+CLOOP_EXTERN_C struct FB_IReferenceCounted* FB_IExternalEngine_getOwner(struct FB_IExternalEngine* self);
+CLOOP_EXTERN_C void FB_IExternalEngine_open(struct FB_IExternalEngine* self, struct FB_IStatus* status, struct FB_IExternalContext* context, char* charSet, unsigned charSetSize);
+CLOOP_EXTERN_C void FB_IExternalEngine_openAttachment(struct FB_IExternalEngine* self, struct FB_IStatus* status, struct FB_IExternalContext* context);
+CLOOP_EXTERN_C void FB_IExternalEngine_closeAttachment(struct FB_IExternalEngine* self, struct FB_IStatus* status, struct FB_IExternalContext* context);
+CLOOP_EXTERN_C struct FB_IExternalFunction* FB_IExternalEngine_makeFunction(struct FB_IExternalEngine* self, struct FB_IStatus* status, struct FB_IExternalContext* context, struct FB_IRoutineMetadata* metadata, struct FB_IMetadataBuilder* inBuilder, struct FB_IMetadataBuilder* outBuilder);
+CLOOP_EXTERN_C struct FB_IExternalProcedure* FB_IExternalEngine_makeProcedure(struct FB_IExternalEngine* self, struct FB_IStatus* status, struct FB_IExternalContext* context, struct FB_IRoutineMetadata* metadata, struct FB_IMetadataBuilder* inBuilder, struct FB_IMetadataBuilder* outBuilder);
+CLOOP_EXTERN_C struct FB_IExternalTrigger* FB_IExternalEngine_makeTrigger(struct FB_IExternalEngine* self, struct FB_IStatus* status, struct FB_IExternalContext* context, struct FB_IRoutineMetadata* metadata, struct FB_IMetadataBuilder* fieldsBuilder);
 
-#define Timer_VERSION 3
+#define FB_ITimer_VERSION 3
 
-struct Timer;
+struct FB_ITimer;
 
-struct TimerVTable
+struct FB_ITimerVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*addRef)(struct Timer* self);
-	int (*release)(struct Timer* self);
-	void (*handler)(struct Timer* self);
+	void (*addRef)(struct FB_ITimer* self);
+	int (*release)(struct FB_ITimer* self);
+	void (*handler)(struct FB_ITimer* self);
 };
 
-struct Timer
+struct FB_ITimer
 {
 	void* cloopDummy[1];
-	struct TimerVTable* vtable;
+	struct FB_ITimerVTable* vtable;
 };
 
-CLOOP_EXTERN_C void Timer_addRef(struct Timer* self);
-CLOOP_EXTERN_C int Timer_release(struct Timer* self);
-CLOOP_EXTERN_C void Timer_handler(struct Timer* self);
+CLOOP_EXTERN_C void FB_ITimer_addRef(struct FB_ITimer* self);
+CLOOP_EXTERN_C int FB_ITimer_release(struct FB_ITimer* self);
+CLOOP_EXTERN_C void FB_ITimer_handler(struct FB_ITimer* self);
 
-#define TimerControl_VERSION 2
+#define FB_ITimerControl_VERSION 2
 
-struct TimerControl;
+struct FB_ITimerControl;
 
-struct TimerControlVTable
+struct FB_ITimerControlVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*start)(struct TimerControl* self, struct Status* status, struct Timer* timer, ISC_UINT64 microSeconds);
-	void (*stop)(struct TimerControl* self, struct Status* status, struct Timer* timer);
+	void (*start)(struct FB_ITimerControl* self, struct FB_IStatus* status, struct FB_ITimer* timer, ISC_UINT64 microSeconds);
+	void (*stop)(struct FB_ITimerControl* self, struct FB_IStatus* status, struct FB_ITimer* timer);
 };
 
-struct TimerControl
+struct FB_ITimerControl
 {
 	void* cloopDummy[1];
-	struct TimerControlVTable* vtable;
+	struct FB_ITimerControlVTable* vtable;
 };
 
-CLOOP_EXTERN_C void TimerControl_start(struct TimerControl* self, struct Status* status, struct Timer* timer, ISC_UINT64 microSeconds);
-CLOOP_EXTERN_C void TimerControl_stop(struct TimerControl* self, struct Status* status, struct Timer* timer);
+CLOOP_EXTERN_C void FB_ITimerControl_start(struct FB_ITimerControl* self, struct FB_IStatus* status, struct FB_ITimer* timer, ISC_UINT64 microSeconds);
+CLOOP_EXTERN_C void FB_ITimerControl_stop(struct FB_ITimerControl* self, struct FB_IStatus* status, struct FB_ITimer* timer);
 
-#define VersionCallback_VERSION 1
+#define FB_IVersionCallback_VERSION 1
 
-struct VersionCallback;
+struct FB_IVersionCallback;
 
-struct VersionCallbackVTable
+struct FB_IVersionCallbackVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*callback)(struct VersionCallback* self, struct Status* status, const char* text);
+	void (*callback)(struct FB_IVersionCallback* self, struct FB_IStatus* status, const char* text);
 };
 
-struct VersionCallback
+struct FB_IVersionCallback
 {
 	void* cloopDummy[1];
-	struct VersionCallbackVTable* vtable;
+	struct FB_IVersionCallbackVTable* vtable;
 };
 
-CLOOP_EXTERN_C void VersionCallback_callback(struct VersionCallback* self, struct Status* status, const char* text);
+CLOOP_EXTERN_C void FB_IVersionCallback_callback(struct FB_IVersionCallback* self, struct FB_IStatus* status, const char* text);
 
-#define Util_VERSION 9
+#define FB_IUtil_VERSION 9
 
-struct Util;
+struct FB_IUtil;
 
-struct UtilVTable
+struct FB_IUtilVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*getFbVersion)(struct Util* self, struct Status* status, struct Attachment* att, struct VersionCallback* callback);
-	void (*loadBlob)(struct Util* self, struct Status* status, ISC_QUAD* blobId, struct Attachment* att, struct Transaction* tra, const char* file, FB_BOOLEAN txt);
-	void (*dumpBlob)(struct Util* self, struct Status* status, ISC_QUAD* blobId, struct Attachment* att, struct Transaction* tra, const char* file, FB_BOOLEAN txt);
-	void (*getPerfCounters)(struct Util* self, struct Status* status, struct Attachment* att, const char* countersSet, ISC_INT64* counters);
-	struct Attachment* (*executeCreateDatabase)(struct Util* self, struct Status* status, unsigned stmtLength, const char* creatDBstatement, unsigned dialect, FB_BOOLEAN* stmtIsCreateDb);
-	void (*decodeDate)(struct Util* self, ISC_DATE date, unsigned* year, unsigned* month, unsigned* day);
-	void (*decodeTime)(struct Util* self, ISC_TIME time, unsigned* hours, unsigned* minutes, unsigned* seconds, unsigned* fractions);
-	ISC_DATE (*encodeDate)(struct Util* self, unsigned year, unsigned month, unsigned day);
-	ISC_TIME (*encodeTime)(struct Util* self, unsigned hours, unsigned minutes, unsigned seconds, unsigned fractions);
+	void (*getFbVersion)(struct FB_IUtil* self, struct FB_IStatus* status, struct FB_IAttachment* att, struct FB_IVersionCallback* callback);
+	void (*loadBlob)(struct FB_IUtil* self, struct FB_IStatus* status, ISC_QUAD* blobId, struct FB_IAttachment* att, struct FB_ITransaction* tra, const char* file, FB_BOOLEAN txt);
+	void (*dumpBlob)(struct FB_IUtil* self, struct FB_IStatus* status, ISC_QUAD* blobId, struct FB_IAttachment* att, struct FB_ITransaction* tra, const char* file, FB_BOOLEAN txt);
+	void (*getPerfCounters)(struct FB_IUtil* self, struct FB_IStatus* status, struct FB_IAttachment* att, const char* countersSet, ISC_INT64* counters);
+	struct FB_IAttachment* (*executeCreateDatabase)(struct FB_IUtil* self, struct FB_IStatus* status, unsigned stmtLength, const char* creatDBstatement, unsigned dialect, FB_BOOLEAN* stmtIsCreateDb);
+	void (*decodeDate)(struct FB_IUtil* self, ISC_DATE date, unsigned* year, unsigned* month, unsigned* day);
+	void (*decodeTime)(struct FB_IUtil* self, ISC_TIME time, unsigned* hours, unsigned* minutes, unsigned* seconds, unsigned* fractions);
+	ISC_DATE (*encodeDate)(struct FB_IUtil* self, unsigned year, unsigned month, unsigned day);
+	ISC_TIME (*encodeTime)(struct FB_IUtil* self, unsigned hours, unsigned minutes, unsigned seconds, unsigned fractions);
 };
 
-struct Util
+struct FB_IUtil
 {
 	void* cloopDummy[1];
-	struct UtilVTable* vtable;
+	struct FB_IUtilVTable* vtable;
 };
 
-CLOOP_EXTERN_C void Util_getFbVersion(struct Util* self, struct Status* status, struct Attachment* att, struct VersionCallback* callback);
-CLOOP_EXTERN_C void Util_loadBlob(struct Util* self, struct Status* status, ISC_QUAD* blobId, struct Attachment* att, struct Transaction* tra, const char* file, FB_BOOLEAN txt);
-CLOOP_EXTERN_C void Util_dumpBlob(struct Util* self, struct Status* status, ISC_QUAD* blobId, struct Attachment* att, struct Transaction* tra, const char* file, FB_BOOLEAN txt);
-CLOOP_EXTERN_C void Util_getPerfCounters(struct Util* self, struct Status* status, struct Attachment* att, const char* countersSet, ISC_INT64* counters);
-CLOOP_EXTERN_C struct Attachment* Util_executeCreateDatabase(struct Util* self, struct Status* status, unsigned stmtLength, const char* creatDBstatement, unsigned dialect, FB_BOOLEAN* stmtIsCreateDb);
-CLOOP_EXTERN_C void Util_decodeDate(struct Util* self, ISC_DATE date, unsigned* year, unsigned* month, unsigned* day);
-CLOOP_EXTERN_C void Util_decodeTime(struct Util* self, ISC_TIME time, unsigned* hours, unsigned* minutes, unsigned* seconds, unsigned* fractions);
-CLOOP_EXTERN_C ISC_DATE Util_encodeDate(struct Util* self, unsigned year, unsigned month, unsigned day);
-CLOOP_EXTERN_C ISC_TIME Util_encodeTime(struct Util* self, unsigned hours, unsigned minutes, unsigned seconds, unsigned fractions);
+CLOOP_EXTERN_C void FB_IUtil_getFbVersion(struct FB_IUtil* self, struct FB_IStatus* status, struct FB_IAttachment* att, struct FB_IVersionCallback* callback);
+CLOOP_EXTERN_C void FB_IUtil_loadBlob(struct FB_IUtil* self, struct FB_IStatus* status, ISC_QUAD* blobId, struct FB_IAttachment* att, struct FB_ITransaction* tra, const char* file, FB_BOOLEAN txt);
+CLOOP_EXTERN_C void FB_IUtil_dumpBlob(struct FB_IUtil* self, struct FB_IStatus* status, ISC_QUAD* blobId, struct FB_IAttachment* att, struct FB_ITransaction* tra, const char* file, FB_BOOLEAN txt);
+CLOOP_EXTERN_C void FB_IUtil_getPerfCounters(struct FB_IUtil* self, struct FB_IStatus* status, struct FB_IAttachment* att, const char* countersSet, ISC_INT64* counters);
+CLOOP_EXTERN_C struct FB_IAttachment* FB_IUtil_executeCreateDatabase(struct FB_IUtil* self, struct FB_IStatus* status, unsigned stmtLength, const char* creatDBstatement, unsigned dialect, FB_BOOLEAN* stmtIsCreateDb);
+CLOOP_EXTERN_C void FB_IUtil_decodeDate(struct FB_IUtil* self, ISC_DATE date, unsigned* year, unsigned* month, unsigned* day);
+CLOOP_EXTERN_C void FB_IUtil_decodeTime(struct FB_IUtil* self, ISC_TIME time, unsigned* hours, unsigned* minutes, unsigned* seconds, unsigned* fractions);
+CLOOP_EXTERN_C ISC_DATE FB_IUtil_encodeDate(struct FB_IUtil* self, unsigned year, unsigned month, unsigned day);
+CLOOP_EXTERN_C ISC_TIME FB_IUtil_encodeTime(struct FB_IUtil* self, unsigned hours, unsigned minutes, unsigned seconds, unsigned fractions);
 
-#define TraceConnection_VERSION 9
+#define FB_ITraceConnection_VERSION 9
 
-#define TraceConnection_KIND_DATABASE ((unsigned) (1))
-#define TraceConnection_KIND_SERVICE ((unsigned) (2))
+#define FB_ITraceConnection_KIND_DATABASE ((unsigned) (1))
+#define FB_ITraceConnection_KIND_SERVICE ((unsigned) (2))
 
-struct TraceConnection;
+struct FB_ITraceConnection;
 
-struct TraceConnectionVTable
+struct FB_ITraceConnectionVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	unsigned (*getKind)(struct TraceConnection* self);
-	int (*getProcessID)(struct TraceConnection* self);
-	const char* (*getUserName)(struct TraceConnection* self);
-	const char* (*getRoleName)(struct TraceConnection* self);
-	const char* (*getCharSet)(struct TraceConnection* self);
-	const char* (*getRemoteProtocol)(struct TraceConnection* self);
-	const char* (*getRemoteAddress)(struct TraceConnection* self);
-	int (*getRemoteProcessID)(struct TraceConnection* self);
-	const char* (*getRemoteProcessName)(struct TraceConnection* self);
+	unsigned (*getKind)(struct FB_ITraceConnection* self);
+	int (*getProcessID)(struct FB_ITraceConnection* self);
+	const char* (*getUserName)(struct FB_ITraceConnection* self);
+	const char* (*getRoleName)(struct FB_ITraceConnection* self);
+	const char* (*getCharSet)(struct FB_ITraceConnection* self);
+	const char* (*getRemoteProtocol)(struct FB_ITraceConnection* self);
+	const char* (*getRemoteAddress)(struct FB_ITraceConnection* self);
+	int (*getRemoteProcessID)(struct FB_ITraceConnection* self);
+	const char* (*getRemoteProcessName)(struct FB_ITraceConnection* self);
 };
 
-struct TraceConnection
+struct FB_ITraceConnection
 {
 	void* cloopDummy[1];
-	struct TraceConnectionVTable* vtable;
+	struct FB_ITraceConnectionVTable* vtable;
 };
 
-CLOOP_EXTERN_C unsigned TraceConnection_getKind(struct TraceConnection* self);
-CLOOP_EXTERN_C int TraceConnection_getProcessID(struct TraceConnection* self);
-CLOOP_EXTERN_C const char* TraceConnection_getUserName(struct TraceConnection* self);
-CLOOP_EXTERN_C const char* TraceConnection_getRoleName(struct TraceConnection* self);
-CLOOP_EXTERN_C const char* TraceConnection_getCharSet(struct TraceConnection* self);
-CLOOP_EXTERN_C const char* TraceConnection_getRemoteProtocol(struct TraceConnection* self);
-CLOOP_EXTERN_C const char* TraceConnection_getRemoteAddress(struct TraceConnection* self);
-CLOOP_EXTERN_C int TraceConnection_getRemoteProcessID(struct TraceConnection* self);
-CLOOP_EXTERN_C const char* TraceConnection_getRemoteProcessName(struct TraceConnection* self);
+CLOOP_EXTERN_C unsigned FB_ITraceConnection_getKind(struct FB_ITraceConnection* self);
+CLOOP_EXTERN_C int FB_ITraceConnection_getProcessID(struct FB_ITraceConnection* self);
+CLOOP_EXTERN_C const char* FB_ITraceConnection_getUserName(struct FB_ITraceConnection* self);
+CLOOP_EXTERN_C const char* FB_ITraceConnection_getRoleName(struct FB_ITraceConnection* self);
+CLOOP_EXTERN_C const char* FB_ITraceConnection_getCharSet(struct FB_ITraceConnection* self);
+CLOOP_EXTERN_C const char* FB_ITraceConnection_getRemoteProtocol(struct FB_ITraceConnection* self);
+CLOOP_EXTERN_C const char* FB_ITraceConnection_getRemoteAddress(struct FB_ITraceConnection* self);
+CLOOP_EXTERN_C int FB_ITraceConnection_getRemoteProcessID(struct FB_ITraceConnection* self);
+CLOOP_EXTERN_C const char* FB_ITraceConnection_getRemoteProcessName(struct FB_ITraceConnection* self);
 
-#define TraceDatabaseConnection_VERSION 11
+#define FB_ITraceDatabaseConnection_VERSION 11
 
-struct TraceDatabaseConnection;
+struct FB_ITraceDatabaseConnection;
 
-struct TraceDatabaseConnectionVTable
+struct FB_ITraceDatabaseConnectionVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	unsigned (*getKind)(struct TraceDatabaseConnection* self);
-	int (*getProcessID)(struct TraceDatabaseConnection* self);
-	const char* (*getUserName)(struct TraceDatabaseConnection* self);
-	const char* (*getRoleName)(struct TraceDatabaseConnection* self);
-	const char* (*getCharSet)(struct TraceDatabaseConnection* self);
-	const char* (*getRemoteProtocol)(struct TraceDatabaseConnection* self);
-	const char* (*getRemoteAddress)(struct TraceDatabaseConnection* self);
-	int (*getRemoteProcessID)(struct TraceDatabaseConnection* self);
-	const char* (*getRemoteProcessName)(struct TraceDatabaseConnection* self);
-	int (*getConnectionID)(struct TraceDatabaseConnection* self);
-	const char* (*getDatabaseName)(struct TraceDatabaseConnection* self);
+	unsigned (*getKind)(struct FB_ITraceDatabaseConnection* self);
+	int (*getProcessID)(struct FB_ITraceDatabaseConnection* self);
+	const char* (*getUserName)(struct FB_ITraceDatabaseConnection* self);
+	const char* (*getRoleName)(struct FB_ITraceDatabaseConnection* self);
+	const char* (*getCharSet)(struct FB_ITraceDatabaseConnection* self);
+	const char* (*getRemoteProtocol)(struct FB_ITraceDatabaseConnection* self);
+	const char* (*getRemoteAddress)(struct FB_ITraceDatabaseConnection* self);
+	int (*getRemoteProcessID)(struct FB_ITraceDatabaseConnection* self);
+	const char* (*getRemoteProcessName)(struct FB_ITraceDatabaseConnection* self);
+	int (*getConnectionID)(struct FB_ITraceDatabaseConnection* self);
+	const char* (*getDatabaseName)(struct FB_ITraceDatabaseConnection* self);
 };
 
-struct TraceDatabaseConnection
+struct FB_ITraceDatabaseConnection
 {
 	void* cloopDummy[1];
-	struct TraceDatabaseConnectionVTable* vtable;
+	struct FB_ITraceDatabaseConnectionVTable* vtable;
 };
 
-CLOOP_EXTERN_C unsigned TraceDatabaseConnection_getKind(struct TraceDatabaseConnection* self);
-CLOOP_EXTERN_C int TraceDatabaseConnection_getProcessID(struct TraceDatabaseConnection* self);
-CLOOP_EXTERN_C const char* TraceDatabaseConnection_getUserName(struct TraceDatabaseConnection* self);
-CLOOP_EXTERN_C const char* TraceDatabaseConnection_getRoleName(struct TraceDatabaseConnection* self);
-CLOOP_EXTERN_C const char* TraceDatabaseConnection_getCharSet(struct TraceDatabaseConnection* self);
-CLOOP_EXTERN_C const char* TraceDatabaseConnection_getRemoteProtocol(struct TraceDatabaseConnection* self);
-CLOOP_EXTERN_C const char* TraceDatabaseConnection_getRemoteAddress(struct TraceDatabaseConnection* self);
-CLOOP_EXTERN_C int TraceDatabaseConnection_getRemoteProcessID(struct TraceDatabaseConnection* self);
-CLOOP_EXTERN_C const char* TraceDatabaseConnection_getRemoteProcessName(struct TraceDatabaseConnection* self);
-CLOOP_EXTERN_C int TraceDatabaseConnection_getConnectionID(struct TraceDatabaseConnection* self);
-CLOOP_EXTERN_C const char* TraceDatabaseConnection_getDatabaseName(struct TraceDatabaseConnection* self);
+CLOOP_EXTERN_C unsigned FB_ITraceDatabaseConnection_getKind(struct FB_ITraceDatabaseConnection* self);
+CLOOP_EXTERN_C int FB_ITraceDatabaseConnection_getProcessID(struct FB_ITraceDatabaseConnection* self);
+CLOOP_EXTERN_C const char* FB_ITraceDatabaseConnection_getUserName(struct FB_ITraceDatabaseConnection* self);
+CLOOP_EXTERN_C const char* FB_ITraceDatabaseConnection_getRoleName(struct FB_ITraceDatabaseConnection* self);
+CLOOP_EXTERN_C const char* FB_ITraceDatabaseConnection_getCharSet(struct FB_ITraceDatabaseConnection* self);
+CLOOP_EXTERN_C const char* FB_ITraceDatabaseConnection_getRemoteProtocol(struct FB_ITraceDatabaseConnection* self);
+CLOOP_EXTERN_C const char* FB_ITraceDatabaseConnection_getRemoteAddress(struct FB_ITraceDatabaseConnection* self);
+CLOOP_EXTERN_C int FB_ITraceDatabaseConnection_getRemoteProcessID(struct FB_ITraceDatabaseConnection* self);
+CLOOP_EXTERN_C const char* FB_ITraceDatabaseConnection_getRemoteProcessName(struct FB_ITraceDatabaseConnection* self);
+CLOOP_EXTERN_C int FB_ITraceDatabaseConnection_getConnectionID(struct FB_ITraceDatabaseConnection* self);
+CLOOP_EXTERN_C const char* FB_ITraceDatabaseConnection_getDatabaseName(struct FB_ITraceDatabaseConnection* self);
 
-#define TraceTransaction_VERSION 5
+#define FB_ITraceTransaction_VERSION 5
 
-#define TraceTransaction_ISOLATION_CONSISTENCY ((unsigned) (1))
-#define TraceTransaction_ISOLATION_CONCURRENCY ((unsigned) (2))
-#define TraceTransaction_ISOLATION_READ_COMMITTED_RECVER ((unsigned) (3))
-#define TraceTransaction_ISOLATION_READ_COMMITTED_NORECVER ((unsigned) (4))
+#define FB_ITraceTransaction_ISOLATION_CONSISTENCY ((unsigned) (1))
+#define FB_ITraceTransaction_ISOLATION_CONCURRENCY ((unsigned) (2))
+#define FB_ITraceTransaction_ISOLATION_READ_COMMITTED_RECVER ((unsigned) (3))
+#define FB_ITraceTransaction_ISOLATION_READ_COMMITTED_NORECVER ((unsigned) (4))
 
-struct TraceTransaction;
+struct FB_ITraceTransaction;
 
-struct TraceTransactionVTable
+struct FB_ITraceTransactionVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	unsigned (*getTransactionID)(struct TraceTransaction* self);
-	FB_BOOLEAN (*getReadOnly)(struct TraceTransaction* self);
-	int (*getWait)(struct TraceTransaction* self);
-	unsigned (*getIsolation)(struct TraceTransaction* self);
-	struct PerformanceInfo* (*getPerf)(struct TraceTransaction* self);
+	unsigned (*getTransactionID)(struct FB_ITraceTransaction* self);
+	FB_BOOLEAN (*getReadOnly)(struct FB_ITraceTransaction* self);
+	int (*getWait)(struct FB_ITraceTransaction* self);
+	unsigned (*getIsolation)(struct FB_ITraceTransaction* self);
+	struct PerformanceInfo* (*getPerf)(struct FB_ITraceTransaction* self);
 };
 
-struct TraceTransaction
+struct FB_ITraceTransaction
 {
 	void* cloopDummy[1];
-	struct TraceTransactionVTable* vtable;
+	struct FB_ITraceTransactionVTable* vtable;
 };
 
-CLOOP_EXTERN_C unsigned TraceTransaction_getTransactionID(struct TraceTransaction* self);
-CLOOP_EXTERN_C FB_BOOLEAN TraceTransaction_getReadOnly(struct TraceTransaction* self);
-CLOOP_EXTERN_C int TraceTransaction_getWait(struct TraceTransaction* self);
-CLOOP_EXTERN_C unsigned TraceTransaction_getIsolation(struct TraceTransaction* self);
-CLOOP_EXTERN_C struct PerformanceInfo* TraceTransaction_getPerf(struct TraceTransaction* self);
+CLOOP_EXTERN_C unsigned FB_ITraceTransaction_getTransactionID(struct FB_ITraceTransaction* self);
+CLOOP_EXTERN_C FB_BOOLEAN FB_ITraceTransaction_getReadOnly(struct FB_ITraceTransaction* self);
+CLOOP_EXTERN_C int FB_ITraceTransaction_getWait(struct FB_ITraceTransaction* self);
+CLOOP_EXTERN_C unsigned FB_ITraceTransaction_getIsolation(struct FB_ITraceTransaction* self);
+CLOOP_EXTERN_C struct PerformanceInfo* FB_ITraceTransaction_getPerf(struct FB_ITraceTransaction* self);
 
-#define TraceParams_VERSION 2
+#define FB_ITraceParams_VERSION 2
 
-struct TraceParams;
+struct FB_ITraceParams;
 
-struct TraceParamsVTable
+struct FB_ITraceParamsVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	unsigned (*getCount)(struct TraceParams* self);
-	const struct dsc* (*getParam)(struct TraceParams* self, unsigned idx);
+	unsigned (*getCount)(struct FB_ITraceParams* self);
+	const struct dsc* (*getParam)(struct FB_ITraceParams* self, unsigned idx);
 };
 
-struct TraceParams
+struct FB_ITraceParams
 {
 	void* cloopDummy[1];
-	struct TraceParamsVTable* vtable;
+	struct FB_ITraceParamsVTable* vtable;
 };
 
-CLOOP_EXTERN_C unsigned TraceParams_getCount(struct TraceParams* self);
-CLOOP_EXTERN_C const struct dsc* TraceParams_getParam(struct TraceParams* self, unsigned idx);
+CLOOP_EXTERN_C unsigned FB_ITraceParams_getCount(struct FB_ITraceParams* self);
+CLOOP_EXTERN_C const struct dsc* FB_ITraceParams_getParam(struct FB_ITraceParams* self, unsigned idx);
 
-#define TraceStatement_VERSION 2
+#define FB_ITraceStatement_VERSION 2
 
-struct TraceStatement;
+struct FB_ITraceStatement;
 
-struct TraceStatementVTable
+struct FB_ITraceStatementVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	int (*getStmtID)(struct TraceStatement* self);
-	struct PerformanceInfo* (*getPerf)(struct TraceStatement* self);
+	int (*getStmtID)(struct FB_ITraceStatement* self);
+	struct PerformanceInfo* (*getPerf)(struct FB_ITraceStatement* self);
 };
 
-struct TraceStatement
+struct FB_ITraceStatement
 {
 	void* cloopDummy[1];
-	struct TraceStatementVTable* vtable;
+	struct FB_ITraceStatementVTable* vtable;
 };
 
-CLOOP_EXTERN_C int TraceStatement_getStmtID(struct TraceStatement* self);
-CLOOP_EXTERN_C struct PerformanceInfo* TraceStatement_getPerf(struct TraceStatement* self);
+CLOOP_EXTERN_C int FB_ITraceStatement_getStmtID(struct FB_ITraceStatement* self);
+CLOOP_EXTERN_C struct PerformanceInfo* FB_ITraceStatement_getPerf(struct FB_ITraceStatement* self);
 
-#define TraceSQLStatement_VERSION 7
+#define FB_ITraceSQLStatement_VERSION 7
 
-struct TraceSQLStatement;
+struct FB_ITraceSQLStatement;
 
-struct TraceSQLStatementVTable
+struct FB_ITraceSQLStatementVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	int (*getStmtID)(struct TraceSQLStatement* self);
-	struct PerformanceInfo* (*getPerf)(struct TraceSQLStatement* self);
-	const char* (*getText)(struct TraceSQLStatement* self);
-	const char* (*getPlan)(struct TraceSQLStatement* self);
-	struct TraceParams* (*getInputs)(struct TraceSQLStatement* self);
-	const char* (*getTextUTF8)(struct TraceSQLStatement* self);
-	const char* (*getExplainedPlan)(struct TraceSQLStatement* self);
+	int (*getStmtID)(struct FB_ITraceSQLStatement* self);
+	struct PerformanceInfo* (*getPerf)(struct FB_ITraceSQLStatement* self);
+	const char* (*getText)(struct FB_ITraceSQLStatement* self);
+	const char* (*getPlan)(struct FB_ITraceSQLStatement* self);
+	struct FB_ITraceParams* (*getInputs)(struct FB_ITraceSQLStatement* self);
+	const char* (*getTextUTF8)(struct FB_ITraceSQLStatement* self);
+	const char* (*getExplainedPlan)(struct FB_ITraceSQLStatement* self);
 };
 
-struct TraceSQLStatement
+struct FB_ITraceSQLStatement
 {
 	void* cloopDummy[1];
-	struct TraceSQLStatementVTable* vtable;
+	struct FB_ITraceSQLStatementVTable* vtable;
 };
 
-CLOOP_EXTERN_C int TraceSQLStatement_getStmtID(struct TraceSQLStatement* self);
-CLOOP_EXTERN_C struct PerformanceInfo* TraceSQLStatement_getPerf(struct TraceSQLStatement* self);
-CLOOP_EXTERN_C const char* TraceSQLStatement_getText(struct TraceSQLStatement* self);
-CLOOP_EXTERN_C const char* TraceSQLStatement_getPlan(struct TraceSQLStatement* self);
-CLOOP_EXTERN_C struct TraceParams* TraceSQLStatement_getInputs(struct TraceSQLStatement* self);
-CLOOP_EXTERN_C const char* TraceSQLStatement_getTextUTF8(struct TraceSQLStatement* self);
-CLOOP_EXTERN_C const char* TraceSQLStatement_getExplainedPlan(struct TraceSQLStatement* self);
+CLOOP_EXTERN_C int FB_ITraceSQLStatement_getStmtID(struct FB_ITraceSQLStatement* self);
+CLOOP_EXTERN_C struct PerformanceInfo* FB_ITraceSQLStatement_getPerf(struct FB_ITraceSQLStatement* self);
+CLOOP_EXTERN_C const char* FB_ITraceSQLStatement_getText(struct FB_ITraceSQLStatement* self);
+CLOOP_EXTERN_C const char* FB_ITraceSQLStatement_getPlan(struct FB_ITraceSQLStatement* self);
+CLOOP_EXTERN_C struct FB_ITraceParams* FB_ITraceSQLStatement_getInputs(struct FB_ITraceSQLStatement* self);
+CLOOP_EXTERN_C const char* FB_ITraceSQLStatement_getTextUTF8(struct FB_ITraceSQLStatement* self);
+CLOOP_EXTERN_C const char* FB_ITraceSQLStatement_getExplainedPlan(struct FB_ITraceSQLStatement* self);
 
-#define TraceBLRStatement_VERSION 5
+#define FB_ITraceBLRStatement_VERSION 5
 
-struct TraceBLRStatement;
+struct FB_ITraceBLRStatement;
 
-struct TraceBLRStatementVTable
+struct FB_ITraceBLRStatementVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	int (*getStmtID)(struct TraceBLRStatement* self);
-	struct PerformanceInfo* (*getPerf)(struct TraceBLRStatement* self);
-	const unsigned char* (*getData)(struct TraceBLRStatement* self);
-	unsigned (*getDataLength)(struct TraceBLRStatement* self);
-	const char* (*getText)(struct TraceBLRStatement* self);
+	int (*getStmtID)(struct FB_ITraceBLRStatement* self);
+	struct PerformanceInfo* (*getPerf)(struct FB_ITraceBLRStatement* self);
+	const unsigned char* (*getData)(struct FB_ITraceBLRStatement* self);
+	unsigned (*getDataLength)(struct FB_ITraceBLRStatement* self);
+	const char* (*getText)(struct FB_ITraceBLRStatement* self);
 };
 
-struct TraceBLRStatement
+struct FB_ITraceBLRStatement
 {
 	void* cloopDummy[1];
-	struct TraceBLRStatementVTable* vtable;
+	struct FB_ITraceBLRStatementVTable* vtable;
 };
 
-CLOOP_EXTERN_C int TraceBLRStatement_getStmtID(struct TraceBLRStatement* self);
-CLOOP_EXTERN_C struct PerformanceInfo* TraceBLRStatement_getPerf(struct TraceBLRStatement* self);
-CLOOP_EXTERN_C const unsigned char* TraceBLRStatement_getData(struct TraceBLRStatement* self);
-CLOOP_EXTERN_C unsigned TraceBLRStatement_getDataLength(struct TraceBLRStatement* self);
-CLOOP_EXTERN_C const char* TraceBLRStatement_getText(struct TraceBLRStatement* self);
+CLOOP_EXTERN_C int FB_ITraceBLRStatement_getStmtID(struct FB_ITraceBLRStatement* self);
+CLOOP_EXTERN_C struct PerformanceInfo* FB_ITraceBLRStatement_getPerf(struct FB_ITraceBLRStatement* self);
+CLOOP_EXTERN_C const unsigned char* FB_ITraceBLRStatement_getData(struct FB_ITraceBLRStatement* self);
+CLOOP_EXTERN_C unsigned FB_ITraceBLRStatement_getDataLength(struct FB_ITraceBLRStatement* self);
+CLOOP_EXTERN_C const char* FB_ITraceBLRStatement_getText(struct FB_ITraceBLRStatement* self);
 
-#define TraceDYNRequest_VERSION 3
+#define FB_ITraceDYNRequest_VERSION 3
 
-struct TraceDYNRequest;
+struct FB_ITraceDYNRequest;
 
-struct TraceDYNRequestVTable
+struct FB_ITraceDYNRequestVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	const unsigned char* (*getData)(struct TraceDYNRequest* self);
-	unsigned (*getDataLength)(struct TraceDYNRequest* self);
-	const char* (*getText)(struct TraceDYNRequest* self);
+	const unsigned char* (*getData)(struct FB_ITraceDYNRequest* self);
+	unsigned (*getDataLength)(struct FB_ITraceDYNRequest* self);
+	const char* (*getText)(struct FB_ITraceDYNRequest* self);
 };
 
-struct TraceDYNRequest
+struct FB_ITraceDYNRequest
 {
 	void* cloopDummy[1];
-	struct TraceDYNRequestVTable* vtable;
+	struct FB_ITraceDYNRequestVTable* vtable;
 };
 
-CLOOP_EXTERN_C const unsigned char* TraceDYNRequest_getData(struct TraceDYNRequest* self);
-CLOOP_EXTERN_C unsigned TraceDYNRequest_getDataLength(struct TraceDYNRequest* self);
-CLOOP_EXTERN_C const char* TraceDYNRequest_getText(struct TraceDYNRequest* self);
+CLOOP_EXTERN_C const unsigned char* FB_ITraceDYNRequest_getData(struct FB_ITraceDYNRequest* self);
+CLOOP_EXTERN_C unsigned FB_ITraceDYNRequest_getDataLength(struct FB_ITraceDYNRequest* self);
+CLOOP_EXTERN_C const char* FB_ITraceDYNRequest_getText(struct FB_ITraceDYNRequest* self);
 
-#define TraceContextVariable_VERSION 3
+#define FB_ITraceContextVariable_VERSION 3
 
-struct TraceContextVariable;
+struct FB_ITraceContextVariable;
 
-struct TraceContextVariableVTable
+struct FB_ITraceContextVariableVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	const char* (*getNameSpace)(struct TraceContextVariable* self);
-	const char* (*getVarName)(struct TraceContextVariable* self);
-	const char* (*getVarValue)(struct TraceContextVariable* self);
+	const char* (*getNameSpace)(struct FB_ITraceContextVariable* self);
+	const char* (*getVarName)(struct FB_ITraceContextVariable* self);
+	const char* (*getVarValue)(struct FB_ITraceContextVariable* self);
 };
 
-struct TraceContextVariable
+struct FB_ITraceContextVariable
 {
 	void* cloopDummy[1];
-	struct TraceContextVariableVTable* vtable;
+	struct FB_ITraceContextVariableVTable* vtable;
 };
 
-CLOOP_EXTERN_C const char* TraceContextVariable_getNameSpace(struct TraceContextVariable* self);
-CLOOP_EXTERN_C const char* TraceContextVariable_getVarName(struct TraceContextVariable* self);
-CLOOP_EXTERN_C const char* TraceContextVariable_getVarValue(struct TraceContextVariable* self);
+CLOOP_EXTERN_C const char* FB_ITraceContextVariable_getNameSpace(struct FB_ITraceContextVariable* self);
+CLOOP_EXTERN_C const char* FB_ITraceContextVariable_getVarName(struct FB_ITraceContextVariable* self);
+CLOOP_EXTERN_C const char* FB_ITraceContextVariable_getVarValue(struct FB_ITraceContextVariable* self);
 
-#define TraceProcedure_VERSION 3
+#define FB_ITraceProcedure_VERSION 3
 
-struct TraceProcedure;
+struct FB_ITraceProcedure;
 
-struct TraceProcedureVTable
+struct FB_ITraceProcedureVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	const char* (*getProcName)(struct TraceProcedure* self);
-	struct TraceParams* (*getInputs)(struct TraceProcedure* self);
-	struct PerformanceInfo* (*getPerf)(struct TraceProcedure* self);
+	const char* (*getProcName)(struct FB_ITraceProcedure* self);
+	struct FB_ITraceParams* (*getInputs)(struct FB_ITraceProcedure* self);
+	struct PerformanceInfo* (*getPerf)(struct FB_ITraceProcedure* self);
 };
 
-struct TraceProcedure
+struct FB_ITraceProcedure
 {
 	void* cloopDummy[1];
-	struct TraceProcedureVTable* vtable;
+	struct FB_ITraceProcedureVTable* vtable;
 };
 
-CLOOP_EXTERN_C const char* TraceProcedure_getProcName(struct TraceProcedure* self);
-CLOOP_EXTERN_C struct TraceParams* TraceProcedure_getInputs(struct TraceProcedure* self);
-CLOOP_EXTERN_C struct PerformanceInfo* TraceProcedure_getPerf(struct TraceProcedure* self);
+CLOOP_EXTERN_C const char* FB_ITraceProcedure_getProcName(struct FB_ITraceProcedure* self);
+CLOOP_EXTERN_C struct FB_ITraceParams* FB_ITraceProcedure_getInputs(struct FB_ITraceProcedure* self);
+CLOOP_EXTERN_C struct PerformanceInfo* FB_ITraceProcedure_getPerf(struct FB_ITraceProcedure* self);
 
-#define TraceFunction_VERSION 4
+#define FB_ITraceFunction_VERSION 4
 
-struct TraceFunction;
+struct FB_ITraceFunction;
 
-struct TraceFunctionVTable
+struct FB_ITraceFunctionVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	const char* (*getFuncName)(struct TraceFunction* self);
-	struct TraceParams* (*getInputs)(struct TraceFunction* self);
-	struct TraceParams* (*getResult)(struct TraceFunction* self);
-	struct PerformanceInfo* (*getPerf)(struct TraceFunction* self);
+	const char* (*getFuncName)(struct FB_ITraceFunction* self);
+	struct FB_ITraceParams* (*getInputs)(struct FB_ITraceFunction* self);
+	struct FB_ITraceParams* (*getResult)(struct FB_ITraceFunction* self);
+	struct PerformanceInfo* (*getPerf)(struct FB_ITraceFunction* self);
 };
 
-struct TraceFunction
+struct FB_ITraceFunction
 {
 	void* cloopDummy[1];
-	struct TraceFunctionVTable* vtable;
+	struct FB_ITraceFunctionVTable* vtable;
 };
 
-CLOOP_EXTERN_C const char* TraceFunction_getFuncName(struct TraceFunction* self);
-CLOOP_EXTERN_C struct TraceParams* TraceFunction_getInputs(struct TraceFunction* self);
-CLOOP_EXTERN_C struct TraceParams* TraceFunction_getResult(struct TraceFunction* self);
-CLOOP_EXTERN_C struct PerformanceInfo* TraceFunction_getPerf(struct TraceFunction* self);
+CLOOP_EXTERN_C const char* FB_ITraceFunction_getFuncName(struct FB_ITraceFunction* self);
+CLOOP_EXTERN_C struct FB_ITraceParams* FB_ITraceFunction_getInputs(struct FB_ITraceFunction* self);
+CLOOP_EXTERN_C struct FB_ITraceParams* FB_ITraceFunction_getResult(struct FB_ITraceFunction* self);
+CLOOP_EXTERN_C struct PerformanceInfo* FB_ITraceFunction_getPerf(struct FB_ITraceFunction* self);
 
-#define TraceTrigger_VERSION 5
+#define FB_ITraceTrigger_VERSION 5
 
-#define TraceTrigger_TYPE_ALL ((unsigned) (0))
-#define TraceTrigger_TYPE_BEFORE ((unsigned) (1))
-#define TraceTrigger_TYPE_AFTER ((unsigned) (2))
+#define FB_ITraceTrigger_TYPE_ALL ((unsigned) (0))
+#define FB_ITraceTrigger_TYPE_BEFORE ((unsigned) (1))
+#define FB_ITraceTrigger_TYPE_AFTER ((unsigned) (2))
 
-struct TraceTrigger;
+struct FB_ITraceTrigger;
 
-struct TraceTriggerVTable
+struct FB_ITraceTriggerVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	const char* (*getTriggerName)(struct TraceTrigger* self);
-	const char* (*getRelationName)(struct TraceTrigger* self);
-	int (*getAction)(struct TraceTrigger* self);
-	int (*getWhich)(struct TraceTrigger* self);
-	struct PerformanceInfo* (*getPerf)(struct TraceTrigger* self);
+	const char* (*getTriggerName)(struct FB_ITraceTrigger* self);
+	const char* (*getRelationName)(struct FB_ITraceTrigger* self);
+	int (*getAction)(struct FB_ITraceTrigger* self);
+	int (*getWhich)(struct FB_ITraceTrigger* self);
+	struct PerformanceInfo* (*getPerf)(struct FB_ITraceTrigger* self);
 };
 
-struct TraceTrigger
+struct FB_ITraceTrigger
 {
 	void* cloopDummy[1];
-	struct TraceTriggerVTable* vtable;
+	struct FB_ITraceTriggerVTable* vtable;
 };
 
-CLOOP_EXTERN_C const char* TraceTrigger_getTriggerName(struct TraceTrigger* self);
-CLOOP_EXTERN_C const char* TraceTrigger_getRelationName(struct TraceTrigger* self);
-CLOOP_EXTERN_C int TraceTrigger_getAction(struct TraceTrigger* self);
-CLOOP_EXTERN_C int TraceTrigger_getWhich(struct TraceTrigger* self);
-CLOOP_EXTERN_C struct PerformanceInfo* TraceTrigger_getPerf(struct TraceTrigger* self);
+CLOOP_EXTERN_C const char* FB_ITraceTrigger_getTriggerName(struct FB_ITraceTrigger* self);
+CLOOP_EXTERN_C const char* FB_ITraceTrigger_getRelationName(struct FB_ITraceTrigger* self);
+CLOOP_EXTERN_C int FB_ITraceTrigger_getAction(struct FB_ITraceTrigger* self);
+CLOOP_EXTERN_C int FB_ITraceTrigger_getWhich(struct FB_ITraceTrigger* self);
+CLOOP_EXTERN_C struct PerformanceInfo* FB_ITraceTrigger_getPerf(struct FB_ITraceTrigger* self);
 
-#define TraceServiceConnection_VERSION 12
+#define FB_ITraceServiceConnection_VERSION 12
 
-struct TraceServiceConnection;
+struct FB_ITraceServiceConnection;
 
-struct TraceServiceConnectionVTable
+struct FB_ITraceServiceConnectionVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	unsigned (*getKind)(struct TraceServiceConnection* self);
-	int (*getProcessID)(struct TraceServiceConnection* self);
-	const char* (*getUserName)(struct TraceServiceConnection* self);
-	const char* (*getRoleName)(struct TraceServiceConnection* self);
-	const char* (*getCharSet)(struct TraceServiceConnection* self);
-	const char* (*getRemoteProtocol)(struct TraceServiceConnection* self);
-	const char* (*getRemoteAddress)(struct TraceServiceConnection* self);
-	int (*getRemoteProcessID)(struct TraceServiceConnection* self);
-	const char* (*getRemoteProcessName)(struct TraceServiceConnection* self);
-	void* (*getServiceID)(struct TraceServiceConnection* self);
-	const char* (*getServiceMgr)(struct TraceServiceConnection* self);
-	const char* (*getServiceName)(struct TraceServiceConnection* self);
+	unsigned (*getKind)(struct FB_ITraceServiceConnection* self);
+	int (*getProcessID)(struct FB_ITraceServiceConnection* self);
+	const char* (*getUserName)(struct FB_ITraceServiceConnection* self);
+	const char* (*getRoleName)(struct FB_ITraceServiceConnection* self);
+	const char* (*getCharSet)(struct FB_ITraceServiceConnection* self);
+	const char* (*getRemoteProtocol)(struct FB_ITraceServiceConnection* self);
+	const char* (*getRemoteAddress)(struct FB_ITraceServiceConnection* self);
+	int (*getRemoteProcessID)(struct FB_ITraceServiceConnection* self);
+	const char* (*getRemoteProcessName)(struct FB_ITraceServiceConnection* self);
+	void* (*getServiceID)(struct FB_ITraceServiceConnection* self);
+	const char* (*getServiceMgr)(struct FB_ITraceServiceConnection* self);
+	const char* (*getServiceName)(struct FB_ITraceServiceConnection* self);
 };
 
-struct TraceServiceConnection
+struct FB_ITraceServiceConnection
 {
 	void* cloopDummy[1];
-	struct TraceServiceConnectionVTable* vtable;
+	struct FB_ITraceServiceConnectionVTable* vtable;
 };
 
-CLOOP_EXTERN_C unsigned TraceServiceConnection_getKind(struct TraceServiceConnection* self);
-CLOOP_EXTERN_C int TraceServiceConnection_getProcessID(struct TraceServiceConnection* self);
-CLOOP_EXTERN_C const char* TraceServiceConnection_getUserName(struct TraceServiceConnection* self);
-CLOOP_EXTERN_C const char* TraceServiceConnection_getRoleName(struct TraceServiceConnection* self);
-CLOOP_EXTERN_C const char* TraceServiceConnection_getCharSet(struct TraceServiceConnection* self);
-CLOOP_EXTERN_C const char* TraceServiceConnection_getRemoteProtocol(struct TraceServiceConnection* self);
-CLOOP_EXTERN_C const char* TraceServiceConnection_getRemoteAddress(struct TraceServiceConnection* self);
-CLOOP_EXTERN_C int TraceServiceConnection_getRemoteProcessID(struct TraceServiceConnection* self);
-CLOOP_EXTERN_C const char* TraceServiceConnection_getRemoteProcessName(struct TraceServiceConnection* self);
-CLOOP_EXTERN_C void* TraceServiceConnection_getServiceID(struct TraceServiceConnection* self);
-CLOOP_EXTERN_C const char* TraceServiceConnection_getServiceMgr(struct TraceServiceConnection* self);
-CLOOP_EXTERN_C const char* TraceServiceConnection_getServiceName(struct TraceServiceConnection* self);
+CLOOP_EXTERN_C unsigned FB_ITraceServiceConnection_getKind(struct FB_ITraceServiceConnection* self);
+CLOOP_EXTERN_C int FB_ITraceServiceConnection_getProcessID(struct FB_ITraceServiceConnection* self);
+CLOOP_EXTERN_C const char* FB_ITraceServiceConnection_getUserName(struct FB_ITraceServiceConnection* self);
+CLOOP_EXTERN_C const char* FB_ITraceServiceConnection_getRoleName(struct FB_ITraceServiceConnection* self);
+CLOOP_EXTERN_C const char* FB_ITraceServiceConnection_getCharSet(struct FB_ITraceServiceConnection* self);
+CLOOP_EXTERN_C const char* FB_ITraceServiceConnection_getRemoteProtocol(struct FB_ITraceServiceConnection* self);
+CLOOP_EXTERN_C const char* FB_ITraceServiceConnection_getRemoteAddress(struct FB_ITraceServiceConnection* self);
+CLOOP_EXTERN_C int FB_ITraceServiceConnection_getRemoteProcessID(struct FB_ITraceServiceConnection* self);
+CLOOP_EXTERN_C const char* FB_ITraceServiceConnection_getRemoteProcessName(struct FB_ITraceServiceConnection* self);
+CLOOP_EXTERN_C void* FB_ITraceServiceConnection_getServiceID(struct FB_ITraceServiceConnection* self);
+CLOOP_EXTERN_C const char* FB_ITraceServiceConnection_getServiceMgr(struct FB_ITraceServiceConnection* self);
+CLOOP_EXTERN_C const char* FB_ITraceServiceConnection_getServiceName(struct FB_ITraceServiceConnection* self);
 
-#define TraceStatusVector_VERSION 4
+#define FB_ITraceStatusVector_VERSION 4
 
-struct TraceStatusVector;
+struct FB_ITraceStatusVector;
 
-struct TraceStatusVectorVTable
+struct FB_ITraceStatusVectorVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	FB_BOOLEAN (*hasError)(struct TraceStatusVector* self);
-	FB_BOOLEAN (*hasWarning)(struct TraceStatusVector* self);
-	const intptr_t* (*getStatus)(struct TraceStatusVector* self);
-	const char* (*getText)(struct TraceStatusVector* self);
+	FB_BOOLEAN (*hasError)(struct FB_ITraceStatusVector* self);
+	FB_BOOLEAN (*hasWarning)(struct FB_ITraceStatusVector* self);
+	const intptr_t* (*getStatus)(struct FB_ITraceStatusVector* self);
+	const char* (*getText)(struct FB_ITraceStatusVector* self);
 };
 
-struct TraceStatusVector
+struct FB_ITraceStatusVector
 {
 	void* cloopDummy[1];
-	struct TraceStatusVectorVTable* vtable;
+	struct FB_ITraceStatusVectorVTable* vtable;
 };
 
-CLOOP_EXTERN_C FB_BOOLEAN TraceStatusVector_hasError(struct TraceStatusVector* self);
-CLOOP_EXTERN_C FB_BOOLEAN TraceStatusVector_hasWarning(struct TraceStatusVector* self);
-CLOOP_EXTERN_C const intptr_t* TraceStatusVector_getStatus(struct TraceStatusVector* self);
-CLOOP_EXTERN_C const char* TraceStatusVector_getText(struct TraceStatusVector* self);
+CLOOP_EXTERN_C FB_BOOLEAN FB_ITraceStatusVector_hasError(struct FB_ITraceStatusVector* self);
+CLOOP_EXTERN_C FB_BOOLEAN FB_ITraceStatusVector_hasWarning(struct FB_ITraceStatusVector* self);
+CLOOP_EXTERN_C const intptr_t* FB_ITraceStatusVector_getStatus(struct FB_ITraceStatusVector* self);
+CLOOP_EXTERN_C const char* FB_ITraceStatusVector_getText(struct FB_ITraceStatusVector* self);
 
-#define TraceSweepInfo_VERSION 5
+#define FB_ITraceSweepInfo_VERSION 5
 
-struct TraceSweepInfo;
+struct FB_ITraceSweepInfo;
 
-struct TraceSweepInfoVTable
+struct FB_ITraceSweepInfoVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	ISC_UINT64 (*getOIT)(struct TraceSweepInfo* self);
-	ISC_UINT64 (*getOST)(struct TraceSweepInfo* self);
-	ISC_UINT64 (*getOAT)(struct TraceSweepInfo* self);
-	ISC_UINT64 (*getNext)(struct TraceSweepInfo* self);
-	struct PerformanceInfo* (*getPerf)(struct TraceSweepInfo* self);
+	ISC_UINT64 (*getOIT)(struct FB_ITraceSweepInfo* self);
+	ISC_UINT64 (*getOST)(struct FB_ITraceSweepInfo* self);
+	ISC_UINT64 (*getOAT)(struct FB_ITraceSweepInfo* self);
+	ISC_UINT64 (*getNext)(struct FB_ITraceSweepInfo* self);
+	struct PerformanceInfo* (*getPerf)(struct FB_ITraceSweepInfo* self);
 };
 
-struct TraceSweepInfo
+struct FB_ITraceSweepInfo
 {
 	void* cloopDummy[1];
-	struct TraceSweepInfoVTable* vtable;
+	struct FB_ITraceSweepInfoVTable* vtable;
 };
 
-CLOOP_EXTERN_C ISC_UINT64 TraceSweepInfo_getOIT(struct TraceSweepInfo* self);
-CLOOP_EXTERN_C ISC_UINT64 TraceSweepInfo_getOST(struct TraceSweepInfo* self);
-CLOOP_EXTERN_C ISC_UINT64 TraceSweepInfo_getOAT(struct TraceSweepInfo* self);
-CLOOP_EXTERN_C ISC_UINT64 TraceSweepInfo_getNext(struct TraceSweepInfo* self);
-CLOOP_EXTERN_C struct PerformanceInfo* TraceSweepInfo_getPerf(struct TraceSweepInfo* self);
+CLOOP_EXTERN_C ISC_UINT64 FB_ITraceSweepInfo_getOIT(struct FB_ITraceSweepInfo* self);
+CLOOP_EXTERN_C ISC_UINT64 FB_ITraceSweepInfo_getOST(struct FB_ITraceSweepInfo* self);
+CLOOP_EXTERN_C ISC_UINT64 FB_ITraceSweepInfo_getOAT(struct FB_ITraceSweepInfo* self);
+CLOOP_EXTERN_C ISC_UINT64 FB_ITraceSweepInfo_getNext(struct FB_ITraceSweepInfo* self);
+CLOOP_EXTERN_C struct PerformanceInfo* FB_ITraceSweepInfo_getPerf(struct FB_ITraceSweepInfo* self);
 
-#define TraceLogWriter_VERSION 3
+#define FB_ITraceLogWriter_VERSION 3
 
-struct TraceLogWriter;
+struct FB_ITraceLogWriter;
 
-struct TraceLogWriterVTable
+struct FB_ITraceLogWriterVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*addRef)(struct TraceLogWriter* self);
-	int (*release)(struct TraceLogWriter* self);
-	unsigned (*write)(struct TraceLogWriter* self, const void* buf, unsigned size);
+	void (*addRef)(struct FB_ITraceLogWriter* self);
+	int (*release)(struct FB_ITraceLogWriter* self);
+	unsigned (*write)(struct FB_ITraceLogWriter* self, const void* buf, unsigned size);
 };
 
-struct TraceLogWriter
+struct FB_ITraceLogWriter
 {
 	void* cloopDummy[1];
-	struct TraceLogWriterVTable* vtable;
+	struct FB_ITraceLogWriterVTable* vtable;
 };
 
-CLOOP_EXTERN_C void TraceLogWriter_addRef(struct TraceLogWriter* self);
-CLOOP_EXTERN_C int TraceLogWriter_release(struct TraceLogWriter* self);
-CLOOP_EXTERN_C unsigned TraceLogWriter_write(struct TraceLogWriter* self, const void* buf, unsigned size);
+CLOOP_EXTERN_C void FB_ITraceLogWriter_addRef(struct FB_ITraceLogWriter* self);
+CLOOP_EXTERN_C int FB_ITraceLogWriter_release(struct FB_ITraceLogWriter* self);
+CLOOP_EXTERN_C unsigned FB_ITraceLogWriter_write(struct FB_ITraceLogWriter* self, const void* buf, unsigned size);
 
-#define TraceInitInfo_VERSION 7
+#define FB_ITraceInitInfo_VERSION 7
 
-struct TraceInitInfo;
+struct FB_ITraceInitInfo;
 
-struct TraceInitInfoVTable
+struct FB_ITraceInitInfoVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	const char* (*getConfigText)(struct TraceInitInfo* self);
-	int (*getTraceSessionID)(struct TraceInitInfo* self);
-	const char* (*getTraceSessionName)(struct TraceInitInfo* self);
-	const char* (*getFirebirdRootDirectory)(struct TraceInitInfo* self);
-	const char* (*getDatabaseName)(struct TraceInitInfo* self);
-	struct TraceDatabaseConnection* (*getConnection)(struct TraceInitInfo* self);
-	struct TraceLogWriter* (*getLogWriter)(struct TraceInitInfo* self);
+	const char* (*getConfigText)(struct FB_ITraceInitInfo* self);
+	int (*getTraceSessionID)(struct FB_ITraceInitInfo* self);
+	const char* (*getTraceSessionName)(struct FB_ITraceInitInfo* self);
+	const char* (*getFirebirdRootDirectory)(struct FB_ITraceInitInfo* self);
+	const char* (*getDatabaseName)(struct FB_ITraceInitInfo* self);
+	struct FB_ITraceDatabaseConnection* (*getConnection)(struct FB_ITraceInitInfo* self);
+	struct FB_ITraceLogWriter* (*getLogWriter)(struct FB_ITraceInitInfo* self);
 };
 
-struct TraceInitInfo
+struct FB_ITraceInitInfo
 {
 	void* cloopDummy[1];
-	struct TraceInitInfoVTable* vtable;
+	struct FB_ITraceInitInfoVTable* vtable;
 };
 
-CLOOP_EXTERN_C const char* TraceInitInfo_getConfigText(struct TraceInitInfo* self);
-CLOOP_EXTERN_C int TraceInitInfo_getTraceSessionID(struct TraceInitInfo* self);
-CLOOP_EXTERN_C const char* TraceInitInfo_getTraceSessionName(struct TraceInitInfo* self);
-CLOOP_EXTERN_C const char* TraceInitInfo_getFirebirdRootDirectory(struct TraceInitInfo* self);
-CLOOP_EXTERN_C const char* TraceInitInfo_getDatabaseName(struct TraceInitInfo* self);
-CLOOP_EXTERN_C struct TraceDatabaseConnection* TraceInitInfo_getConnection(struct TraceInitInfo* self);
-CLOOP_EXTERN_C struct TraceLogWriter* TraceInitInfo_getLogWriter(struct TraceInitInfo* self);
+CLOOP_EXTERN_C const char* FB_ITraceInitInfo_getConfigText(struct FB_ITraceInitInfo* self);
+CLOOP_EXTERN_C int FB_ITraceInitInfo_getTraceSessionID(struct FB_ITraceInitInfo* self);
+CLOOP_EXTERN_C const char* FB_ITraceInitInfo_getTraceSessionName(struct FB_ITraceInitInfo* self);
+CLOOP_EXTERN_C const char* FB_ITraceInitInfo_getFirebirdRootDirectory(struct FB_ITraceInitInfo* self);
+CLOOP_EXTERN_C const char* FB_ITraceInitInfo_getDatabaseName(struct FB_ITraceInitInfo* self);
+CLOOP_EXTERN_C struct FB_ITraceDatabaseConnection* FB_ITraceInitInfo_getConnection(struct FB_ITraceInitInfo* self);
+CLOOP_EXTERN_C struct FB_ITraceLogWriter* FB_ITraceInitInfo_getLogWriter(struct FB_ITraceInitInfo* self);
 
-#define TracePlugin_VERSION 23
+#define FB_ITracePlugin_VERSION 23
 
-#define TracePlugin_RESULT_SUCCESS ((unsigned) (0))
-#define TracePlugin_RESULT_FAILED ((unsigned) (1))
-#define TracePlugin_RESULT_UNAUTHORIZED ((unsigned) (2))
-#define TracePlugin_SWEEP_STATE_STARTED ((unsigned) (1))
-#define TracePlugin_SWEEP_STATE_FINISHED ((unsigned) (2))
-#define TracePlugin_SWEEP_STATE_FAILED ((unsigned) (3))
-#define TracePlugin_SWEEP_STATE_PROGRESS ((unsigned) (4))
+#define FB_ITracePlugin_RESULT_SUCCESS ((unsigned) (0))
+#define FB_ITracePlugin_RESULT_FAILED ((unsigned) (1))
+#define FB_ITracePlugin_RESULT_UNAUTHORIZED ((unsigned) (2))
+#define FB_ITracePlugin_SWEEP_STATE_STARTED ((unsigned) (1))
+#define FB_ITracePlugin_SWEEP_STATE_FINISHED ((unsigned) (2))
+#define FB_ITracePlugin_SWEEP_STATE_FAILED ((unsigned) (3))
+#define FB_ITracePlugin_SWEEP_STATE_PROGRESS ((unsigned) (4))
 
-struct TracePlugin;
+struct FB_ITracePlugin;
 
-struct TracePluginVTable
+struct FB_ITracePluginVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*addRef)(struct TracePlugin* self);
-	int (*release)(struct TracePlugin* self);
-	const char* (*trace_get_error)(struct TracePlugin* self);
-	FB_BOOLEAN (*trace_attach)(struct TracePlugin* self, struct TraceDatabaseConnection* connection, FB_BOOLEAN create_db, unsigned att_result);
-	FB_BOOLEAN (*trace_detach)(struct TracePlugin* self, struct TraceDatabaseConnection* connection, FB_BOOLEAN drop_db);
-	FB_BOOLEAN (*trace_transaction_start)(struct TracePlugin* self, struct TraceDatabaseConnection* connection, struct TraceTransaction* transaction, unsigned tpb_length, const unsigned char* tpb, unsigned tra_result);
-	FB_BOOLEAN (*trace_transaction_end)(struct TracePlugin* self, struct TraceDatabaseConnection* connection, struct TraceTransaction* transaction, FB_BOOLEAN commit, FB_BOOLEAN retain_context, unsigned tra_result);
-	FB_BOOLEAN (*trace_proc_execute)(struct TracePlugin* self, struct TraceDatabaseConnection* connection, struct TraceTransaction* transaction, struct TraceProcedure* procedure, FB_BOOLEAN started, unsigned proc_result);
-	FB_BOOLEAN (*trace_trigger_execute)(struct TracePlugin* self, struct TraceDatabaseConnection* connection, struct TraceTransaction* transaction, struct TraceTrigger* trigger, FB_BOOLEAN started, unsigned trig_result);
-	FB_BOOLEAN (*trace_set_context)(struct TracePlugin* self, struct TraceDatabaseConnection* connection, struct TraceTransaction* transaction, struct TraceContextVariable* variable);
-	FB_BOOLEAN (*trace_dsql_prepare)(struct TracePlugin* self, struct TraceDatabaseConnection* connection, struct TraceTransaction* transaction, struct TraceSQLStatement* statement, ISC_INT64 time_millis, unsigned req_result);
-	FB_BOOLEAN (*trace_dsql_free)(struct TracePlugin* self, struct TraceDatabaseConnection* connection, struct TraceSQLStatement* statement, unsigned option);
-	FB_BOOLEAN (*trace_dsql_execute)(struct TracePlugin* self, struct TraceDatabaseConnection* connection, struct TraceTransaction* transaction, struct TraceSQLStatement* statement, FB_BOOLEAN started, unsigned req_result);
-	FB_BOOLEAN (*trace_blr_compile)(struct TracePlugin* self, struct TraceDatabaseConnection* connection, struct TraceTransaction* transaction, struct TraceBLRStatement* statement, ISC_INT64 time_millis, unsigned req_result);
-	FB_BOOLEAN (*trace_blr_execute)(struct TracePlugin* self, struct TraceDatabaseConnection* connection, struct TraceTransaction* transaction, struct TraceBLRStatement* statement, unsigned req_result);
-	FB_BOOLEAN (*trace_dyn_execute)(struct TracePlugin* self, struct TraceDatabaseConnection* connection, struct TraceTransaction* transaction, struct TraceDYNRequest* request, ISC_INT64 time_millis, unsigned req_result);
-	FB_BOOLEAN (*trace_service_attach)(struct TracePlugin* self, struct TraceServiceConnection* service, unsigned att_result);
-	FB_BOOLEAN (*trace_service_start)(struct TracePlugin* self, struct TraceServiceConnection* service, unsigned switches_length, const char* switches, unsigned start_result);
-	FB_BOOLEAN (*trace_service_query)(struct TracePlugin* self, struct TraceServiceConnection* service, unsigned send_item_length, const unsigned char* send_items, unsigned recv_item_length, const unsigned char* recv_items, unsigned query_result);
-	FB_BOOLEAN (*trace_service_detach)(struct TracePlugin* self, struct TraceServiceConnection* service, unsigned detach_result);
-	FB_BOOLEAN (*trace_event_error)(struct TracePlugin* self, struct TraceConnection* connection, struct TraceStatusVector* status, const char* function);
-	FB_BOOLEAN (*trace_event_sweep)(struct TracePlugin* self, struct TraceDatabaseConnection* connection, struct TraceSweepInfo* sweep, unsigned sweep_state);
-	FB_BOOLEAN (*trace_func_execute)(struct TracePlugin* self, struct TraceDatabaseConnection* connection, struct TraceTransaction* transaction, struct TraceFunction* function, FB_BOOLEAN started, unsigned func_result);
+	void (*addRef)(struct FB_ITracePlugin* self);
+	int (*release)(struct FB_ITracePlugin* self);
+	const char* (*trace_get_error)(struct FB_ITracePlugin* self);
+	FB_BOOLEAN (*trace_attach)(struct FB_ITracePlugin* self, struct FB_ITraceDatabaseConnection* connection, FB_BOOLEAN create_db, unsigned att_result);
+	FB_BOOLEAN (*trace_detach)(struct FB_ITracePlugin* self, struct FB_ITraceDatabaseConnection* connection, FB_BOOLEAN drop_db);
+	FB_BOOLEAN (*trace_transaction_start)(struct FB_ITracePlugin* self, struct FB_ITraceDatabaseConnection* connection, struct FB_ITraceTransaction* transaction, unsigned tpb_length, const unsigned char* tpb, unsigned tra_result);
+	FB_BOOLEAN (*trace_transaction_end)(struct FB_ITracePlugin* self, struct FB_ITraceDatabaseConnection* connection, struct FB_ITraceTransaction* transaction, FB_BOOLEAN commit, FB_BOOLEAN retain_context, unsigned tra_result);
+	FB_BOOLEAN (*trace_proc_execute)(struct FB_ITracePlugin* self, struct FB_ITraceDatabaseConnection* connection, struct FB_ITraceTransaction* transaction, struct FB_ITraceProcedure* procedure, FB_BOOLEAN started, unsigned proc_result);
+	FB_BOOLEAN (*trace_trigger_execute)(struct FB_ITracePlugin* self, struct FB_ITraceDatabaseConnection* connection, struct FB_ITraceTransaction* transaction, struct FB_ITraceTrigger* trigger, FB_BOOLEAN started, unsigned trig_result);
+	FB_BOOLEAN (*trace_set_context)(struct FB_ITracePlugin* self, struct FB_ITraceDatabaseConnection* connection, struct FB_ITraceTransaction* transaction, struct FB_ITraceContextVariable* variable);
+	FB_BOOLEAN (*trace_dsql_prepare)(struct FB_ITracePlugin* self, struct FB_ITraceDatabaseConnection* connection, struct FB_ITraceTransaction* transaction, struct FB_ITraceSQLStatement* statement, ISC_INT64 time_millis, unsigned req_result);
+	FB_BOOLEAN (*trace_dsql_free)(struct FB_ITracePlugin* self, struct FB_ITraceDatabaseConnection* connection, struct FB_ITraceSQLStatement* statement, unsigned option);
+	FB_BOOLEAN (*trace_dsql_execute)(struct FB_ITracePlugin* self, struct FB_ITraceDatabaseConnection* connection, struct FB_ITraceTransaction* transaction, struct FB_ITraceSQLStatement* statement, FB_BOOLEAN started, unsigned req_result);
+	FB_BOOLEAN (*trace_blr_compile)(struct FB_ITracePlugin* self, struct FB_ITraceDatabaseConnection* connection, struct FB_ITraceTransaction* transaction, struct FB_ITraceBLRStatement* statement, ISC_INT64 time_millis, unsigned req_result);
+	FB_BOOLEAN (*trace_blr_execute)(struct FB_ITracePlugin* self, struct FB_ITraceDatabaseConnection* connection, struct FB_ITraceTransaction* transaction, struct FB_ITraceBLRStatement* statement, unsigned req_result);
+	FB_BOOLEAN (*trace_dyn_execute)(struct FB_ITracePlugin* self, struct FB_ITraceDatabaseConnection* connection, struct FB_ITraceTransaction* transaction, struct FB_ITraceDYNRequest* request, ISC_INT64 time_millis, unsigned req_result);
+	FB_BOOLEAN (*trace_service_attach)(struct FB_ITracePlugin* self, struct FB_ITraceServiceConnection* service, unsigned att_result);
+	FB_BOOLEAN (*trace_service_start)(struct FB_ITracePlugin* self, struct FB_ITraceServiceConnection* service, unsigned switches_length, const char* switches, unsigned start_result);
+	FB_BOOLEAN (*trace_service_query)(struct FB_ITracePlugin* self, struct FB_ITraceServiceConnection* service, unsigned send_item_length, const unsigned char* send_items, unsigned recv_item_length, const unsigned char* recv_items, unsigned query_result);
+	FB_BOOLEAN (*trace_service_detach)(struct FB_ITracePlugin* self, struct FB_ITraceServiceConnection* service, unsigned detach_result);
+	FB_BOOLEAN (*trace_event_error)(struct FB_ITracePlugin* self, struct FB_ITraceConnection* connection, struct FB_ITraceStatusVector* status, const char* function);
+	FB_BOOLEAN (*trace_event_sweep)(struct FB_ITracePlugin* self, struct FB_ITraceDatabaseConnection* connection, struct FB_ITraceSweepInfo* sweep, unsigned sweep_state);
+	FB_BOOLEAN (*trace_func_execute)(struct FB_ITracePlugin* self, struct FB_ITraceDatabaseConnection* connection, struct FB_ITraceTransaction* transaction, struct FB_ITraceFunction* function, FB_BOOLEAN started, unsigned func_result);
 };
 
-struct TracePlugin
+struct FB_ITracePlugin
 {
 	void* cloopDummy[1];
-	struct TracePluginVTable* vtable;
+	struct FB_ITracePluginVTable* vtable;
 };
 
-CLOOP_EXTERN_C void TracePlugin_addRef(struct TracePlugin* self);
-CLOOP_EXTERN_C int TracePlugin_release(struct TracePlugin* self);
-CLOOP_EXTERN_C const char* TracePlugin_trace_get_error(struct TracePlugin* self);
-CLOOP_EXTERN_C FB_BOOLEAN TracePlugin_trace_attach(struct TracePlugin* self, struct TraceDatabaseConnection* connection, FB_BOOLEAN create_db, unsigned att_result);
-CLOOP_EXTERN_C FB_BOOLEAN TracePlugin_trace_detach(struct TracePlugin* self, struct TraceDatabaseConnection* connection, FB_BOOLEAN drop_db);
-CLOOP_EXTERN_C FB_BOOLEAN TracePlugin_trace_transaction_start(struct TracePlugin* self, struct TraceDatabaseConnection* connection, struct TraceTransaction* transaction, unsigned tpb_length, const unsigned char* tpb, unsigned tra_result);
-CLOOP_EXTERN_C FB_BOOLEAN TracePlugin_trace_transaction_end(struct TracePlugin* self, struct TraceDatabaseConnection* connection, struct TraceTransaction* transaction, FB_BOOLEAN commit, FB_BOOLEAN retain_context, unsigned tra_result);
-CLOOP_EXTERN_C FB_BOOLEAN TracePlugin_trace_proc_execute(struct TracePlugin* self, struct TraceDatabaseConnection* connection, struct TraceTransaction* transaction, struct TraceProcedure* procedure, FB_BOOLEAN started, unsigned proc_result);
-CLOOP_EXTERN_C FB_BOOLEAN TracePlugin_trace_trigger_execute(struct TracePlugin* self, struct TraceDatabaseConnection* connection, struct TraceTransaction* transaction, struct TraceTrigger* trigger, FB_BOOLEAN started, unsigned trig_result);
-CLOOP_EXTERN_C FB_BOOLEAN TracePlugin_trace_set_context(struct TracePlugin* self, struct TraceDatabaseConnection* connection, struct TraceTransaction* transaction, struct TraceContextVariable* variable);
-CLOOP_EXTERN_C FB_BOOLEAN TracePlugin_trace_dsql_prepare(struct TracePlugin* self, struct TraceDatabaseConnection* connection, struct TraceTransaction* transaction, struct TraceSQLStatement* statement, ISC_INT64 time_millis, unsigned req_result);
-CLOOP_EXTERN_C FB_BOOLEAN TracePlugin_trace_dsql_free(struct TracePlugin* self, struct TraceDatabaseConnection* connection, struct TraceSQLStatement* statement, unsigned option);
-CLOOP_EXTERN_C FB_BOOLEAN TracePlugin_trace_dsql_execute(struct TracePlugin* self, struct TraceDatabaseConnection* connection, struct TraceTransaction* transaction, struct TraceSQLStatement* statement, FB_BOOLEAN started, unsigned req_result);
-CLOOP_EXTERN_C FB_BOOLEAN TracePlugin_trace_blr_compile(struct TracePlugin* self, struct TraceDatabaseConnection* connection, struct TraceTransaction* transaction, struct TraceBLRStatement* statement, ISC_INT64 time_millis, unsigned req_result);
-CLOOP_EXTERN_C FB_BOOLEAN TracePlugin_trace_blr_execute(struct TracePlugin* self, struct TraceDatabaseConnection* connection, struct TraceTransaction* transaction, struct TraceBLRStatement* statement, unsigned req_result);
-CLOOP_EXTERN_C FB_BOOLEAN TracePlugin_trace_dyn_execute(struct TracePlugin* self, struct TraceDatabaseConnection* connection, struct TraceTransaction* transaction, struct TraceDYNRequest* request, ISC_INT64 time_millis, unsigned req_result);
-CLOOP_EXTERN_C FB_BOOLEAN TracePlugin_trace_service_attach(struct TracePlugin* self, struct TraceServiceConnection* service, unsigned att_result);
-CLOOP_EXTERN_C FB_BOOLEAN TracePlugin_trace_service_start(struct TracePlugin* self, struct TraceServiceConnection* service, unsigned switches_length, const char* switches, unsigned start_result);
-CLOOP_EXTERN_C FB_BOOLEAN TracePlugin_trace_service_query(struct TracePlugin* self, struct TraceServiceConnection* service, unsigned send_item_length, const unsigned char* send_items, unsigned recv_item_length, const unsigned char* recv_items, unsigned query_result);
-CLOOP_EXTERN_C FB_BOOLEAN TracePlugin_trace_service_detach(struct TracePlugin* self, struct TraceServiceConnection* service, unsigned detach_result);
-CLOOP_EXTERN_C FB_BOOLEAN TracePlugin_trace_event_error(struct TracePlugin* self, struct TraceConnection* connection, struct TraceStatusVector* status, const char* function);
-CLOOP_EXTERN_C FB_BOOLEAN TracePlugin_trace_event_sweep(struct TracePlugin* self, struct TraceDatabaseConnection* connection, struct TraceSweepInfo* sweep, unsigned sweep_state);
-CLOOP_EXTERN_C FB_BOOLEAN TracePlugin_trace_func_execute(struct TracePlugin* self, struct TraceDatabaseConnection* connection, struct TraceTransaction* transaction, struct TraceFunction* function, FB_BOOLEAN started, unsigned func_result);
+CLOOP_EXTERN_C void FB_ITracePlugin_addRef(struct FB_ITracePlugin* self);
+CLOOP_EXTERN_C int FB_ITracePlugin_release(struct FB_ITracePlugin* self);
+CLOOP_EXTERN_C const char* FB_ITracePlugin_trace_get_error(struct FB_ITracePlugin* self);
+CLOOP_EXTERN_C FB_BOOLEAN FB_ITracePlugin_trace_attach(struct FB_ITracePlugin* self, struct FB_ITraceDatabaseConnection* connection, FB_BOOLEAN create_db, unsigned att_result);
+CLOOP_EXTERN_C FB_BOOLEAN FB_ITracePlugin_trace_detach(struct FB_ITracePlugin* self, struct FB_ITraceDatabaseConnection* connection, FB_BOOLEAN drop_db);
+CLOOP_EXTERN_C FB_BOOLEAN FB_ITracePlugin_trace_transaction_start(struct FB_ITracePlugin* self, struct FB_ITraceDatabaseConnection* connection, struct FB_ITraceTransaction* transaction, unsigned tpb_length, const unsigned char* tpb, unsigned tra_result);
+CLOOP_EXTERN_C FB_BOOLEAN FB_ITracePlugin_trace_transaction_end(struct FB_ITracePlugin* self, struct FB_ITraceDatabaseConnection* connection, struct FB_ITraceTransaction* transaction, FB_BOOLEAN commit, FB_BOOLEAN retain_context, unsigned tra_result);
+CLOOP_EXTERN_C FB_BOOLEAN FB_ITracePlugin_trace_proc_execute(struct FB_ITracePlugin* self, struct FB_ITraceDatabaseConnection* connection, struct FB_ITraceTransaction* transaction, struct FB_ITraceProcedure* procedure, FB_BOOLEAN started, unsigned proc_result);
+CLOOP_EXTERN_C FB_BOOLEAN FB_ITracePlugin_trace_trigger_execute(struct FB_ITracePlugin* self, struct FB_ITraceDatabaseConnection* connection, struct FB_ITraceTransaction* transaction, struct FB_ITraceTrigger* trigger, FB_BOOLEAN started, unsigned trig_result);
+CLOOP_EXTERN_C FB_BOOLEAN FB_ITracePlugin_trace_set_context(struct FB_ITracePlugin* self, struct FB_ITraceDatabaseConnection* connection, struct FB_ITraceTransaction* transaction, struct FB_ITraceContextVariable* variable);
+CLOOP_EXTERN_C FB_BOOLEAN FB_ITracePlugin_trace_dsql_prepare(struct FB_ITracePlugin* self, struct FB_ITraceDatabaseConnection* connection, struct FB_ITraceTransaction* transaction, struct FB_ITraceSQLStatement* statement, ISC_INT64 time_millis, unsigned req_result);
+CLOOP_EXTERN_C FB_BOOLEAN FB_ITracePlugin_trace_dsql_free(struct FB_ITracePlugin* self, struct FB_ITraceDatabaseConnection* connection, struct FB_ITraceSQLStatement* statement, unsigned option);
+CLOOP_EXTERN_C FB_BOOLEAN FB_ITracePlugin_trace_dsql_execute(struct FB_ITracePlugin* self, struct FB_ITraceDatabaseConnection* connection, struct FB_ITraceTransaction* transaction, struct FB_ITraceSQLStatement* statement, FB_BOOLEAN started, unsigned req_result);
+CLOOP_EXTERN_C FB_BOOLEAN FB_ITracePlugin_trace_blr_compile(struct FB_ITracePlugin* self, struct FB_ITraceDatabaseConnection* connection, struct FB_ITraceTransaction* transaction, struct FB_ITraceBLRStatement* statement, ISC_INT64 time_millis, unsigned req_result);
+CLOOP_EXTERN_C FB_BOOLEAN FB_ITracePlugin_trace_blr_execute(struct FB_ITracePlugin* self, struct FB_ITraceDatabaseConnection* connection, struct FB_ITraceTransaction* transaction, struct FB_ITraceBLRStatement* statement, unsigned req_result);
+CLOOP_EXTERN_C FB_BOOLEAN FB_ITracePlugin_trace_dyn_execute(struct FB_ITracePlugin* self, struct FB_ITraceDatabaseConnection* connection, struct FB_ITraceTransaction* transaction, struct FB_ITraceDYNRequest* request, ISC_INT64 time_millis, unsigned req_result);
+CLOOP_EXTERN_C FB_BOOLEAN FB_ITracePlugin_trace_service_attach(struct FB_ITracePlugin* self, struct FB_ITraceServiceConnection* service, unsigned att_result);
+CLOOP_EXTERN_C FB_BOOLEAN FB_ITracePlugin_trace_service_start(struct FB_ITracePlugin* self, struct FB_ITraceServiceConnection* service, unsigned switches_length, const char* switches, unsigned start_result);
+CLOOP_EXTERN_C FB_BOOLEAN FB_ITracePlugin_trace_service_query(struct FB_ITracePlugin* self, struct FB_ITraceServiceConnection* service, unsigned send_item_length, const unsigned char* send_items, unsigned recv_item_length, const unsigned char* recv_items, unsigned query_result);
+CLOOP_EXTERN_C FB_BOOLEAN FB_ITracePlugin_trace_service_detach(struct FB_ITracePlugin* self, struct FB_ITraceServiceConnection* service, unsigned detach_result);
+CLOOP_EXTERN_C FB_BOOLEAN FB_ITracePlugin_trace_event_error(struct FB_ITracePlugin* self, struct FB_ITraceConnection* connection, struct FB_ITraceStatusVector* status, const char* function);
+CLOOP_EXTERN_C FB_BOOLEAN FB_ITracePlugin_trace_event_sweep(struct FB_ITracePlugin* self, struct FB_ITraceDatabaseConnection* connection, struct FB_ITraceSweepInfo* sweep, unsigned sweep_state);
+CLOOP_EXTERN_C FB_BOOLEAN FB_ITracePlugin_trace_func_execute(struct FB_ITracePlugin* self, struct FB_ITraceDatabaseConnection* connection, struct FB_ITraceTransaction* transaction, struct FB_ITraceFunction* function, FB_BOOLEAN started, unsigned func_result);
 
-#define TraceFactory_VERSION 6
+#define FB_ITraceFactory_VERSION 6
 
-#define TraceFactory_TRACE_EVENT_ATTACH ((unsigned) (0))
-#define TraceFactory_TRACE_EVENT_DETACH ((unsigned) (1))
-#define TraceFactory_TRACE_EVENT_TRANSACTION_START ((unsigned) (2))
-#define TraceFactory_TRACE_EVENT_TRANSACTION_END ((unsigned) (3))
-#define TraceFactory_TRACE_EVENT_SET_CONTEXT ((unsigned) (4))
-#define TraceFactory_TRACE_EVENT_PROC_EXECUTE ((unsigned) (5))
-#define TraceFactory_TRACE_EVENT_TRIGGER_EXECUTE ((unsigned) (6))
-#define TraceFactory_TRACE_EVENT_DSQL_PREPARE ((unsigned) (7))
-#define TraceFactory_TRACE_EVENT_DSQL_FREE ((unsigned) (8))
-#define TraceFactory_TRACE_EVENT_DSQL_EXECUTE ((unsigned) (9))
-#define TraceFactory_TRACE_EVENT_BLR_COMPILE ((unsigned) (10))
-#define TraceFactory_TRACE_EVENT_BLR_EXECUTE ((unsigned) (11))
-#define TraceFactory_TRACE_EVENT_DYN_EXECUTE ((unsigned) (12))
-#define TraceFactory_TRACE_EVENT_SERVICE_ATTACH ((unsigned) (13))
-#define TraceFactory_TRACE_EVENT_SERVICE_START ((unsigned) (14))
-#define TraceFactory_TRACE_EVENT_SERVICE_QUERY ((unsigned) (15))
-#define TraceFactory_TRACE_EVENT_SERVICE_DETACH ((unsigned) (16))
-#define TraceFactory_TRACE_EVENT_ERROR ((unsigned) (17))
-#define TraceFactory_TRACE_EVENT_SWEEP ((unsigned) (18))
-#define TraceFactory_TRACE_EVENT_FUNC_EXECUTE ((unsigned) (19))
-#define TraceFactory_TRACE_EVENT_MAX ((unsigned) (20))
+#define FB_ITraceFactory_TRACE_EVENT_ATTACH ((unsigned) (0))
+#define FB_ITraceFactory_TRACE_EVENT_DETACH ((unsigned) (1))
+#define FB_ITraceFactory_TRACE_EVENT_TRANSACTION_START ((unsigned) (2))
+#define FB_ITraceFactory_TRACE_EVENT_TRANSACTION_END ((unsigned) (3))
+#define FB_ITraceFactory_TRACE_EVENT_SET_CONTEXT ((unsigned) (4))
+#define FB_ITraceFactory_TRACE_EVENT_PROC_EXECUTE ((unsigned) (5))
+#define FB_ITraceFactory_TRACE_EVENT_TRIGGER_EXECUTE ((unsigned) (6))
+#define FB_ITraceFactory_TRACE_EVENT_DSQL_PREPARE ((unsigned) (7))
+#define FB_ITraceFactory_TRACE_EVENT_DSQL_FREE ((unsigned) (8))
+#define FB_ITraceFactory_TRACE_EVENT_DSQL_EXECUTE ((unsigned) (9))
+#define FB_ITraceFactory_TRACE_EVENT_BLR_COMPILE ((unsigned) (10))
+#define FB_ITraceFactory_TRACE_EVENT_BLR_EXECUTE ((unsigned) (11))
+#define FB_ITraceFactory_TRACE_EVENT_DYN_EXECUTE ((unsigned) (12))
+#define FB_ITraceFactory_TRACE_EVENT_SERVICE_ATTACH ((unsigned) (13))
+#define FB_ITraceFactory_TRACE_EVENT_SERVICE_START ((unsigned) (14))
+#define FB_ITraceFactory_TRACE_EVENT_SERVICE_QUERY ((unsigned) (15))
+#define FB_ITraceFactory_TRACE_EVENT_SERVICE_DETACH ((unsigned) (16))
+#define FB_ITraceFactory_TRACE_EVENT_ERROR ((unsigned) (17))
+#define FB_ITraceFactory_TRACE_EVENT_SWEEP ((unsigned) (18))
+#define FB_ITraceFactory_TRACE_EVENT_FUNC_EXECUTE ((unsigned) (19))
+#define FB_ITraceFactory_TRACE_EVENT_MAX ((unsigned) (20))
 
-struct TraceFactory;
+struct FB_ITraceFactory;
 
-struct TraceFactoryVTable
+struct FB_ITraceFactoryVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*addRef)(struct TraceFactory* self);
-	int (*release)(struct TraceFactory* self);
-	void (*setOwner)(struct TraceFactory* self, struct ReferenceCounted* r);
-	struct ReferenceCounted* (*getOwner)(struct TraceFactory* self);
-	ISC_UINT64 (*trace_needs)(struct TraceFactory* self);
-	struct TracePlugin* (*trace_create)(struct TraceFactory* self, struct Status* status, struct TraceInitInfo* init_info);
+	void (*addRef)(struct FB_ITraceFactory* self);
+	int (*release)(struct FB_ITraceFactory* self);
+	void (*setOwner)(struct FB_ITraceFactory* self, struct FB_IReferenceCounted* r);
+	struct FB_IReferenceCounted* (*getOwner)(struct FB_ITraceFactory* self);
+	ISC_UINT64 (*trace_needs)(struct FB_ITraceFactory* self);
+	struct FB_ITracePlugin* (*trace_create)(struct FB_ITraceFactory* self, struct FB_IStatus* status, struct FB_ITraceInitInfo* init_info);
 };
 
-struct TraceFactory
+struct FB_ITraceFactory
 {
 	void* cloopDummy[1];
-	struct TraceFactoryVTable* vtable;
+	struct FB_ITraceFactoryVTable* vtable;
 };
 
-CLOOP_EXTERN_C void TraceFactory_addRef(struct TraceFactory* self);
-CLOOP_EXTERN_C int TraceFactory_release(struct TraceFactory* self);
-CLOOP_EXTERN_C void TraceFactory_setOwner(struct TraceFactory* self, struct ReferenceCounted* r);
-CLOOP_EXTERN_C struct ReferenceCounted* TraceFactory_getOwner(struct TraceFactory* self);
-CLOOP_EXTERN_C ISC_UINT64 TraceFactory_trace_needs(struct TraceFactory* self);
-CLOOP_EXTERN_C struct TracePlugin* TraceFactory_trace_create(struct TraceFactory* self, struct Status* status, struct TraceInitInfo* init_info);
+CLOOP_EXTERN_C void FB_ITraceFactory_addRef(struct FB_ITraceFactory* self);
+CLOOP_EXTERN_C int FB_ITraceFactory_release(struct FB_ITraceFactory* self);
+CLOOP_EXTERN_C void FB_ITraceFactory_setOwner(struct FB_ITraceFactory* self, struct FB_IReferenceCounted* r);
+CLOOP_EXTERN_C struct FB_IReferenceCounted* FB_ITraceFactory_getOwner(struct FB_ITraceFactory* self);
+CLOOP_EXTERN_C ISC_UINT64 FB_ITraceFactory_trace_needs(struct FB_ITraceFactory* self);
+CLOOP_EXTERN_C struct FB_ITracePlugin* FB_ITraceFactory_trace_create(struct FB_ITraceFactory* self, struct FB_IStatus* status, struct FB_ITraceInitInfo* init_info);
 
-#define UdrFunctionFactory_VERSION 3
+#define FB_IUdrFunctionFactory_VERSION 3
 
-struct UdrFunctionFactory;
+struct FB_IUdrFunctionFactory;
 
-struct UdrFunctionFactoryVTable
+struct FB_IUdrFunctionFactoryVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*dispose)(struct UdrFunctionFactory* self);
-	void (*setup)(struct UdrFunctionFactory* self, struct Status* status, struct ExternalContext* context, struct RoutineMetadata* metadata, struct MetadataBuilder* inBuilder, struct MetadataBuilder* outBuilder);
-	struct ExternalFunction* (*newItem)(struct UdrFunctionFactory* self, struct Status* status, struct ExternalContext* context, struct RoutineMetadata* metadata);
+	void (*dispose)(struct FB_IUdrFunctionFactory* self);
+	void (*setup)(struct FB_IUdrFunctionFactory* self, struct FB_IStatus* status, struct FB_IExternalContext* context, struct FB_IRoutineMetadata* metadata, struct FB_IMetadataBuilder* inBuilder, struct FB_IMetadataBuilder* outBuilder);
+	struct FB_IExternalFunction* (*newItem)(struct FB_IUdrFunctionFactory* self, struct FB_IStatus* status, struct FB_IExternalContext* context, struct FB_IRoutineMetadata* metadata);
 };
 
-struct UdrFunctionFactory
+struct FB_IUdrFunctionFactory
 {
 	void* cloopDummy[1];
-	struct UdrFunctionFactoryVTable* vtable;
+	struct FB_IUdrFunctionFactoryVTable* vtable;
 };
 
-CLOOP_EXTERN_C void UdrFunctionFactory_dispose(struct UdrFunctionFactory* self);
-CLOOP_EXTERN_C void UdrFunctionFactory_setup(struct UdrFunctionFactory* self, struct Status* status, struct ExternalContext* context, struct RoutineMetadata* metadata, struct MetadataBuilder* inBuilder, struct MetadataBuilder* outBuilder);
-CLOOP_EXTERN_C struct ExternalFunction* UdrFunctionFactory_newItem(struct UdrFunctionFactory* self, struct Status* status, struct ExternalContext* context, struct RoutineMetadata* metadata);
+CLOOP_EXTERN_C void FB_IUdrFunctionFactory_dispose(struct FB_IUdrFunctionFactory* self);
+CLOOP_EXTERN_C void FB_IUdrFunctionFactory_setup(struct FB_IUdrFunctionFactory* self, struct FB_IStatus* status, struct FB_IExternalContext* context, struct FB_IRoutineMetadata* metadata, struct FB_IMetadataBuilder* inBuilder, struct FB_IMetadataBuilder* outBuilder);
+CLOOP_EXTERN_C struct FB_IExternalFunction* FB_IUdrFunctionFactory_newItem(struct FB_IUdrFunctionFactory* self, struct FB_IStatus* status, struct FB_IExternalContext* context, struct FB_IRoutineMetadata* metadata);
 
-#define UdrProcedureFactory_VERSION 3
+#define FB_IUdrProcedureFactory_VERSION 3
 
-struct UdrProcedureFactory;
+struct FB_IUdrProcedureFactory;
 
-struct UdrProcedureFactoryVTable
+struct FB_IUdrProcedureFactoryVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*dispose)(struct UdrProcedureFactory* self);
-	void (*setup)(struct UdrProcedureFactory* self, struct Status* status, struct ExternalContext* context, struct RoutineMetadata* metadata, struct MetadataBuilder* inBuilder, struct MetadataBuilder* outBuilder);
-	struct ExternalProcedure* (*newItem)(struct UdrProcedureFactory* self, struct Status* status, struct ExternalContext* context, struct RoutineMetadata* metadata);
+	void (*dispose)(struct FB_IUdrProcedureFactory* self);
+	void (*setup)(struct FB_IUdrProcedureFactory* self, struct FB_IStatus* status, struct FB_IExternalContext* context, struct FB_IRoutineMetadata* metadata, struct FB_IMetadataBuilder* inBuilder, struct FB_IMetadataBuilder* outBuilder);
+	struct FB_IExternalProcedure* (*newItem)(struct FB_IUdrProcedureFactory* self, struct FB_IStatus* status, struct FB_IExternalContext* context, struct FB_IRoutineMetadata* metadata);
 };
 
-struct UdrProcedureFactory
+struct FB_IUdrProcedureFactory
 {
 	void* cloopDummy[1];
-	struct UdrProcedureFactoryVTable* vtable;
+	struct FB_IUdrProcedureFactoryVTable* vtable;
 };
 
-CLOOP_EXTERN_C void UdrProcedureFactory_dispose(struct UdrProcedureFactory* self);
-CLOOP_EXTERN_C void UdrProcedureFactory_setup(struct UdrProcedureFactory* self, struct Status* status, struct ExternalContext* context, struct RoutineMetadata* metadata, struct MetadataBuilder* inBuilder, struct MetadataBuilder* outBuilder);
-CLOOP_EXTERN_C struct ExternalProcedure* UdrProcedureFactory_newItem(struct UdrProcedureFactory* self, struct Status* status, struct ExternalContext* context, struct RoutineMetadata* metadata);
+CLOOP_EXTERN_C void FB_IUdrProcedureFactory_dispose(struct FB_IUdrProcedureFactory* self);
+CLOOP_EXTERN_C void FB_IUdrProcedureFactory_setup(struct FB_IUdrProcedureFactory* self, struct FB_IStatus* status, struct FB_IExternalContext* context, struct FB_IRoutineMetadata* metadata, struct FB_IMetadataBuilder* inBuilder, struct FB_IMetadataBuilder* outBuilder);
+CLOOP_EXTERN_C struct FB_IExternalProcedure* FB_IUdrProcedureFactory_newItem(struct FB_IUdrProcedureFactory* self, struct FB_IStatus* status, struct FB_IExternalContext* context, struct FB_IRoutineMetadata* metadata);
 
-#define UdrTriggerFactory_VERSION 3
+#define FB_IUdrTriggerFactory_VERSION 3
 
-struct UdrTriggerFactory;
+struct FB_IUdrTriggerFactory;
 
-struct UdrTriggerFactoryVTable
+struct FB_IUdrTriggerFactoryVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	void (*dispose)(struct UdrTriggerFactory* self);
-	void (*setup)(struct UdrTriggerFactory* self, struct Status* status, struct ExternalContext* context, struct RoutineMetadata* metadata, struct MetadataBuilder* fieldsBuilder);
-	struct ExternalTrigger* (*newItem)(struct UdrTriggerFactory* self, struct Status* status, struct ExternalContext* context, struct RoutineMetadata* metadata);
+	void (*dispose)(struct FB_IUdrTriggerFactory* self);
+	void (*setup)(struct FB_IUdrTriggerFactory* self, struct FB_IStatus* status, struct FB_IExternalContext* context, struct FB_IRoutineMetadata* metadata, struct FB_IMetadataBuilder* fieldsBuilder);
+	struct FB_IExternalTrigger* (*newItem)(struct FB_IUdrTriggerFactory* self, struct FB_IStatus* status, struct FB_IExternalContext* context, struct FB_IRoutineMetadata* metadata);
 };
 
-struct UdrTriggerFactory
+struct FB_IUdrTriggerFactory
 {
 	void* cloopDummy[1];
-	struct UdrTriggerFactoryVTable* vtable;
+	struct FB_IUdrTriggerFactoryVTable* vtable;
 };
 
-CLOOP_EXTERN_C void UdrTriggerFactory_dispose(struct UdrTriggerFactory* self);
-CLOOP_EXTERN_C void UdrTriggerFactory_setup(struct UdrTriggerFactory* self, struct Status* status, struct ExternalContext* context, struct RoutineMetadata* metadata, struct MetadataBuilder* fieldsBuilder);
-CLOOP_EXTERN_C struct ExternalTrigger* UdrTriggerFactory_newItem(struct UdrTriggerFactory* self, struct Status* status, struct ExternalContext* context, struct RoutineMetadata* metadata);
+CLOOP_EXTERN_C void FB_IUdrTriggerFactory_dispose(struct FB_IUdrTriggerFactory* self);
+CLOOP_EXTERN_C void FB_IUdrTriggerFactory_setup(struct FB_IUdrTriggerFactory* self, struct FB_IStatus* status, struct FB_IExternalContext* context, struct FB_IRoutineMetadata* metadata, struct FB_IMetadataBuilder* fieldsBuilder);
+CLOOP_EXTERN_C struct FB_IExternalTrigger* FB_IUdrTriggerFactory_newItem(struct FB_IUdrTriggerFactory* self, struct FB_IStatus* status, struct FB_IExternalContext* context, struct FB_IRoutineMetadata* metadata);
 
-#define UdrPlugin_VERSION 4
+#define FB_IUdrPlugin_VERSION 4
 
-struct UdrPlugin;
+struct FB_IUdrPlugin;
 
-struct UdrPluginVTable
+struct FB_IUdrPluginVTable
 {
 	void* cloopDummy[1];
 	uintptr_t version;
-	struct Master* (*getMaster)(struct UdrPlugin* self);
-	void (*registerFunction)(struct UdrPlugin* self, struct Status* status, const char* name, struct UdrFunctionFactory* factory);
-	void (*registerProcedure)(struct UdrPlugin* self, struct Status* status, const char* name, struct UdrProcedureFactory* factory);
-	void (*registerTrigger)(struct UdrPlugin* self, struct Status* status, const char* name, struct UdrTriggerFactory* factory);
+	struct FB_IMaster* (*getMaster)(struct FB_IUdrPlugin* self);
+	void (*registerFunction)(struct FB_IUdrPlugin* self, struct FB_IStatus* status, const char* name, struct FB_IUdrFunctionFactory* factory);
+	void (*registerProcedure)(struct FB_IUdrPlugin* self, struct FB_IStatus* status, const char* name, struct FB_IUdrProcedureFactory* factory);
+	void (*registerTrigger)(struct FB_IUdrPlugin* self, struct FB_IStatus* status, const char* name, struct FB_IUdrTriggerFactory* factory);
 };
 
-struct UdrPlugin
+struct FB_IUdrPlugin
 {
 	void* cloopDummy[1];
-	struct UdrPluginVTable* vtable;
+	struct FB_IUdrPluginVTable* vtable;
 };
 
-CLOOP_EXTERN_C struct Master* UdrPlugin_getMaster(struct UdrPlugin* self);
-CLOOP_EXTERN_C void UdrPlugin_registerFunction(struct UdrPlugin* self, struct Status* status, const char* name, struct UdrFunctionFactory* factory);
-CLOOP_EXTERN_C void UdrPlugin_registerProcedure(struct UdrPlugin* self, struct Status* status, const char* name, struct UdrProcedureFactory* factory);
-CLOOP_EXTERN_C void UdrPlugin_registerTrigger(struct UdrPlugin* self, struct Status* status, const char* name, struct UdrTriggerFactory* factory);
+CLOOP_EXTERN_C struct FB_IMaster* FB_IUdrPlugin_getMaster(struct FB_IUdrPlugin* self);
+CLOOP_EXTERN_C void FB_IUdrPlugin_registerFunction(struct FB_IUdrPlugin* self, struct FB_IStatus* status, const char* name, struct FB_IUdrFunctionFactory* factory);
+CLOOP_EXTERN_C void FB_IUdrPlugin_registerProcedure(struct FB_IUdrPlugin* self, struct FB_IStatus* status, const char* name, struct FB_IUdrProcedureFactory* factory);
+CLOOP_EXTERN_C void FB_IUdrPlugin_registerTrigger(struct FB_IUdrPlugin* self, struct FB_IStatus* status, const char* name, struct FB_IUdrTriggerFactory* factory);
 
 
 #endif	// FB_C_API_H
