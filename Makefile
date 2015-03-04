@@ -1,4 +1,4 @@
-MODULES	:= ods perf perf/udr test test/v3api
+MODULES	:= ods perf perf/udr test test/v3api pascal
 
 TARGET	:= release
 
@@ -21,9 +21,14 @@ SRCS := $(foreach sdir,$(SRC_DIRS),$(wildcard $(sdir)/*.cpp))
 OBJS := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRCS))
 
 CXX_FLAGS := -ggdb -fPIC -MMD -MP -DBOOST_TEST_DYN_LINK
+FPC_FLAGS := -Mdelphi
 
 ifeq ($(TARGET),release)
 	CXX_FLAGS += -O3
+endif
+
+ifeq ($(TARGET),debug)
+	FPC_FLAGS += -g
 endif
 
 vpath %.cpp $(SRC_DIRS)
@@ -40,6 +45,7 @@ all: mkdirs \
 	$(BIN_DIR)/fbinsert \
 	$(BIN_DIR)/fbtest	\
 	$(LIB_DIR)/libperfudr.$(SHRLIB_EXT) \
+	$(BIN_DIR)/FbApiPascalTest	\
 
 mkdirs: $(OBJ_DIRS) $(BIN_DIR) $(LIB_DIR)
 
@@ -79,3 +85,9 @@ $(BIN_DIR)/fbtest: \
 
 $(LIB_DIR)/libperfudr.$(SHRLIB_EXT): $(OBJ_DIR)/perf/udr/Message.o
 	$(LD) -shared $^ -o $@ -lfbclient -ludr_engine
+
+$(BIN_DIR)/FbApiPascalTest: \
+	$(SRC_DIR)/pascal/FbApiTest.dpr \
+	$(SRC_DIR)/gen/FbApi.pas \
+
+	fpc $(FPC_FLAGS) -fPIC -Fu$(SRC_DIR)/gen -FU$(OBJ_DIR)/pascal -Fl$$FIREBIRD/lib -o$@ $(SRC_DIR)/pascal/FbApiTest.dpr
