@@ -22,6 +22,16 @@
 #include <firebird/UdrCppEngine.h>
 
 
+/***
+create procedure gen_rows_message (
+    start_n integer not null,
+    end_n integer not null
+) returns (
+    result integer not null
+)
+    external name 'perfudr!gen_rows_message'
+    engine udr;
+***/
 FB_UDR_BEGIN_PROCEDURE(gen_rows_message)
 	FB_UDR_MESSAGE(InMessage,
 		(FB_INTEGER, start)
@@ -45,6 +55,20 @@ FB_UDR_BEGIN_PROCEDURE(gen_rows_message)
 FB_UDR_END_PROCEDURE
 
 
+/***
+create procedure gen_rows_message_5c (
+    start_n integer not null,
+    end_n integer not null
+) returns (
+    result1 integer not null,
+    result2 integer not null,
+    result3 integer not null,
+    result4 integer not null,
+    result5 integer not null
+)
+    external name 'perfudr!gen_rows_message_5c'
+    engine udr;
+***/
 FB_UDR_BEGIN_PROCEDURE(gen_rows_message_5c)
 	FB_UDR_MESSAGE(InMessage,
 		(FB_INTEGER, start)
@@ -73,6 +97,16 @@ FB_UDR_BEGIN_PROCEDURE(gen_rows_message_5c)
 FB_UDR_END_PROCEDURE
 
 
+/***
+create procedure copy_message (
+    count_ integer not null,
+    input varchar(20)
+) returns (
+    output varchar(20)
+)
+    external name 'perfudr!copy_message'
+    engine udr;
+***/
 FB_UDR_BEGIN_PROCEDURE(copy_message)
 	FB_UDR_MESSAGE(InMessage,
 		(FB_INTEGER, count)
@@ -96,6 +130,20 @@ FB_UDR_BEGIN_PROCEDURE(copy_message)
 FB_UDR_END_PROCEDURE
 
 
+/***
+create procedure copy_message_5c (
+    count_ integer not null,
+    input varchar(20)
+) returns (
+    output1 varchar(20),
+    output2 varchar(20),
+    output3 varchar(20),
+    output4 varchar(20),
+    output5 varchar(20)
+)
+    external name 'perfudr!copy_message_5c'
+    engine udr;
+***/
 FB_UDR_BEGIN_PROCEDURE(copy_message_5c)
 	FB_UDR_MESSAGE(InMessage,
 		(FB_INTEGER, count)
@@ -127,3 +175,11 @@ FB_UDR_BEGIN_PROCEDURE(copy_message_5c)
 		return in->count-- > 0;
 	}
 FB_UDR_END_PROCEDURE
+
+
+//------------------------------------------------------------------------------
+
+
+// This should be used in only one of the UDR library files.
+// Build must export firebird_udr_plugin function.
+FB_UDR_IMPLEMENT_ENTRY_POINT
