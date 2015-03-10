@@ -29,7 +29,7 @@ uses FbApi;
 
 function fb_get_master_interface: Master; cdecl; external 'fbclient';
 
-function fb_interpret(s: PChar; n: Cardinal; var statusVector: NativeIntPtr): Integer; cdecl;
+function fb_interpret(s: PAnsiChar; n: Cardinal; var statusVector: NativeIntPtr): Integer; cdecl;
 	external 'fbclient';
 
 type
@@ -57,7 +57,7 @@ var
 	outBuffer: OutMessage;
 	rs: ResultSet;
 	statusVector: NativeIntPtr;
-	s: string;
+	s: AnsiString;
 begin
 	try
 		master := fb_get_master_interface();
@@ -113,7 +113,7 @@ begin
 		begin
 			SetLength(s, 2000);
 			statusVector := e.getStatus().getErrors();
-			SetLength(s, fb_interpret(PChar(s), 2000, statusVector));
+			SetLength(s, fb_interpret(PAnsiChar(s), 2000, statusVector));
 			WriteLn('Exception: ', string(s));
 		end
 	end

@@ -148,7 +148,7 @@ end;
 	Master_getStatusPtr = function(this: Master): Status; cdecl;
 	Master_getDispatcherPtr = function(this: Master): Provider; cdecl;
 	Master_getPluginManagerPtr = function(this: Master): PluginManager; cdecl;
-	Master_circularAllocPtr = function(this: Master; s: PChar; len: Cardinal; thr: NativeInt): PChar; cdecl;
+	Master_circularAllocPtr = function(this: Master; s: PAnsiChar; len: Cardinal; thr: NativeInt): PAnsiChar; cdecl;
 	Master_getTimerControlPtr = function(this: Master): TimerControl; cdecl;
 	Master_getDtcPtr = function(this: Master): Dtc; cdecl;
 	Master_registerAttachmentPtr = function(this: Master; provider: Provider; attachment: Attachment): Attachment; cdecl;
@@ -159,45 +159,45 @@ end;
 	Master_getConfigManagerPtr = function(this: Master): ConfigManager; cdecl;
 	PluginBase_setOwnerPtr = procedure(this: PluginBase; r: ReferenceCounted); cdecl;
 	PluginBase_getOwnerPtr = function(this: PluginBase): ReferenceCounted; cdecl;
-	PluginSet_getNamePtr = function(this: PluginSet): PChar; cdecl;
-	PluginSet_getModuleNamePtr = function(this: PluginSet): PChar; cdecl;
+	PluginSet_getNamePtr = function(this: PluginSet): PAnsiChar; cdecl;
+	PluginSet_getModuleNamePtr = function(this: PluginSet): PAnsiChar; cdecl;
 	PluginSet_getPluginPtr = function(this: PluginSet; status: Status): PluginBase; cdecl;
 	PluginSet_nextPtr = procedure(this: PluginSet; status: Status); cdecl;
-	PluginSet_set_Ptr = procedure(this: PluginSet; status: Status; s: PChar); cdecl;
-	ConfigEntry_getNamePtr = function(this: ConfigEntry): PChar; cdecl;
-	ConfigEntry_getValuePtr = function(this: ConfigEntry): PChar; cdecl;
+	PluginSet_set_Ptr = procedure(this: PluginSet; status: Status; s: PAnsiChar); cdecl;
+	ConfigEntry_getNamePtr = function(this: ConfigEntry): PAnsiChar; cdecl;
+	ConfigEntry_getValuePtr = function(this: ConfigEntry): PAnsiChar; cdecl;
 	ConfigEntry_getIntValuePtr = function(this: ConfigEntry): Int64; cdecl;
 	ConfigEntry_getBoolValuePtr = function(this: ConfigEntry): Boolean; cdecl;
 	ConfigEntry_getSubConfigPtr = function(this: ConfigEntry; status: Status): Config; cdecl;
-	Config_findPtr = function(this: Config; status: Status; name: PChar): ConfigEntry; cdecl;
-	Config_findValuePtr = function(this: Config; status: Status; name: PChar; value: PChar): ConfigEntry; cdecl;
-	Config_findPosPtr = function(this: Config; status: Status; name: PChar; pos: Cardinal): ConfigEntry; cdecl;
-	FirebirdConf_getKeyPtr = function(this: FirebirdConf; name: PChar): Cardinal; cdecl;
+	Config_findPtr = function(this: Config; status: Status; name: PAnsiChar): ConfigEntry; cdecl;
+	Config_findValuePtr = function(this: Config; status: Status; name: PAnsiChar; value: PAnsiChar): ConfigEntry; cdecl;
+	Config_findPosPtr = function(this: Config; status: Status; name: PAnsiChar; pos: Cardinal): ConfigEntry; cdecl;
+	FirebirdConf_getKeyPtr = function(this: FirebirdConf; name: PAnsiChar): Cardinal; cdecl;
 	FirebirdConf_asIntegerPtr = function(this: FirebirdConf; key: Cardinal): Int64; cdecl;
-	FirebirdConf_asStringPtr = function(this: FirebirdConf; key: Cardinal): PChar; cdecl;
+	FirebirdConf_asStringPtr = function(this: FirebirdConf; key: Cardinal): PAnsiChar; cdecl;
 	FirebirdConf_asBooleanPtr = function(this: FirebirdConf; key: Cardinal): Boolean; cdecl;
-	PluginConfig_getConfigFileNamePtr = function(this: PluginConfig): PChar; cdecl;
+	PluginConfig_getConfigFileNamePtr = function(this: PluginConfig): PAnsiChar; cdecl;
 	PluginConfig_getDefaultConfigPtr = function(this: PluginConfig; status: Status): Config; cdecl;
 	PluginConfig_getFirebirdConfPtr = function(this: PluginConfig; status: Status): FirebirdConf; cdecl;
 	PluginConfig_setReleaseDelayPtr = procedure(this: PluginConfig; status: Status; microSeconds: QWord); cdecl;
 	PluginFactory_createPluginPtr = function(this: PluginFactory; status: Status; factoryParameter: PluginConfig): PluginBase; cdecl;
 	PluginModule_doCleanPtr = procedure(this: PluginModule); cdecl;
-	PluginManager_registerPluginFactoryPtr = procedure(this: PluginManager; pluginType: Cardinal; defaultName: PChar; factory: PluginFactory); cdecl;
+	PluginManager_registerPluginFactoryPtr = procedure(this: PluginManager; pluginType: Cardinal; defaultName: PAnsiChar; factory: PluginFactory); cdecl;
 	PluginManager_registerModulePtr = procedure(this: PluginManager; cleanup: PluginModule); cdecl;
 	PluginManager_unregisterModulePtr = procedure(this: PluginManager; cleanup: PluginModule); cdecl;
-	PluginManager_getPluginsPtr = function(this: PluginManager; status: Status; pluginType: Cardinal; namesList: PChar; firebirdConf: FirebirdConf): PluginSet; cdecl;
-	PluginManager_getConfigPtr = function(this: PluginManager; status: Status; filename: PChar): Config; cdecl;
+	PluginManager_getPluginsPtr = function(this: PluginManager; status: Status; pluginType: Cardinal; namesList: PAnsiChar; firebirdConf: FirebirdConf): PluginSet; cdecl;
+	PluginManager_getConfigPtr = function(this: PluginManager; status: Status; filename: PAnsiChar): Config; cdecl;
 	PluginManager_releasePluginPtr = procedure(this: PluginManager; plugin: PluginBase); cdecl;
-	CryptKey_setSymmetricPtr = procedure(this: CryptKey; status: Status; type_: PChar; keyLength: Cardinal; key: Pointer); cdecl;
-	CryptKey_setAsymmetricPtr = procedure(this: CryptKey; status: Status; type_: PChar; encryptKeyLength: Cardinal; encryptKey: Pointer; decryptKeyLength: Cardinal; decryptKey: Pointer); cdecl;
+	CryptKey_setSymmetricPtr = procedure(this: CryptKey; status: Status; type_: PAnsiChar; keyLength: Cardinal; key: Pointer); cdecl;
+	CryptKey_setAsymmetricPtr = procedure(this: CryptKey; status: Status; type_: PAnsiChar; encryptKeyLength: Cardinal; encryptKey: Pointer; decryptKeyLength: Cardinal; decryptKey: Pointer); cdecl;
 	CryptKey_getEncryptKeyPtr = function(this: CryptKey; length: CardinalPtr): Pointer; cdecl;
 	CryptKey_getDecryptKeyPtr = function(this: CryptKey; length: CardinalPtr): Pointer; cdecl;
-	ConfigManager_getDirectoryPtr = function(this: ConfigManager; code: Cardinal): PChar; cdecl;
+	ConfigManager_getDirectoryPtr = function(this: ConfigManager; code: Cardinal): PAnsiChar; cdecl;
 	ConfigManager_getFirebirdConfPtr = function(this: ConfigManager): FirebirdConf; cdecl;
-	ConfigManager_getDatabaseConfPtr = function(this: ConfigManager; dbName: PChar): FirebirdConf; cdecl;
-	ConfigManager_getPluginConfigPtr = function(this: ConfigManager; configuredPlugin: PChar): Config; cdecl;
-	ConfigManager_getInstallDirectoryPtr = function(this: ConfigManager): PChar; cdecl;
-	ConfigManager_getRootDirectoryPtr = function(this: ConfigManager): PChar; cdecl;
+	ConfigManager_getDatabaseConfPtr = function(this: ConfigManager; dbName: PAnsiChar): FirebirdConf; cdecl;
+	ConfigManager_getPluginConfigPtr = function(this: ConfigManager; configuredPlugin: PAnsiChar): Config; cdecl;
+	ConfigManager_getInstallDirectoryPtr = function(this: ConfigManager): PAnsiChar; cdecl;
+	ConfigManager_getRootDirectoryPtr = function(this: ConfigManager): PAnsiChar; cdecl;
 	EventCallback_eventCallbackFunctionPtr = procedure(this: EventCallback; length: Cardinal; events: BytePtr); cdecl;
 	Blob_getInfoPtr = procedure(this: Blob; status: Status; itemsLength: Cardinal; items: BytePtr; bufferLength: Cardinal; buffer: BytePtr); cdecl;
 	Blob_getSegmentPtr = function(this: Blob; status: Status; bufferLength: Cardinal; buffer: Pointer; segmentLength: CardinalPtr): Integer; cdecl;
@@ -216,10 +216,10 @@ end;
 	Transaction_validatePtr = function(this: Transaction; status: Status; attachment: Attachment): Transaction; cdecl;
 	Transaction_enterDtcPtr = function(this: Transaction; status: Status): Transaction; cdecl;
 	MessageMetadata_getCountPtr = function(this: MessageMetadata; status: Status): Cardinal; cdecl;
-	MessageMetadata_getFieldPtr = function(this: MessageMetadata; status: Status; index: Cardinal): PChar; cdecl;
-	MessageMetadata_getRelationPtr = function(this: MessageMetadata; status: Status; index: Cardinal): PChar; cdecl;
-	MessageMetadata_getOwnerPtr = function(this: MessageMetadata; status: Status; index: Cardinal): PChar; cdecl;
-	MessageMetadata_getAliasPtr = function(this: MessageMetadata; status: Status; index: Cardinal): PChar; cdecl;
+	MessageMetadata_getFieldPtr = function(this: MessageMetadata; status: Status; index: Cardinal): PAnsiChar; cdecl;
+	MessageMetadata_getRelationPtr = function(this: MessageMetadata; status: Status; index: Cardinal): PAnsiChar; cdecl;
+	MessageMetadata_getOwnerPtr = function(this: MessageMetadata; status: Status; index: Cardinal): PAnsiChar; cdecl;
+	MessageMetadata_getAliasPtr = function(this: MessageMetadata; status: Status; index: Cardinal): PAnsiChar; cdecl;
 	MessageMetadata_getTypePtr = function(this: MessageMetadata; status: Status; index: Cardinal): Cardinal; cdecl;
 	MessageMetadata_isNullablePtr = function(this: MessageMetadata; status: Status; index: Cardinal): Boolean; cdecl;
 	MessageMetadata_getSubTypePtr = function(this: MessageMetadata; status: Status; index: Cardinal): Integer; cdecl;
@@ -236,7 +236,7 @@ end;
 	MetadataBuilder_setCharSetPtr = procedure(this: MetadataBuilder; status: Status; index: Cardinal; charSet: Cardinal); cdecl;
 	MetadataBuilder_setScalePtr = procedure(this: MetadataBuilder; status: Status; index: Cardinal; scale: Cardinal); cdecl;
 	MetadataBuilder_truncatePtr = procedure(this: MetadataBuilder; status: Status; count: Cardinal); cdecl;
-	MetadataBuilder_moveNameToIndexPtr = procedure(this: MetadataBuilder; status: Status; name: PChar; index: Cardinal); cdecl;
+	MetadataBuilder_moveNameToIndexPtr = procedure(this: MetadataBuilder; status: Status; name: PAnsiChar; index: Cardinal); cdecl;
 	MetadataBuilder_removePtr = procedure(this: MetadataBuilder; status: Status; index: Cardinal); cdecl;
 	MetadataBuilder_addFieldPtr = function(this: MetadataBuilder; status: Status): Cardinal; cdecl;
 	MetadataBuilder_getMetadataPtr = function(this: MetadataBuilder; status: Status): MessageMetadata; cdecl;
@@ -253,13 +253,13 @@ end;
 	ResultSet_setDelayedOutputFormatPtr = procedure(this: ResultSet; status: Status; format: MessageMetadata); cdecl;
 	Statement_getInfoPtr = procedure(this: Statement; status: Status; itemsLength: Cardinal; items: BytePtr; bufferLength: Cardinal; buffer: BytePtr); cdecl;
 	Statement_getTypePtr = function(this: Statement; status: Status): Cardinal; cdecl;
-	Statement_getPlanPtr = function(this: Statement; status: Status; detailed: Boolean): PChar; cdecl;
+	Statement_getPlanPtr = function(this: Statement; status: Status; detailed: Boolean): PAnsiChar; cdecl;
 	Statement_getAffectedRecordsPtr = function(this: Statement; status: Status): QWord; cdecl;
 	Statement_getInputMetadataPtr = function(this: Statement; status: Status): MessageMetadata; cdecl;
 	Statement_getOutputMetadataPtr = function(this: Statement; status: Status): MessageMetadata; cdecl;
 	Statement_executePtr = function(this: Statement; status: Status; transaction: Transaction; inMetadata: MessageMetadata; inBuffer: Pointer; outMetadata: MessageMetadata; outBuffer: Pointer): Transaction; cdecl;
 	Statement_openCursorPtr = function(this: Statement; status: Status; transaction: Transaction; inMetadata: MessageMetadata; inBuffer: Pointer; outMetadata: MessageMetadata; flags: Cardinal): ResultSet; cdecl;
-	Statement_setCursorNamePtr = procedure(this: Statement; status: Status; name: PChar); cdecl;
+	Statement_setCursorNamePtr = procedure(this: Statement; status: Status; name: PAnsiChar); cdecl;
 	Statement_freePtr = procedure(this: Statement; status: Status); cdecl;
 	Statement_getFlagsPtr = function(this: Statement; status: Status): Cardinal; cdecl;
 	Request_receivePtr = procedure(this: Request; status: Status; level: Integer; msgType: Cardinal; length: Cardinal; message: BytePtr); cdecl;
@@ -280,9 +280,9 @@ end;
 	Attachment_getSlicePtr = function(this: Attachment; status: Status; transaction: Transaction; id: ISC_QUADPtr; sdlLength: Cardinal; sdl: BytePtr; paramLength: Cardinal; param: BytePtr; sliceLength: Integer; slice: BytePtr): Integer; cdecl;
 	Attachment_putSlicePtr = procedure(this: Attachment; status: Status; transaction: Transaction; id: ISC_QUADPtr; sdlLength: Cardinal; sdl: BytePtr; paramLength: Cardinal; param: BytePtr; sliceLength: Integer; slice: BytePtr); cdecl;
 	Attachment_executeDynPtr = procedure(this: Attachment; status: Status; transaction: Transaction; length: Cardinal; dyn: BytePtr); cdecl;
-	Attachment_preparePtr = function(this: Attachment; status: Status; tra: Transaction; stmtLength: Cardinal; sqlStmt: PChar; dialect: Cardinal; flags: Cardinal): Statement; cdecl;
-	Attachment_executePtr = function(this: Attachment; status: Status; transaction: Transaction; stmtLength: Cardinal; sqlStmt: PChar; dialect: Cardinal; inMetadata: MessageMetadata; inBuffer: Pointer; outMetadata: MessageMetadata; outBuffer: Pointer): Transaction; cdecl;
-	Attachment_openCursorPtr = function(this: Attachment; status: Status; transaction: Transaction; stmtLength: Cardinal; sqlStmt: PChar; dialect: Cardinal; inMetadata: MessageMetadata; inBuffer: Pointer; outMetadata: MessageMetadata; cursorName: PChar; cursorFlags: Cardinal): ResultSet; cdecl;
+	Attachment_preparePtr = function(this: Attachment; status: Status; tra: Transaction; stmtLength: Cardinal; sqlStmt: PAnsiChar; dialect: Cardinal; flags: Cardinal): Statement; cdecl;
+	Attachment_executePtr = function(this: Attachment; status: Status; transaction: Transaction; stmtLength: Cardinal; sqlStmt: PAnsiChar; dialect: Cardinal; inMetadata: MessageMetadata; inBuffer: Pointer; outMetadata: MessageMetadata; outBuffer: Pointer): Transaction; cdecl;
+	Attachment_openCursorPtr = function(this: Attachment; status: Status; transaction: Transaction; stmtLength: Cardinal; sqlStmt: PAnsiChar; dialect: Cardinal; inMetadata: MessageMetadata; inBuffer: Pointer; outMetadata: MessageMetadata; cursorName: PAnsiChar; cursorFlags: Cardinal): ResultSet; cdecl;
 	Attachment_queEventsPtr = function(this: Attachment; status: Status; callback: EventCallback; length: Cardinal; events: BytePtr): Events; cdecl;
 	Attachment_cancelOperationPtr = procedure(this: Attachment; status: Status; option: Integer); cdecl;
 	Attachment_pingPtr = procedure(this: Attachment; status: Status); cdecl;
@@ -291,9 +291,9 @@ end;
 	Service_detachPtr = procedure(this: Service; status: Status); cdecl;
 	Service_queryPtr = procedure(this: Service; status: Status; sendLength: Cardinal; sendItems: BytePtr; receiveLength: Cardinal; receiveItems: BytePtr; bufferLength: Cardinal; buffer: BytePtr); cdecl;
 	Service_startPtr = procedure(this: Service; status: Status; spbLength: Cardinal; spb: BytePtr); cdecl;
-	Provider_attachDatabasePtr = function(this: Provider; status: Status; fileName: PChar; dpbLength: Cardinal; dpb: BytePtr): Attachment; cdecl;
-	Provider_createDatabasePtr = function(this: Provider; status: Status; fileName: PChar; dpbLength: Cardinal; dpb: BytePtr): Attachment; cdecl;
-	Provider_attachServiceManagerPtr = function(this: Provider; status: Status; service: PChar; spbLength: Cardinal; spb: BytePtr): Service; cdecl;
+	Provider_attachDatabasePtr = function(this: Provider; status: Status; fileName: PAnsiChar; dpbLength: Cardinal; dpb: BytePtr): Attachment; cdecl;
+	Provider_createDatabasePtr = function(this: Provider; status: Status; fileName: PAnsiChar; dpbLength: Cardinal; dpb: BytePtr): Attachment; cdecl;
+	Provider_attachServiceManagerPtr = function(this: Provider; status: Status; service: PAnsiChar; spbLength: Cardinal; spb: BytePtr): Service; cdecl;
 	Provider_shutdownPtr = procedure(this: Provider; status: Status; timeout: Cardinal; reason: Integer); cdecl;
 	Provider_setDbCryptCallbackPtr = procedure(this: Provider; status: Status; cryptCallback: CryptKeyCallback); cdecl;
 	DtcStart_addAttachmentPtr = procedure(this: DtcStart; status: Status; att: Attachment); cdecl;
@@ -302,15 +302,15 @@ end;
 	Dtc_joinPtr = function(this: Dtc; status: Status; one: Transaction; two: Transaction): Transaction; cdecl;
 	Dtc_startBuilderPtr = function(this: Dtc; status: Status): DtcStart; cdecl;
 	Writer_resetPtr = procedure(this: Writer); cdecl;
-	Writer_addPtr = procedure(this: Writer; status: Status; name: PChar); cdecl;
-	Writer_setTypePtr = procedure(this: Writer; status: Status; value: PChar); cdecl;
-	Writer_setDbPtr = procedure(this: Writer; status: Status; value: PChar); cdecl;
-	ServerBlock_getLoginPtr = function(this: ServerBlock): PChar; cdecl;
+	Writer_addPtr = procedure(this: Writer; status: Status; name: PAnsiChar); cdecl;
+	Writer_setTypePtr = procedure(this: Writer; status: Status; value: PAnsiChar); cdecl;
+	Writer_setDbPtr = procedure(this: Writer; status: Status; value: PAnsiChar); cdecl;
+	ServerBlock_getLoginPtr = function(this: ServerBlock): PAnsiChar; cdecl;
 	ServerBlock_getDataPtr = function(this: ServerBlock; length: CardinalPtr): BytePtr; cdecl;
 	ServerBlock_putDataPtr = procedure(this: ServerBlock; status: Status; length: Cardinal; data: Pointer); cdecl;
 	ServerBlock_newKeyPtr = function(this: ServerBlock; status: Status): CryptKey; cdecl;
-	ClientBlock_getLoginPtr = function(this: ClientBlock): PChar; cdecl;
-	ClientBlock_getPasswordPtr = function(this: ClientBlock): PChar; cdecl;
+	ClientBlock_getLoginPtr = function(this: ClientBlock): PAnsiChar; cdecl;
+	ClientBlock_getPasswordPtr = function(this: ClientBlock): PAnsiChar; cdecl;
 	ClientBlock_getDataPtr = function(this: ClientBlock; length: CardinalPtr): BytePtr; cdecl;
 	ClientBlock_putDataPtr = procedure(this: ClientBlock; status: Status; length: Cardinal; data: Pointer); cdecl;
 	ClientBlock_newKeyPtr = function(this: ClientBlock; status: Status): CryptKey; cdecl;
@@ -319,8 +319,8 @@ end;
 	UserField_enteredPtr = function(this: UserField): Integer; cdecl;
 	UserField_specifiedPtr = function(this: UserField): Integer; cdecl;
 	UserField_setEnteredPtr = procedure(this: UserField; status: Status; newValue: Integer); cdecl;
-	CharUserField_getPtr = function(this: CharUserField): PChar; cdecl;
-	CharUserField_set_Ptr = procedure(this: CharUserField; status: Status; newValue: PChar); cdecl;
+	CharUserField_getPtr = function(this: CharUserField): PAnsiChar; cdecl;
+	CharUserField_set_Ptr = procedure(this: CharUserField; status: Status; newValue: PAnsiChar); cdecl;
 	IntUserField_getPtr = function(this: IntUserField): Integer; cdecl;
 	IntUserField_set_Ptr = procedure(this: IntUserField; status: Status; newValue: Integer); cdecl;
 	User_operationPtr = function(this: User): Integer; cdecl;
@@ -335,22 +335,22 @@ end;
 	User_adminPtr = function(this: User): IntUserField; cdecl;
 	User_clearPtr = procedure(this: User; status: Status); cdecl;
 	ListUsers_listPtr = procedure(this: ListUsers; status: Status; user: User); cdecl;
-	LogonInfo_namePtr = function(this: LogonInfo): PChar; cdecl;
-	LogonInfo_rolePtr = function(this: LogonInfo): PChar; cdecl;
-	LogonInfo_networkProtocolPtr = function(this: LogonInfo): PChar; cdecl;
-	LogonInfo_remoteAddressPtr = function(this: LogonInfo): PChar; cdecl;
+	LogonInfo_namePtr = function(this: LogonInfo): PAnsiChar; cdecl;
+	LogonInfo_rolePtr = function(this: LogonInfo): PAnsiChar; cdecl;
+	LogonInfo_networkProtocolPtr = function(this: LogonInfo): PAnsiChar; cdecl;
+	LogonInfo_remoteAddressPtr = function(this: LogonInfo): PAnsiChar; cdecl;
 	LogonInfo_authBlockPtr = function(this: LogonInfo; length: CardinalPtr): BytePtr; cdecl;
 	Management_startPtr = procedure(this: Management; status: Status; logonInfo: LogonInfo); cdecl;
 	Management_executePtr = function(this: Management; status: Status; user: User; callback: ListUsers): Integer; cdecl;
 	Management_commitPtr = procedure(this: Management; status: Status); cdecl;
 	Management_rollbackPtr = procedure(this: Management; status: Status); cdecl;
-	WireCryptPlugin_getKnownTypesPtr = function(this: WireCryptPlugin; status: Status): PChar; cdecl;
+	WireCryptPlugin_getKnownTypesPtr = function(this: WireCryptPlugin; status: Status): PAnsiChar; cdecl;
 	WireCryptPlugin_setKeyPtr = procedure(this: WireCryptPlugin; status: Status; key: CryptKey); cdecl;
 	WireCryptPlugin_encryptPtr = procedure(this: WireCryptPlugin; status: Status; length: Cardinal; from: Pointer; to_: Pointer); cdecl;
 	WireCryptPlugin_decryptPtr = procedure(this: WireCryptPlugin; status: Status; length: Cardinal; from: Pointer; to_: Pointer); cdecl;
 	CryptKeyCallback_callbackPtr = function(this: CryptKeyCallback; dataLength: Cardinal; data: Pointer; bufferLength: Cardinal; buffer: Pointer): Cardinal; cdecl;
 	KeyHolderPlugin_keyCallbackPtr = function(this: KeyHolderPlugin; status: Status; callback: CryptKeyCallback): Integer; cdecl;
-	KeyHolderPlugin_keyHandlePtr = function(this: KeyHolderPlugin; status: Status; keyName: PChar): CryptKeyCallback; cdecl;
+	KeyHolderPlugin_keyHandlePtr = function(this: KeyHolderPlugin; status: Status; keyName: PAnsiChar): CryptKeyCallback; cdecl;
 	DbCryptPlugin_setKeyPtr = procedure(this: DbCryptPlugin; status: Status; length: Cardinal; sources: KeyHolderPluginPtr); cdecl;
 	DbCryptPlugin_encryptPtr = procedure(this: DbCryptPlugin; status: Status; length: Cardinal; from: Pointer; to_: Pointer); cdecl;
 	DbCryptPlugin_decryptPtr = procedure(this: DbCryptPlugin; status: Status; length: Cardinal; from: Pointer; to_: Pointer); cdecl;
@@ -358,29 +358,29 @@ end;
 	ExternalContext_getEnginePtr = function(this: ExternalContext; status: Status): ExternalEngine; cdecl;
 	ExternalContext_getAttachmentPtr = function(this: ExternalContext; status: Status): Attachment; cdecl;
 	ExternalContext_getTransactionPtr = function(this: ExternalContext; status: Status): Transaction; cdecl;
-	ExternalContext_getUserNamePtr = function(this: ExternalContext): PChar; cdecl;
-	ExternalContext_getDatabaseNamePtr = function(this: ExternalContext): PChar; cdecl;
-	ExternalContext_getClientCharSetPtr = function(this: ExternalContext): PChar; cdecl;
+	ExternalContext_getUserNamePtr = function(this: ExternalContext): PAnsiChar; cdecl;
+	ExternalContext_getDatabaseNamePtr = function(this: ExternalContext): PAnsiChar; cdecl;
+	ExternalContext_getClientCharSetPtr = function(this: ExternalContext): PAnsiChar; cdecl;
 	ExternalContext_obtainInfoCodePtr = function(this: ExternalContext): Integer; cdecl;
 	ExternalContext_getInfoPtr = function(this: ExternalContext; code: Integer): Pointer; cdecl;
 	ExternalContext_setInfoPtr = function(this: ExternalContext; code: Integer; value: Pointer): Pointer; cdecl;
 	ExternalResultSet_fetchPtr = function(this: ExternalResultSet; status: Status): Boolean; cdecl;
-	ExternalFunction_getCharSetPtr = procedure(this: ExternalFunction; status: Status; context: ExternalContext; name: PChar; nameSize: Cardinal); cdecl;
+	ExternalFunction_getCharSetPtr = procedure(this: ExternalFunction; status: Status; context: ExternalContext; name: PAnsiChar; nameSize: Cardinal); cdecl;
 	ExternalFunction_executePtr = procedure(this: ExternalFunction; status: Status; context: ExternalContext; inMsg: Pointer; outMsg: Pointer); cdecl;
-	ExternalProcedure_getCharSetPtr = procedure(this: ExternalProcedure; status: Status; context: ExternalContext; name: PChar; nameSize: Cardinal); cdecl;
+	ExternalProcedure_getCharSetPtr = procedure(this: ExternalProcedure; status: Status; context: ExternalContext; name: PAnsiChar; nameSize: Cardinal); cdecl;
 	ExternalProcedure_openPtr = function(this: ExternalProcedure; status: Status; context: ExternalContext; inMsg: Pointer; outMsg: Pointer): ExternalResultSet; cdecl;
-	ExternalTrigger_getCharSetPtr = procedure(this: ExternalTrigger; status: Status; context: ExternalContext; name: PChar; nameSize: Cardinal); cdecl;
+	ExternalTrigger_getCharSetPtr = procedure(this: ExternalTrigger; status: Status; context: ExternalContext; name: PAnsiChar; nameSize: Cardinal); cdecl;
 	ExternalTrigger_executePtr = procedure(this: ExternalTrigger; status: Status; context: ExternalContext; action: Cardinal; oldMsg: Pointer; newMsg: Pointer); cdecl;
-	RoutineMetadata_getPackagePtr = function(this: RoutineMetadata; status: Status): PChar; cdecl;
-	RoutineMetadata_getNamePtr = function(this: RoutineMetadata; status: Status): PChar; cdecl;
-	RoutineMetadata_getEntryPointPtr = function(this: RoutineMetadata; status: Status): PChar; cdecl;
-	RoutineMetadata_getBodyPtr = function(this: RoutineMetadata; status: Status): PChar; cdecl;
+	RoutineMetadata_getPackagePtr = function(this: RoutineMetadata; status: Status): PAnsiChar; cdecl;
+	RoutineMetadata_getNamePtr = function(this: RoutineMetadata; status: Status): PAnsiChar; cdecl;
+	RoutineMetadata_getEntryPointPtr = function(this: RoutineMetadata; status: Status): PAnsiChar; cdecl;
+	RoutineMetadata_getBodyPtr = function(this: RoutineMetadata; status: Status): PAnsiChar; cdecl;
 	RoutineMetadata_getInputMetadataPtr = function(this: RoutineMetadata; status: Status): MessageMetadata; cdecl;
 	RoutineMetadata_getOutputMetadataPtr = function(this: RoutineMetadata; status: Status): MessageMetadata; cdecl;
 	RoutineMetadata_getTriggerMetadataPtr = function(this: RoutineMetadata; status: Status): MessageMetadata; cdecl;
-	RoutineMetadata_getTriggerTablePtr = function(this: RoutineMetadata; status: Status): PChar; cdecl;
+	RoutineMetadata_getTriggerTablePtr = function(this: RoutineMetadata; status: Status): PAnsiChar; cdecl;
 	RoutineMetadata_getTriggerTypePtr = function(this: RoutineMetadata; status: Status): Cardinal; cdecl;
-	ExternalEngine_openPtr = procedure(this: ExternalEngine; status: Status; context: ExternalContext; charSet: PChar; charSetSize: Cardinal); cdecl;
+	ExternalEngine_openPtr = procedure(this: ExternalEngine; status: Status; context: ExternalContext; charSet: PAnsiChar; charSetSize: Cardinal); cdecl;
 	ExternalEngine_openAttachmentPtr = procedure(this: ExternalEngine; status: Status; context: ExternalContext); cdecl;
 	ExternalEngine_closeAttachmentPtr = procedure(this: ExternalEngine; status: Status; context: ExternalContext); cdecl;
 	ExternalEngine_makeFunctionPtr = function(this: ExternalEngine; status: Status; context: ExternalContext; metadata: RoutineMetadata; inBuilder: MetadataBuilder; outBuilder: MetadataBuilder): ExternalFunction; cdecl;
@@ -389,27 +389,27 @@ end;
 	Timer_handlerPtr = procedure(this: Timer); cdecl;
 	TimerControl_startPtr = procedure(this: TimerControl; status: Status; timer: Timer; microSeconds: QWord); cdecl;
 	TimerControl_stopPtr = procedure(this: TimerControl; status: Status; timer: Timer); cdecl;
-	VersionCallback_callbackPtr = procedure(this: VersionCallback; status: Status; text: PChar); cdecl;
+	VersionCallback_callbackPtr = procedure(this: VersionCallback; status: Status; text: PAnsiChar); cdecl;
 	Util_getFbVersionPtr = procedure(this: Util; status: Status; att: Attachment; callback: VersionCallback); cdecl;
-	Util_loadBlobPtr = procedure(this: Util; status: Status; blobId: ISC_QUADPtr; att: Attachment; tra: Transaction; file_: PChar; txt: Boolean); cdecl;
-	Util_dumpBlobPtr = procedure(this: Util; status: Status; blobId: ISC_QUADPtr; att: Attachment; tra: Transaction; file_: PChar; txt: Boolean); cdecl;
-	Util_getPerfCountersPtr = procedure(this: Util; status: Status; att: Attachment; countersSet: PChar; counters: Int64Ptr); cdecl;
-	Util_executeCreateDatabasePtr = function(this: Util; status: Status; stmtLength: Cardinal; creatDBstatement: PChar; dialect: Cardinal; stmtIsCreateDb: BooleanPtr): Attachment; cdecl;
+	Util_loadBlobPtr = procedure(this: Util; status: Status; blobId: ISC_QUADPtr; att: Attachment; tra: Transaction; file_: PAnsiChar; txt: Boolean); cdecl;
+	Util_dumpBlobPtr = procedure(this: Util; status: Status; blobId: ISC_QUADPtr; att: Attachment; tra: Transaction; file_: PAnsiChar; txt: Boolean); cdecl;
+	Util_getPerfCountersPtr = procedure(this: Util; status: Status; att: Attachment; countersSet: PAnsiChar; counters: Int64Ptr); cdecl;
+	Util_executeCreateDatabasePtr = function(this: Util; status: Status; stmtLength: Cardinal; creatDBstatement: PAnsiChar; dialect: Cardinal; stmtIsCreateDb: BooleanPtr): Attachment; cdecl;
 	Util_decodeDatePtr = procedure(this: Util; date: ISC_DATE; year: CardinalPtr; month: CardinalPtr; day: CardinalPtr); cdecl;
 	Util_decodeTimePtr = procedure(this: Util; time: ISC_TIME; hours: CardinalPtr; minutes: CardinalPtr; seconds: CardinalPtr; fractions: CardinalPtr); cdecl;
 	Util_encodeDatePtr = function(this: Util; year: Cardinal; month: Cardinal; day: Cardinal): ISC_DATE; cdecl;
 	Util_encodeTimePtr = function(this: Util; hours: Cardinal; minutes: Cardinal; seconds: Cardinal; fractions: Cardinal): ISC_TIME; cdecl;
 	TraceConnection_getKindPtr = function(this: TraceConnection): Cardinal; cdecl;
 	TraceConnection_getProcessIDPtr = function(this: TraceConnection): Integer; cdecl;
-	TraceConnection_getUserNamePtr = function(this: TraceConnection): PChar; cdecl;
-	TraceConnection_getRoleNamePtr = function(this: TraceConnection): PChar; cdecl;
-	TraceConnection_getCharSetPtr = function(this: TraceConnection): PChar; cdecl;
-	TraceConnection_getRemoteProtocolPtr = function(this: TraceConnection): PChar; cdecl;
-	TraceConnection_getRemoteAddressPtr = function(this: TraceConnection): PChar; cdecl;
+	TraceConnection_getUserNamePtr = function(this: TraceConnection): PAnsiChar; cdecl;
+	TraceConnection_getRoleNamePtr = function(this: TraceConnection): PAnsiChar; cdecl;
+	TraceConnection_getCharSetPtr = function(this: TraceConnection): PAnsiChar; cdecl;
+	TraceConnection_getRemoteProtocolPtr = function(this: TraceConnection): PAnsiChar; cdecl;
+	TraceConnection_getRemoteAddressPtr = function(this: TraceConnection): PAnsiChar; cdecl;
 	TraceConnection_getRemoteProcessIDPtr = function(this: TraceConnection): Integer; cdecl;
-	TraceConnection_getRemoteProcessNamePtr = function(this: TraceConnection): PChar; cdecl;
+	TraceConnection_getRemoteProcessNamePtr = function(this: TraceConnection): PAnsiChar; cdecl;
 	TraceDatabaseConnection_getConnectionIDPtr = function(this: TraceDatabaseConnection): Integer; cdecl;
-	TraceDatabaseConnection_getDatabaseNamePtr = function(this: TraceDatabaseConnection): PChar; cdecl;
+	TraceDatabaseConnection_getDatabaseNamePtr = function(this: TraceDatabaseConnection): PAnsiChar; cdecl;
 	TraceTransaction_getTransactionIDPtr = function(this: TraceTransaction): Cardinal; cdecl;
 	TraceTransaction_getReadOnlyPtr = function(this: TraceTransaction): Boolean; cdecl;
 	TraceTransaction_getWaitPtr = function(this: TraceTransaction): Integer; cdecl;
@@ -419,53 +419,53 @@ end;
 	TraceParams_getParamPtr = function(this: TraceParams; idx: Cardinal): dscPtr; cdecl;
 	TraceStatement_getStmtIDPtr = function(this: TraceStatement): Integer; cdecl;
 	TraceStatement_getPerfPtr = function(this: TraceStatement): PerformanceInfoPtr; cdecl;
-	TraceSQLStatement_getTextPtr = function(this: TraceSQLStatement): PChar; cdecl;
-	TraceSQLStatement_getPlanPtr = function(this: TraceSQLStatement): PChar; cdecl;
+	TraceSQLStatement_getTextPtr = function(this: TraceSQLStatement): PAnsiChar; cdecl;
+	TraceSQLStatement_getPlanPtr = function(this: TraceSQLStatement): PAnsiChar; cdecl;
 	TraceSQLStatement_getInputsPtr = function(this: TraceSQLStatement): TraceParams; cdecl;
-	TraceSQLStatement_getTextUTF8Ptr = function(this: TraceSQLStatement): PChar; cdecl;
-	TraceSQLStatement_getExplainedPlanPtr = function(this: TraceSQLStatement): PChar; cdecl;
+	TraceSQLStatement_getTextUTF8Ptr = function(this: TraceSQLStatement): PAnsiChar; cdecl;
+	TraceSQLStatement_getExplainedPlanPtr = function(this: TraceSQLStatement): PAnsiChar; cdecl;
 	TraceBLRStatement_getDataPtr = function(this: TraceBLRStatement): BytePtr; cdecl;
 	TraceBLRStatement_getDataLengthPtr = function(this: TraceBLRStatement): Cardinal; cdecl;
-	TraceBLRStatement_getTextPtr = function(this: TraceBLRStatement): PChar; cdecl;
+	TraceBLRStatement_getTextPtr = function(this: TraceBLRStatement): PAnsiChar; cdecl;
 	TraceDYNRequest_getDataPtr = function(this: TraceDYNRequest): BytePtr; cdecl;
 	TraceDYNRequest_getDataLengthPtr = function(this: TraceDYNRequest): Cardinal; cdecl;
-	TraceDYNRequest_getTextPtr = function(this: TraceDYNRequest): PChar; cdecl;
-	TraceContextVariable_getNameSpacePtr = function(this: TraceContextVariable): PChar; cdecl;
-	TraceContextVariable_getVarNamePtr = function(this: TraceContextVariable): PChar; cdecl;
-	TraceContextVariable_getVarValuePtr = function(this: TraceContextVariable): PChar; cdecl;
-	TraceProcedure_getProcNamePtr = function(this: TraceProcedure): PChar; cdecl;
+	TraceDYNRequest_getTextPtr = function(this: TraceDYNRequest): PAnsiChar; cdecl;
+	TraceContextVariable_getNameSpacePtr = function(this: TraceContextVariable): PAnsiChar; cdecl;
+	TraceContextVariable_getVarNamePtr = function(this: TraceContextVariable): PAnsiChar; cdecl;
+	TraceContextVariable_getVarValuePtr = function(this: TraceContextVariable): PAnsiChar; cdecl;
+	TraceProcedure_getProcNamePtr = function(this: TraceProcedure): PAnsiChar; cdecl;
 	TraceProcedure_getInputsPtr = function(this: TraceProcedure): TraceParams; cdecl;
 	TraceProcedure_getPerfPtr = function(this: TraceProcedure): PerformanceInfoPtr; cdecl;
-	TraceFunction_getFuncNamePtr = function(this: TraceFunction): PChar; cdecl;
+	TraceFunction_getFuncNamePtr = function(this: TraceFunction): PAnsiChar; cdecl;
 	TraceFunction_getInputsPtr = function(this: TraceFunction): TraceParams; cdecl;
 	TraceFunction_getResultPtr = function(this: TraceFunction): TraceParams; cdecl;
 	TraceFunction_getPerfPtr = function(this: TraceFunction): PerformanceInfoPtr; cdecl;
-	TraceTrigger_getTriggerNamePtr = function(this: TraceTrigger): PChar; cdecl;
-	TraceTrigger_getRelationNamePtr = function(this: TraceTrigger): PChar; cdecl;
+	TraceTrigger_getTriggerNamePtr = function(this: TraceTrigger): PAnsiChar; cdecl;
+	TraceTrigger_getRelationNamePtr = function(this: TraceTrigger): PAnsiChar; cdecl;
 	TraceTrigger_getActionPtr = function(this: TraceTrigger): Integer; cdecl;
 	TraceTrigger_getWhichPtr = function(this: TraceTrigger): Integer; cdecl;
 	TraceTrigger_getPerfPtr = function(this: TraceTrigger): PerformanceInfoPtr; cdecl;
 	TraceServiceConnection_getServiceIDPtr = function(this: TraceServiceConnection): Pointer; cdecl;
-	TraceServiceConnection_getServiceMgrPtr = function(this: TraceServiceConnection): PChar; cdecl;
-	TraceServiceConnection_getServiceNamePtr = function(this: TraceServiceConnection): PChar; cdecl;
+	TraceServiceConnection_getServiceMgrPtr = function(this: TraceServiceConnection): PAnsiChar; cdecl;
+	TraceServiceConnection_getServiceNamePtr = function(this: TraceServiceConnection): PAnsiChar; cdecl;
 	TraceStatusVector_hasErrorPtr = function(this: TraceStatusVector): Boolean; cdecl;
 	TraceStatusVector_hasWarningPtr = function(this: TraceStatusVector): Boolean; cdecl;
 	TraceStatusVector_getStatusPtr = function(this: TraceStatusVector): NativeIntPtr; cdecl;
-	TraceStatusVector_getTextPtr = function(this: TraceStatusVector): PChar; cdecl;
+	TraceStatusVector_getTextPtr = function(this: TraceStatusVector): PAnsiChar; cdecl;
 	TraceSweepInfo_getOITPtr = function(this: TraceSweepInfo): QWord; cdecl;
 	TraceSweepInfo_getOSTPtr = function(this: TraceSweepInfo): QWord; cdecl;
 	TraceSweepInfo_getOATPtr = function(this: TraceSweepInfo): QWord; cdecl;
 	TraceSweepInfo_getNextPtr = function(this: TraceSweepInfo): QWord; cdecl;
 	TraceSweepInfo_getPerfPtr = function(this: TraceSweepInfo): PerformanceInfoPtr; cdecl;
 	TraceLogWriter_writePtr = function(this: TraceLogWriter; buf: Pointer; size: Cardinal): Cardinal; cdecl;
-	TraceInitInfo_getConfigTextPtr = function(this: TraceInitInfo): PChar; cdecl;
+	TraceInitInfo_getConfigTextPtr = function(this: TraceInitInfo): PAnsiChar; cdecl;
 	TraceInitInfo_getTraceSessionIDPtr = function(this: TraceInitInfo): Integer; cdecl;
-	TraceInitInfo_getTraceSessionNamePtr = function(this: TraceInitInfo): PChar; cdecl;
-	TraceInitInfo_getFirebirdRootDirectoryPtr = function(this: TraceInitInfo): PChar; cdecl;
-	TraceInitInfo_getDatabaseNamePtr = function(this: TraceInitInfo): PChar; cdecl;
+	TraceInitInfo_getTraceSessionNamePtr = function(this: TraceInitInfo): PAnsiChar; cdecl;
+	TraceInitInfo_getFirebirdRootDirectoryPtr = function(this: TraceInitInfo): PAnsiChar; cdecl;
+	TraceInitInfo_getDatabaseNamePtr = function(this: TraceInitInfo): PAnsiChar; cdecl;
 	TraceInitInfo_getConnectionPtr = function(this: TraceInitInfo): TraceDatabaseConnection; cdecl;
 	TraceInitInfo_getLogWriterPtr = function(this: TraceInitInfo): TraceLogWriter; cdecl;
-	TracePlugin_trace_get_errorPtr = function(this: TracePlugin): PChar; cdecl;
+	TracePlugin_trace_get_errorPtr = function(this: TracePlugin): PAnsiChar; cdecl;
 	TracePlugin_trace_attachPtr = function(this: TracePlugin; connection: TraceDatabaseConnection; create_db: Boolean; att_result: Cardinal): Boolean; cdecl;
 	TracePlugin_trace_detachPtr = function(this: TracePlugin; connection: TraceDatabaseConnection; drop_db: Boolean): Boolean; cdecl;
 	TracePlugin_trace_transaction_startPtr = function(this: TracePlugin; connection: TraceDatabaseConnection; transaction: TraceTransaction; tpb_length: Cardinal; tpb: BytePtr; tra_result: Cardinal): Boolean; cdecl;
@@ -480,10 +480,10 @@ end;
 	TracePlugin_trace_blr_executePtr = function(this: TracePlugin; connection: TraceDatabaseConnection; transaction: TraceTransaction; statement: TraceBLRStatement; req_result: Cardinal): Boolean; cdecl;
 	TracePlugin_trace_dyn_executePtr = function(this: TracePlugin; connection: TraceDatabaseConnection; transaction: TraceTransaction; request: TraceDYNRequest; time_millis: Int64; req_result: Cardinal): Boolean; cdecl;
 	TracePlugin_trace_service_attachPtr = function(this: TracePlugin; service: TraceServiceConnection; att_result: Cardinal): Boolean; cdecl;
-	TracePlugin_trace_service_startPtr = function(this: TracePlugin; service: TraceServiceConnection; switches_length: Cardinal; switches: PChar; start_result: Cardinal): Boolean; cdecl;
+	TracePlugin_trace_service_startPtr = function(this: TracePlugin; service: TraceServiceConnection; switches_length: Cardinal; switches: PAnsiChar; start_result: Cardinal): Boolean; cdecl;
 	TracePlugin_trace_service_queryPtr = function(this: TracePlugin; service: TraceServiceConnection; send_item_length: Cardinal; send_items: BytePtr; recv_item_length: Cardinal; recv_items: BytePtr; query_result: Cardinal): Boolean; cdecl;
 	TracePlugin_trace_service_detachPtr = function(this: TracePlugin; service: TraceServiceConnection; detach_result: Cardinal): Boolean; cdecl;
-	TracePlugin_trace_event_errorPtr = function(this: TracePlugin; connection: TraceConnection; status: TraceStatusVector; function_: PChar): Boolean; cdecl;
+	TracePlugin_trace_event_errorPtr = function(this: TracePlugin; connection: TraceConnection; status: TraceStatusVector; function_: PAnsiChar): Boolean; cdecl;
 	TracePlugin_trace_event_sweepPtr = function(this: TracePlugin; connection: TraceDatabaseConnection; sweep: TraceSweepInfo; sweep_state: Cardinal): Boolean; cdecl;
 	TracePlugin_trace_func_executePtr = function(this: TracePlugin; connection: TraceDatabaseConnection; transaction: TraceTransaction; function_: TraceFunction; started: Boolean; func_result: Cardinal): Boolean; cdecl;
 	TraceFactory_trace_needsPtr = function(this: TraceFactory): QWord; cdecl;
@@ -495,9 +495,9 @@ end;
 	UdrTriggerFactory_setupPtr = procedure(this: UdrTriggerFactory; status: Status; context: ExternalContext; metadata: RoutineMetadata; fieldsBuilder: MetadataBuilder); cdecl;
 	UdrTriggerFactory_newItemPtr = function(this: UdrTriggerFactory; status: Status; context: ExternalContext; metadata: RoutineMetadata): ExternalTrigger; cdecl;
 	UdrPlugin_getMasterPtr = function(this: UdrPlugin): Master; cdecl;
-	UdrPlugin_registerFunctionPtr = procedure(this: UdrPlugin; status: Status; name: PChar; factory: UdrFunctionFactory); cdecl;
-	UdrPlugin_registerProcedurePtr = procedure(this: UdrPlugin; status: Status; name: PChar; factory: UdrProcedureFactory); cdecl;
-	UdrPlugin_registerTriggerPtr = procedure(this: UdrPlugin; status: Status; name: PChar; factory: UdrTriggerFactory); cdecl;
+	UdrPlugin_registerFunctionPtr = procedure(this: UdrPlugin; status: Status; name: PAnsiChar; factory: UdrFunctionFactory); cdecl;
+	UdrPlugin_registerProcedurePtr = procedure(this: UdrPlugin; status: Status; name: PAnsiChar; factory: UdrProcedureFactory); cdecl;
+	UdrPlugin_registerTriggerPtr = procedure(this: UdrPlugin; status: Status; name: PAnsiChar; factory: UdrTriggerFactory); cdecl;
 
 	VersionedVTable = class
 		version: NativeInt;
@@ -618,7 +618,7 @@ end;
 		function getStatus(): Status;
 		function getDispatcher(): Provider;
 		function getPluginManager(): PluginManager;
-		function circularAlloc(s: PChar; len: Cardinal; thr: NativeInt): PChar;
+		function circularAlloc(s: PAnsiChar; len: Cardinal; thr: NativeInt): PAnsiChar;
 		function getTimerControl(): TimerControl;
 		function getDtc(): Dtc;
 		function registerAttachment(provider: Provider; attachment: Attachment): Attachment;
@@ -635,7 +635,7 @@ end;
 		function getStatus(): Status; virtual; abstract;
 		function getDispatcher(): Provider; virtual; abstract;
 		function getPluginManager(): PluginManager; virtual; abstract;
-		function circularAlloc(s: PChar; len: Cardinal; thr: NativeInt): PChar; virtual; abstract;
+		function circularAlloc(s: PAnsiChar; len: Cardinal; thr: NativeInt): PAnsiChar; virtual; abstract;
 		function getTimerControl(): TimerControl; virtual; abstract;
 		function getDtc(): Dtc; virtual; abstract;
 		function registerAttachment(provider: Provider; attachment: Attachment): Attachment; virtual; abstract;
@@ -678,11 +678,11 @@ end;
 	PluginSet = class(ReferenceCounted)
 		const VERSION = 7;
 
-		function getName(): PChar;
-		function getModuleName(): PChar;
+		function getName(): PAnsiChar;
+		function getModuleName(): PAnsiChar;
 		function getPlugin(status: Status): PluginBase;
 		procedure next(status: Status);
-		procedure set_(status: Status; s: PChar);
+		procedure set_(status: Status; s: PAnsiChar);
 	end;
 
 	PluginSetImpl = class(PluginSet)
@@ -690,11 +690,11 @@ end;
 
 		procedure addRef(); virtual; abstract;
 		function release(): Integer; virtual; abstract;
-		function getName(): PChar; virtual; abstract;
-		function getModuleName(): PChar; virtual; abstract;
+		function getName(): PAnsiChar; virtual; abstract;
+		function getModuleName(): PAnsiChar; virtual; abstract;
 		function getPlugin(status: Status): PluginBase; virtual; abstract;
 		procedure next(status: Status); virtual; abstract;
-		procedure set_(status: Status; s: PChar); virtual; abstract;
+		procedure set_(status: Status; s: PAnsiChar); virtual; abstract;
 	end;
 
 	ConfigEntryVTable = class(ReferenceCountedVTable)
@@ -708,8 +708,8 @@ end;
 	ConfigEntry = class(ReferenceCounted)
 		const VERSION = 7;
 
-		function getName(): PChar;
-		function getValue(): PChar;
+		function getName(): PAnsiChar;
+		function getValue(): PAnsiChar;
 		function getIntValue(): Int64;
 		function getBoolValue(): Boolean;
 		function getSubConfig(status: Status): Config;
@@ -720,8 +720,8 @@ end;
 
 		procedure addRef(); virtual; abstract;
 		function release(): Integer; virtual; abstract;
-		function getName(): PChar; virtual; abstract;
-		function getValue(): PChar; virtual; abstract;
+		function getName(): PAnsiChar; virtual; abstract;
+		function getValue(): PAnsiChar; virtual; abstract;
 		function getIntValue(): Int64; virtual; abstract;
 		function getBoolValue(): Boolean; virtual; abstract;
 		function getSubConfig(status: Status): Config; virtual; abstract;
@@ -736,9 +736,9 @@ end;
 	Config = class(ReferenceCounted)
 		const VERSION = 5;
 
-		function find(status: Status; name: PChar): ConfigEntry;
-		function findValue(status: Status; name: PChar; value: PChar): ConfigEntry;
-		function findPos(status: Status; name: PChar; pos: Cardinal): ConfigEntry;
+		function find(status: Status; name: PAnsiChar): ConfigEntry;
+		function findValue(status: Status; name: PAnsiChar; value: PAnsiChar): ConfigEntry;
+		function findPos(status: Status; name: PAnsiChar; pos: Cardinal): ConfigEntry;
 	end;
 
 	ConfigImpl = class(Config)
@@ -746,9 +746,9 @@ end;
 
 		procedure addRef(); virtual; abstract;
 		function release(): Integer; virtual; abstract;
-		function find(status: Status; name: PChar): ConfigEntry; virtual; abstract;
-		function findValue(status: Status; name: PChar; value: PChar): ConfigEntry; virtual; abstract;
-		function findPos(status: Status; name: PChar; pos: Cardinal): ConfigEntry; virtual; abstract;
+		function find(status: Status; name: PAnsiChar): ConfigEntry; virtual; abstract;
+		function findValue(status: Status; name: PAnsiChar; value: PAnsiChar): ConfigEntry; virtual; abstract;
+		function findPos(status: Status; name: PAnsiChar; pos: Cardinal): ConfigEntry; virtual; abstract;
 	end;
 
 	FirebirdConfVTable = class(ReferenceCountedVTable)
@@ -761,9 +761,9 @@ end;
 	FirebirdConf = class(ReferenceCounted)
 		const VERSION = 6;
 
-		function getKey(name: PChar): Cardinal;
+		function getKey(name: PAnsiChar): Cardinal;
 		function asInteger(key: Cardinal): Int64;
-		function asString(key: Cardinal): PChar;
+		function asString(key: Cardinal): PAnsiChar;
 		function asBoolean(key: Cardinal): Boolean;
 	end;
 
@@ -772,9 +772,9 @@ end;
 
 		procedure addRef(); virtual; abstract;
 		function release(): Integer; virtual; abstract;
-		function getKey(name: PChar): Cardinal; virtual; abstract;
+		function getKey(name: PAnsiChar): Cardinal; virtual; abstract;
 		function asInteger(key: Cardinal): Int64; virtual; abstract;
-		function asString(key: Cardinal): PChar; virtual; abstract;
+		function asString(key: Cardinal): PAnsiChar; virtual; abstract;
 		function asBoolean(key: Cardinal): Boolean; virtual; abstract;
 	end;
 
@@ -788,7 +788,7 @@ end;
 	PluginConfig = class(ReferenceCounted)
 		const VERSION = 6;
 
-		function getConfigFileName(): PChar;
+		function getConfigFileName(): PAnsiChar;
 		function getDefaultConfig(status: Status): Config;
 		function getFirebirdConf(status: Status): FirebirdConf;
 		procedure setReleaseDelay(status: Status; microSeconds: QWord);
@@ -799,7 +799,7 @@ end;
 
 		procedure addRef(); virtual; abstract;
 		function release(): Integer; virtual; abstract;
-		function getConfigFileName(): PChar; virtual; abstract;
+		function getConfigFileName(): PAnsiChar; virtual; abstract;
 		function getDefaultConfig(status: Status): Config; virtual; abstract;
 		function getFirebirdConf(status: Status): FirebirdConf; virtual; abstract;
 		procedure setReleaseDelay(status: Status; microSeconds: QWord); virtual; abstract;
@@ -860,22 +860,22 @@ end;
 		const TYPE_KEY_HOLDER = Cardinal(10);
 		const TYPE_COUNT = Cardinal(11);
 
-		procedure registerPluginFactory(pluginType: Cardinal; defaultName: PChar; factory: PluginFactory);
+		procedure registerPluginFactory(pluginType: Cardinal; defaultName: PAnsiChar; factory: PluginFactory);
 		procedure registerModule(cleanup: PluginModule);
 		procedure unregisterModule(cleanup: PluginModule);
-		function getPlugins(status: Status; pluginType: Cardinal; namesList: PChar; firebirdConf: FirebirdConf): PluginSet;
-		function getConfig(status: Status; filename: PChar): Config;
+		function getPlugins(status: Status; pluginType: Cardinal; namesList: PAnsiChar; firebirdConf: FirebirdConf): PluginSet;
+		function getConfig(status: Status; filename: PAnsiChar): Config;
 		procedure releasePlugin(plugin: PluginBase);
 	end;
 
 	PluginManagerImpl = class(PluginManager)
 		constructor create;
 
-		procedure registerPluginFactory(pluginType: Cardinal; defaultName: PChar; factory: PluginFactory); virtual; abstract;
+		procedure registerPluginFactory(pluginType: Cardinal; defaultName: PAnsiChar; factory: PluginFactory); virtual; abstract;
 		procedure registerModule(cleanup: PluginModule); virtual; abstract;
 		procedure unregisterModule(cleanup: PluginModule); virtual; abstract;
-		function getPlugins(status: Status; pluginType: Cardinal; namesList: PChar; firebirdConf: FirebirdConf): PluginSet; virtual; abstract;
-		function getConfig(status: Status; filename: PChar): Config; virtual; abstract;
+		function getPlugins(status: Status; pluginType: Cardinal; namesList: PAnsiChar; firebirdConf: FirebirdConf): PluginSet; virtual; abstract;
+		function getConfig(status: Status; filename: PAnsiChar): Config; virtual; abstract;
 		procedure releasePlugin(plugin: PluginBase); virtual; abstract;
 	end;
 
@@ -889,8 +889,8 @@ end;
 	CryptKey = class(Versioned)
 		const VERSION = 4;
 
-		procedure setSymmetric(status: Status; type_: PChar; keyLength: Cardinal; key: Pointer);
-		procedure setAsymmetric(status: Status; type_: PChar; encryptKeyLength: Cardinal; encryptKey: Pointer; decryptKeyLength: Cardinal; decryptKey: Pointer);
+		procedure setSymmetric(status: Status; type_: PAnsiChar; keyLength: Cardinal; key: Pointer);
+		procedure setAsymmetric(status: Status; type_: PAnsiChar; encryptKeyLength: Cardinal; encryptKey: Pointer; decryptKeyLength: Cardinal; decryptKey: Pointer);
 		function getEncryptKey(length: CardinalPtr): Pointer;
 		function getDecryptKey(length: CardinalPtr): Pointer;
 	end;
@@ -898,8 +898,8 @@ end;
 	CryptKeyImpl = class(CryptKey)
 		constructor create;
 
-		procedure setSymmetric(status: Status; type_: PChar; keyLength: Cardinal; key: Pointer); virtual; abstract;
-		procedure setAsymmetric(status: Status; type_: PChar; encryptKeyLength: Cardinal; encryptKey: Pointer; decryptKeyLength: Cardinal; decryptKey: Pointer); virtual; abstract;
+		procedure setSymmetric(status: Status; type_: PAnsiChar; keyLength: Cardinal; key: Pointer); virtual; abstract;
+		procedure setAsymmetric(status: Status; type_: PAnsiChar; encryptKeyLength: Cardinal; encryptKey: Pointer; decryptKeyLength: Cardinal; decryptKey: Pointer); virtual; abstract;
 		function getEncryptKey(length: CardinalPtr): Pointer; virtual; abstract;
 		function getDecryptKey(length: CardinalPtr): Pointer; virtual; abstract;
 	end;
@@ -934,23 +934,23 @@ end;
 		const DIR_PLUGINS = Cardinal(16);
 		const DIR_COUNT = Cardinal(17);
 
-		function getDirectory(code: Cardinal): PChar;
+		function getDirectory(code: Cardinal): PAnsiChar;
 		function getFirebirdConf(): FirebirdConf;
-		function getDatabaseConf(dbName: PChar): FirebirdConf;
-		function getPluginConfig(configuredPlugin: PChar): Config;
-		function getInstallDirectory(): PChar;
-		function getRootDirectory(): PChar;
+		function getDatabaseConf(dbName: PAnsiChar): FirebirdConf;
+		function getPluginConfig(configuredPlugin: PAnsiChar): Config;
+		function getInstallDirectory(): PAnsiChar;
+		function getRootDirectory(): PAnsiChar;
 	end;
 
 	ConfigManagerImpl = class(ConfigManager)
 		constructor create;
 
-		function getDirectory(code: Cardinal): PChar; virtual; abstract;
+		function getDirectory(code: Cardinal): PAnsiChar; virtual; abstract;
 		function getFirebirdConf(): FirebirdConf; virtual; abstract;
-		function getDatabaseConf(dbName: PChar): FirebirdConf; virtual; abstract;
-		function getPluginConfig(configuredPlugin: PChar): Config; virtual; abstract;
-		function getInstallDirectory(): PChar; virtual; abstract;
-		function getRootDirectory(): PChar; virtual; abstract;
+		function getDatabaseConf(dbName: PAnsiChar): FirebirdConf; virtual; abstract;
+		function getPluginConfig(configuredPlugin: PAnsiChar): Config; virtual; abstract;
+		function getInstallDirectory(): PAnsiChar; virtual; abstract;
+		function getRootDirectory(): PAnsiChar; virtual; abstract;
 	end;
 
 	EventCallbackVTable = class(ReferenceCountedVTable)
@@ -1071,10 +1071,10 @@ end;
 		const VERSION = 17;
 
 		function getCount(status: Status): Cardinal;
-		function getField(status: Status; index: Cardinal): PChar;
-		function getRelation(status: Status; index: Cardinal): PChar;
-		function getOwner(status: Status; index: Cardinal): PChar;
-		function getAlias(status: Status; index: Cardinal): PChar;
+		function getField(status: Status; index: Cardinal): PAnsiChar;
+		function getRelation(status: Status; index: Cardinal): PAnsiChar;
+		function getOwner(status: Status; index: Cardinal): PAnsiChar;
+		function getAlias(status: Status; index: Cardinal): PAnsiChar;
 		function getType(status: Status; index: Cardinal): Cardinal;
 		function isNullable(status: Status; index: Cardinal): Boolean;
 		function getSubType(status: Status; index: Cardinal): Integer;
@@ -1093,10 +1093,10 @@ end;
 		procedure addRef(); virtual; abstract;
 		function release(): Integer; virtual; abstract;
 		function getCount(status: Status): Cardinal; virtual; abstract;
-		function getField(status: Status; index: Cardinal): PChar; virtual; abstract;
-		function getRelation(status: Status; index: Cardinal): PChar; virtual; abstract;
-		function getOwner(status: Status; index: Cardinal): PChar; virtual; abstract;
-		function getAlias(status: Status; index: Cardinal): PChar; virtual; abstract;
+		function getField(status: Status; index: Cardinal): PAnsiChar; virtual; abstract;
+		function getRelation(status: Status; index: Cardinal): PAnsiChar; virtual; abstract;
+		function getOwner(status: Status; index: Cardinal): PAnsiChar; virtual; abstract;
+		function getAlias(status: Status; index: Cardinal): PAnsiChar; virtual; abstract;
 		function getType(status: Status; index: Cardinal): Cardinal; virtual; abstract;
 		function isNullable(status: Status; index: Cardinal): Boolean; virtual; abstract;
 		function getSubType(status: Status; index: Cardinal): Integer; virtual; abstract;
@@ -1131,7 +1131,7 @@ end;
 		procedure setCharSet(status: Status; index: Cardinal; charSet: Cardinal);
 		procedure setScale(status: Status; index: Cardinal; scale: Cardinal);
 		procedure truncate(status: Status; count: Cardinal);
-		procedure moveNameToIndex(status: Status; name: PChar; index: Cardinal);
+		procedure moveNameToIndex(status: Status; name: PAnsiChar; index: Cardinal);
 		procedure remove(status: Status; index: Cardinal);
 		function addField(status: Status): Cardinal;
 		function getMetadata(status: Status): MessageMetadata;
@@ -1148,7 +1148,7 @@ end;
 		procedure setCharSet(status: Status; index: Cardinal; charSet: Cardinal); virtual; abstract;
 		procedure setScale(status: Status; index: Cardinal; scale: Cardinal); virtual; abstract;
 		procedure truncate(status: Status; count: Cardinal); virtual; abstract;
-		procedure moveNameToIndex(status: Status; name: PChar; index: Cardinal); virtual; abstract;
+		procedure moveNameToIndex(status: Status; name: PAnsiChar; index: Cardinal); virtual; abstract;
 		procedure remove(status: Status; index: Cardinal); virtual; abstract;
 		function addField(status: Status): Cardinal; virtual; abstract;
 		function getMetadata(status: Status): MessageMetadata; virtual; abstract;
@@ -1234,13 +1234,13 @@ end;
 
 		procedure getInfo(status: Status; itemsLength: Cardinal; items: BytePtr; bufferLength: Cardinal; buffer: BytePtr);
 		function getType(status: Status): Cardinal;
-		function getPlan(status: Status; detailed: Boolean): PChar;
+		function getPlan(status: Status; detailed: Boolean): PAnsiChar;
 		function getAffectedRecords(status: Status): QWord;
 		function getInputMetadata(status: Status): MessageMetadata;
 		function getOutputMetadata(status: Status): MessageMetadata;
 		function execute(status: Status; transaction: Transaction; inMetadata: MessageMetadata; inBuffer: Pointer; outMetadata: MessageMetadata; outBuffer: Pointer): Transaction;
 		function openCursor(status: Status; transaction: Transaction; inMetadata: MessageMetadata; inBuffer: Pointer; outMetadata: MessageMetadata; flags: Cardinal): ResultSet;
-		procedure setCursorName(status: Status; name: PChar);
+		procedure setCursorName(status: Status; name: PAnsiChar);
 		procedure free(status: Status);
 		function getFlags(status: Status): Cardinal;
 	end;
@@ -1252,13 +1252,13 @@ end;
 		function release(): Integer; virtual; abstract;
 		procedure getInfo(status: Status; itemsLength: Cardinal; items: BytePtr; bufferLength: Cardinal; buffer: BytePtr); virtual; abstract;
 		function getType(status: Status): Cardinal; virtual; abstract;
-		function getPlan(status: Status; detailed: Boolean): PChar; virtual; abstract;
+		function getPlan(status: Status; detailed: Boolean): PAnsiChar; virtual; abstract;
 		function getAffectedRecords(status: Status): QWord; virtual; abstract;
 		function getInputMetadata(status: Status): MessageMetadata; virtual; abstract;
 		function getOutputMetadata(status: Status): MessageMetadata; virtual; abstract;
 		function execute(status: Status; transaction: Transaction; inMetadata: MessageMetadata; inBuffer: Pointer; outMetadata: MessageMetadata; outBuffer: Pointer): Transaction; virtual; abstract;
 		function openCursor(status: Status; transaction: Transaction; inMetadata: MessageMetadata; inBuffer: Pointer; outMetadata: MessageMetadata; flags: Cardinal): ResultSet; virtual; abstract;
-		procedure setCursorName(status: Status; name: PChar); virtual; abstract;
+		procedure setCursorName(status: Status; name: PAnsiChar); virtual; abstract;
 		procedure free(status: Status); virtual; abstract;
 		function getFlags(status: Status): Cardinal; virtual; abstract;
 	end;
@@ -1351,9 +1351,9 @@ end;
 		function getSlice(status: Status; transaction: Transaction; id: ISC_QUADPtr; sdlLength: Cardinal; sdl: BytePtr; paramLength: Cardinal; param: BytePtr; sliceLength: Integer; slice: BytePtr): Integer;
 		procedure putSlice(status: Status; transaction: Transaction; id: ISC_QUADPtr; sdlLength: Cardinal; sdl: BytePtr; paramLength: Cardinal; param: BytePtr; sliceLength: Integer; slice: BytePtr);
 		procedure executeDyn(status: Status; transaction: Transaction; length: Cardinal; dyn: BytePtr);
-		function prepare(status: Status; tra: Transaction; stmtLength: Cardinal; sqlStmt: PChar; dialect: Cardinal; flags: Cardinal): Statement;
-		function execute(status: Status; transaction: Transaction; stmtLength: Cardinal; sqlStmt: PChar; dialect: Cardinal; inMetadata: MessageMetadata; inBuffer: Pointer; outMetadata: MessageMetadata; outBuffer: Pointer): Transaction;
-		function openCursor(status: Status; transaction: Transaction; stmtLength: Cardinal; sqlStmt: PChar; dialect: Cardinal; inMetadata: MessageMetadata; inBuffer: Pointer; outMetadata: MessageMetadata; cursorName: PChar; cursorFlags: Cardinal): ResultSet;
+		function prepare(status: Status; tra: Transaction; stmtLength: Cardinal; sqlStmt: PAnsiChar; dialect: Cardinal; flags: Cardinal): Statement;
+		function execute(status: Status; transaction: Transaction; stmtLength: Cardinal; sqlStmt: PAnsiChar; dialect: Cardinal; inMetadata: MessageMetadata; inBuffer: Pointer; outMetadata: MessageMetadata; outBuffer: Pointer): Transaction;
+		function openCursor(status: Status; transaction: Transaction; stmtLength: Cardinal; sqlStmt: PAnsiChar; dialect: Cardinal; inMetadata: MessageMetadata; inBuffer: Pointer; outMetadata: MessageMetadata; cursorName: PAnsiChar; cursorFlags: Cardinal): ResultSet;
 		function queEvents(status: Status; callback: EventCallback; length: Cardinal; events: BytePtr): Events;
 		procedure cancelOperation(status: Status; option: Integer);
 		procedure ping(status: Status);
@@ -1376,9 +1376,9 @@ end;
 		function getSlice(status: Status; transaction: Transaction; id: ISC_QUADPtr; sdlLength: Cardinal; sdl: BytePtr; paramLength: Cardinal; param: BytePtr; sliceLength: Integer; slice: BytePtr): Integer; virtual; abstract;
 		procedure putSlice(status: Status; transaction: Transaction; id: ISC_QUADPtr; sdlLength: Cardinal; sdl: BytePtr; paramLength: Cardinal; param: BytePtr; sliceLength: Integer; slice: BytePtr); virtual; abstract;
 		procedure executeDyn(status: Status; transaction: Transaction; length: Cardinal; dyn: BytePtr); virtual; abstract;
-		function prepare(status: Status; tra: Transaction; stmtLength: Cardinal; sqlStmt: PChar; dialect: Cardinal; flags: Cardinal): Statement; virtual; abstract;
-		function execute(status: Status; transaction: Transaction; stmtLength: Cardinal; sqlStmt: PChar; dialect: Cardinal; inMetadata: MessageMetadata; inBuffer: Pointer; outMetadata: MessageMetadata; outBuffer: Pointer): Transaction; virtual; abstract;
-		function openCursor(status: Status; transaction: Transaction; stmtLength: Cardinal; sqlStmt: PChar; dialect: Cardinal; inMetadata: MessageMetadata; inBuffer: Pointer; outMetadata: MessageMetadata; cursorName: PChar; cursorFlags: Cardinal): ResultSet; virtual; abstract;
+		function prepare(status: Status; tra: Transaction; stmtLength: Cardinal; sqlStmt: PAnsiChar; dialect: Cardinal; flags: Cardinal): Statement; virtual; abstract;
+		function execute(status: Status; transaction: Transaction; stmtLength: Cardinal; sqlStmt: PAnsiChar; dialect: Cardinal; inMetadata: MessageMetadata; inBuffer: Pointer; outMetadata: MessageMetadata; outBuffer: Pointer): Transaction; virtual; abstract;
+		function openCursor(status: Status; transaction: Transaction; stmtLength: Cardinal; sqlStmt: PAnsiChar; dialect: Cardinal; inMetadata: MessageMetadata; inBuffer: Pointer; outMetadata: MessageMetadata; cursorName: PAnsiChar; cursorFlags: Cardinal): ResultSet; virtual; abstract;
 		function queEvents(status: Status; callback: EventCallback; length: Cardinal; events: BytePtr): Events; virtual; abstract;
 		procedure cancelOperation(status: Status; option: Integer); virtual; abstract;
 		procedure ping(status: Status); virtual; abstract;
@@ -1421,9 +1421,9 @@ end;
 	Provider = class(PluginBase)
 		const VERSION = 9;
 
-		function attachDatabase(status: Status; fileName: PChar; dpbLength: Cardinal; dpb: BytePtr): Attachment;
-		function createDatabase(status: Status; fileName: PChar; dpbLength: Cardinal; dpb: BytePtr): Attachment;
-		function attachServiceManager(status: Status; service: PChar; spbLength: Cardinal; spb: BytePtr): Service;
+		function attachDatabase(status: Status; fileName: PAnsiChar; dpbLength: Cardinal; dpb: BytePtr): Attachment;
+		function createDatabase(status: Status; fileName: PAnsiChar; dpbLength: Cardinal; dpb: BytePtr): Attachment;
+		function attachServiceManager(status: Status; service: PAnsiChar; spbLength: Cardinal; spb: BytePtr): Service;
 		procedure shutdown(status: Status; timeout: Cardinal; reason: Integer);
 		procedure setDbCryptCallback(status: Status; cryptCallback: CryptKeyCallback);
 	end;
@@ -1435,9 +1435,9 @@ end;
 		function release(): Integer; virtual; abstract;
 		procedure setOwner(r: ReferenceCounted); virtual; abstract;
 		function getOwner(): ReferenceCounted; virtual; abstract;
-		function attachDatabase(status: Status; fileName: PChar; dpbLength: Cardinal; dpb: BytePtr): Attachment; virtual; abstract;
-		function createDatabase(status: Status; fileName: PChar; dpbLength: Cardinal; dpb: BytePtr): Attachment; virtual; abstract;
-		function attachServiceManager(status: Status; service: PChar; spbLength: Cardinal; spb: BytePtr): Service; virtual; abstract;
+		function attachDatabase(status: Status; fileName: PAnsiChar; dpbLength: Cardinal; dpb: BytePtr): Attachment; virtual; abstract;
+		function createDatabase(status: Status; fileName: PAnsiChar; dpbLength: Cardinal; dpb: BytePtr): Attachment; virtual; abstract;
+		function attachServiceManager(status: Status; service: PAnsiChar; spbLength: Cardinal; spb: BytePtr): Service; virtual; abstract;
 		procedure shutdown(status: Status; timeout: Cardinal; reason: Integer); virtual; abstract;
 		procedure setDbCryptCallback(status: Status; cryptCallback: CryptKeyCallback); virtual; abstract;
 	end;
@@ -1516,18 +1516,18 @@ end;
 		const VERSION = 4;
 
 		procedure reset();
-		procedure add(status: Status; name: PChar);
-		procedure setType(status: Status; value: PChar);
-		procedure setDb(status: Status; value: PChar);
+		procedure add(status: Status; name: PAnsiChar);
+		procedure setType(status: Status; value: PAnsiChar);
+		procedure setDb(status: Status; value: PAnsiChar);
 	end;
 
 	WriterImpl = class(Writer)
 		constructor create;
 
 		procedure reset(); virtual; abstract;
-		procedure add(status: Status; name: PChar); virtual; abstract;
-		procedure setType(status: Status; value: PChar); virtual; abstract;
-		procedure setDb(status: Status; value: PChar); virtual; abstract;
+		procedure add(status: Status; name: PAnsiChar); virtual; abstract;
+		procedure setType(status: Status; value: PAnsiChar); virtual; abstract;
+		procedure setDb(status: Status; value: PAnsiChar); virtual; abstract;
 	end;
 
 	ServerBlockVTable = class(VersionedVTable)
@@ -1540,7 +1540,7 @@ end;
 	ServerBlock = class(Versioned)
 		const VERSION = 4;
 
-		function getLogin(): PChar;
+		function getLogin(): PAnsiChar;
 		function getData(length: CardinalPtr): BytePtr;
 		procedure putData(status: Status; length: Cardinal; data: Pointer);
 		function newKey(status: Status): CryptKey;
@@ -1549,7 +1549,7 @@ end;
 	ServerBlockImpl = class(ServerBlock)
 		constructor create;
 
-		function getLogin(): PChar; virtual; abstract;
+		function getLogin(): PAnsiChar; virtual; abstract;
 		function getData(length: CardinalPtr): BytePtr; virtual; abstract;
 		procedure putData(status: Status; length: Cardinal; data: Pointer); virtual; abstract;
 		function newKey(status: Status): CryptKey; virtual; abstract;
@@ -1566,8 +1566,8 @@ end;
 	ClientBlock = class(ReferenceCounted)
 		const VERSION = 7;
 
-		function getLogin(): PChar;
-		function getPassword(): PChar;
+		function getLogin(): PAnsiChar;
+		function getPassword(): PAnsiChar;
 		function getData(length: CardinalPtr): BytePtr;
 		procedure putData(status: Status; length: Cardinal; data: Pointer);
 		function newKey(status: Status): CryptKey;
@@ -1578,8 +1578,8 @@ end;
 
 		procedure addRef(); virtual; abstract;
 		function release(): Integer; virtual; abstract;
-		function getLogin(): PChar; virtual; abstract;
-		function getPassword(): PChar; virtual; abstract;
+		function getLogin(): PAnsiChar; virtual; abstract;
+		function getPassword(): PAnsiChar; virtual; abstract;
 		function getData(length: CardinalPtr): BytePtr; virtual; abstract;
 		procedure putData(status: Status; length: Cardinal; data: Pointer); virtual; abstract;
 		function newKey(status: Status): CryptKey; virtual; abstract;
@@ -1655,8 +1655,8 @@ end;
 	CharUserField = class(UserField)
 		const VERSION = 5;
 
-		function get(): PChar;
-		procedure set_(status: Status; newValue: PChar);
+		function get(): PAnsiChar;
+		procedure set_(status: Status; newValue: PAnsiChar);
 	end;
 
 	CharUserFieldImpl = class(CharUserField)
@@ -1665,8 +1665,8 @@ end;
 		function entered(): Integer; virtual; abstract;
 		function specified(): Integer; virtual; abstract;
 		procedure setEntered(status: Status; newValue: Integer); virtual; abstract;
-		function get(): PChar; virtual; abstract;
-		procedure set_(status: Status; newValue: PChar); virtual; abstract;
+		function get(): PAnsiChar; virtual; abstract;
+		procedure set_(status: Status; newValue: PAnsiChar); virtual; abstract;
 	end;
 
 	IntUserFieldVTable = class(UserFieldVTable)
@@ -1764,20 +1764,20 @@ end;
 	LogonInfo = class(Versioned)
 		const VERSION = 5;
 
-		function name(): PChar;
-		function role(): PChar;
-		function networkProtocol(): PChar;
-		function remoteAddress(): PChar;
+		function name(): PAnsiChar;
+		function role(): PAnsiChar;
+		function networkProtocol(): PAnsiChar;
+		function remoteAddress(): PAnsiChar;
 		function authBlock(length: CardinalPtr): BytePtr;
 	end;
 
 	LogonInfoImpl = class(LogonInfo)
 		constructor create;
 
-		function name(): PChar; virtual; abstract;
-		function role(): PChar; virtual; abstract;
-		function networkProtocol(): PChar; virtual; abstract;
-		function remoteAddress(): PChar; virtual; abstract;
+		function name(): PAnsiChar; virtual; abstract;
+		function role(): PAnsiChar; virtual; abstract;
+		function networkProtocol(): PAnsiChar; virtual; abstract;
+		function remoteAddress(): PAnsiChar; virtual; abstract;
 		function authBlock(length: CardinalPtr): BytePtr; virtual; abstract;
 	end;
 
@@ -1820,7 +1820,7 @@ end;
 	WireCryptPlugin = class(PluginBase)
 		const VERSION = 8;
 
-		function getKnownTypes(status: Status): PChar;
+		function getKnownTypes(status: Status): PAnsiChar;
 		procedure setKey(status: Status; key: CryptKey);
 		procedure encrypt(status: Status; length: Cardinal; from: Pointer; to_: Pointer);
 		procedure decrypt(status: Status; length: Cardinal; from: Pointer; to_: Pointer);
@@ -1833,7 +1833,7 @@ end;
 		function release(): Integer; virtual; abstract;
 		procedure setOwner(r: ReferenceCounted); virtual; abstract;
 		function getOwner(): ReferenceCounted; virtual; abstract;
-		function getKnownTypes(status: Status): PChar; virtual; abstract;
+		function getKnownTypes(status: Status): PAnsiChar; virtual; abstract;
 		procedure setKey(status: Status; key: CryptKey); virtual; abstract;
 		procedure encrypt(status: Status; length: Cardinal; from: Pointer; to_: Pointer); virtual; abstract;
 		procedure decrypt(status: Status; length: Cardinal; from: Pointer; to_: Pointer); virtual; abstract;
@@ -1864,7 +1864,7 @@ end;
 		const VERSION = 6;
 
 		function keyCallback(status: Status; callback: CryptKeyCallback): Integer;
-		function keyHandle(status: Status; keyName: PChar): CryptKeyCallback;
+		function keyHandle(status: Status; keyName: PAnsiChar): CryptKeyCallback;
 	end;
 
 	KeyHolderPluginImpl = class(KeyHolderPlugin)
@@ -1875,7 +1875,7 @@ end;
 		procedure setOwner(r: ReferenceCounted); virtual; abstract;
 		function getOwner(): ReferenceCounted; virtual; abstract;
 		function keyCallback(status: Status; callback: CryptKeyCallback): Integer; virtual; abstract;
-		function keyHandle(status: Status; keyName: PChar): CryptKeyCallback; virtual; abstract;
+		function keyHandle(status: Status; keyName: PAnsiChar): CryptKeyCallback; virtual; abstract;
 	end;
 
 	DbCryptPluginVTable = class(PluginBaseVTable)
@@ -1924,9 +1924,9 @@ end;
 		function getEngine(status: Status): ExternalEngine;
 		function getAttachment(status: Status): Attachment;
 		function getTransaction(status: Status): Transaction;
-		function getUserName(): PChar;
-		function getDatabaseName(): PChar;
-		function getClientCharSet(): PChar;
+		function getUserName(): PAnsiChar;
+		function getDatabaseName(): PAnsiChar;
+		function getClientCharSet(): PAnsiChar;
 		function obtainInfoCode(): Integer;
 		function getInfo(code: Integer): Pointer;
 		function setInfo(code: Integer; value: Pointer): Pointer;
@@ -1939,9 +1939,9 @@ end;
 		function getEngine(status: Status): ExternalEngine; virtual; abstract;
 		function getAttachment(status: Status): Attachment; virtual; abstract;
 		function getTransaction(status: Status): Transaction; virtual; abstract;
-		function getUserName(): PChar; virtual; abstract;
-		function getDatabaseName(): PChar; virtual; abstract;
-		function getClientCharSet(): PChar; virtual; abstract;
+		function getUserName(): PAnsiChar; virtual; abstract;
+		function getDatabaseName(): PAnsiChar; virtual; abstract;
+		function getClientCharSet(): PAnsiChar; virtual; abstract;
 		function obtainInfoCode(): Integer; virtual; abstract;
 		function getInfo(code: Integer): Pointer; virtual; abstract;
 		function setInfo(code: Integer; value: Pointer): Pointer; virtual; abstract;
@@ -1972,7 +1972,7 @@ end;
 	ExternalFunction = class(Disposable)
 		const VERSION = 3;
 
-		procedure getCharSet(status: Status; context: ExternalContext; name: PChar; nameSize: Cardinal);
+		procedure getCharSet(status: Status; context: ExternalContext; name: PAnsiChar; nameSize: Cardinal);
 		procedure execute(status: Status; context: ExternalContext; inMsg: Pointer; outMsg: Pointer);
 	end;
 
@@ -1980,7 +1980,7 @@ end;
 		constructor create;
 
 		procedure dispose(); virtual; abstract;
-		procedure getCharSet(status: Status; context: ExternalContext; name: PChar; nameSize: Cardinal); virtual; abstract;
+		procedure getCharSet(status: Status; context: ExternalContext; name: PAnsiChar; nameSize: Cardinal); virtual; abstract;
 		procedure execute(status: Status; context: ExternalContext; inMsg: Pointer; outMsg: Pointer); virtual; abstract;
 	end;
 
@@ -1992,7 +1992,7 @@ end;
 	ExternalProcedure = class(Disposable)
 		const VERSION = 3;
 
-		procedure getCharSet(status: Status; context: ExternalContext; name: PChar; nameSize: Cardinal);
+		procedure getCharSet(status: Status; context: ExternalContext; name: PAnsiChar; nameSize: Cardinal);
 		function open(status: Status; context: ExternalContext; inMsg: Pointer; outMsg: Pointer): ExternalResultSet;
 	end;
 
@@ -2000,7 +2000,7 @@ end;
 		constructor create;
 
 		procedure dispose(); virtual; abstract;
-		procedure getCharSet(status: Status; context: ExternalContext; name: PChar; nameSize: Cardinal); virtual; abstract;
+		procedure getCharSet(status: Status; context: ExternalContext; name: PAnsiChar; nameSize: Cardinal); virtual; abstract;
 		function open(status: Status; context: ExternalContext; inMsg: Pointer; outMsg: Pointer): ExternalResultSet; virtual; abstract;
 	end;
 
@@ -2024,7 +2024,7 @@ end;
 		const ACTION_TRANS_ROLLBACK = Cardinal(8);
 		const ACTION_DDL = Cardinal(9);
 
-		procedure getCharSet(status: Status; context: ExternalContext; name: PChar; nameSize: Cardinal);
+		procedure getCharSet(status: Status; context: ExternalContext; name: PAnsiChar; nameSize: Cardinal);
 		procedure execute(status: Status; context: ExternalContext; action: Cardinal; oldMsg: Pointer; newMsg: Pointer);
 	end;
 
@@ -2032,7 +2032,7 @@ end;
 		constructor create;
 
 		procedure dispose(); virtual; abstract;
-		procedure getCharSet(status: Status; context: ExternalContext; name: PChar; nameSize: Cardinal); virtual; abstract;
+		procedure getCharSet(status: Status; context: ExternalContext; name: PAnsiChar; nameSize: Cardinal); virtual; abstract;
 		procedure execute(status: Status; context: ExternalContext; action: Cardinal; oldMsg: Pointer; newMsg: Pointer); virtual; abstract;
 	end;
 
@@ -2051,28 +2051,28 @@ end;
 	RoutineMetadata = class(Versioned)
 		const VERSION = 9;
 
-		function getPackage(status: Status): PChar;
-		function getName(status: Status): PChar;
-		function getEntryPoint(status: Status): PChar;
-		function getBody(status: Status): PChar;
+		function getPackage(status: Status): PAnsiChar;
+		function getName(status: Status): PAnsiChar;
+		function getEntryPoint(status: Status): PAnsiChar;
+		function getBody(status: Status): PAnsiChar;
 		function getInputMetadata(status: Status): MessageMetadata;
 		function getOutputMetadata(status: Status): MessageMetadata;
 		function getTriggerMetadata(status: Status): MessageMetadata;
-		function getTriggerTable(status: Status): PChar;
+		function getTriggerTable(status: Status): PAnsiChar;
 		function getTriggerType(status: Status): Cardinal;
 	end;
 
 	RoutineMetadataImpl = class(RoutineMetadata)
 		constructor create;
 
-		function getPackage(status: Status): PChar; virtual; abstract;
-		function getName(status: Status): PChar; virtual; abstract;
-		function getEntryPoint(status: Status): PChar; virtual; abstract;
-		function getBody(status: Status): PChar; virtual; abstract;
+		function getPackage(status: Status): PAnsiChar; virtual; abstract;
+		function getName(status: Status): PAnsiChar; virtual; abstract;
+		function getEntryPoint(status: Status): PAnsiChar; virtual; abstract;
+		function getBody(status: Status): PAnsiChar; virtual; abstract;
 		function getInputMetadata(status: Status): MessageMetadata; virtual; abstract;
 		function getOutputMetadata(status: Status): MessageMetadata; virtual; abstract;
 		function getTriggerMetadata(status: Status): MessageMetadata; virtual; abstract;
-		function getTriggerTable(status: Status): PChar; virtual; abstract;
+		function getTriggerTable(status: Status): PAnsiChar; virtual; abstract;
 		function getTriggerType(status: Status): Cardinal; virtual; abstract;
 	end;
 
@@ -2088,7 +2088,7 @@ end;
 	ExternalEngine = class(PluginBase)
 		const VERSION = 10;
 
-		procedure open(status: Status; context: ExternalContext; charSet: PChar; charSetSize: Cardinal);
+		procedure open(status: Status; context: ExternalContext; charSet: PAnsiChar; charSetSize: Cardinal);
 		procedure openAttachment(status: Status; context: ExternalContext);
 		procedure closeAttachment(status: Status; context: ExternalContext);
 		function makeFunction(status: Status; context: ExternalContext; metadata: RoutineMetadata; inBuilder: MetadataBuilder; outBuilder: MetadataBuilder): ExternalFunction;
@@ -2103,7 +2103,7 @@ end;
 		function release(): Integer; virtual; abstract;
 		procedure setOwner(r: ReferenceCounted); virtual; abstract;
 		function getOwner(): ReferenceCounted; virtual; abstract;
-		procedure open(status: Status; context: ExternalContext; charSet: PChar; charSetSize: Cardinal); virtual; abstract;
+		procedure open(status: Status; context: ExternalContext; charSet: PAnsiChar; charSetSize: Cardinal); virtual; abstract;
 		procedure openAttachment(status: Status; context: ExternalContext); virtual; abstract;
 		procedure closeAttachment(status: Status; context: ExternalContext); virtual; abstract;
 		function makeFunction(status: Status; context: ExternalContext; metadata: RoutineMetadata; inBuilder: MetadataBuilder; outBuilder: MetadataBuilder): ExternalFunction; virtual; abstract;
@@ -2155,13 +2155,13 @@ end;
 	VersionCallback = class(Versioned)
 		const VERSION = 1;
 
-		procedure callback(status: Status; text: PChar);
+		procedure callback(status: Status; text: PAnsiChar);
 	end;
 
 	VersionCallbackImpl = class(VersionCallback)
 		constructor create;
 
-		procedure callback(status: Status; text: PChar); virtual; abstract;
+		procedure callback(status: Status; text: PAnsiChar); virtual; abstract;
 	end;
 
 	UtilVTable = class(VersionedVTable)
@@ -2180,10 +2180,10 @@ end;
 		const VERSION = 9;
 
 		procedure getFbVersion(status: Status; att: Attachment; callback: VersionCallback);
-		procedure loadBlob(status: Status; blobId: ISC_QUADPtr; att: Attachment; tra: Transaction; file_: PChar; txt: Boolean);
-		procedure dumpBlob(status: Status; blobId: ISC_QUADPtr; att: Attachment; tra: Transaction; file_: PChar; txt: Boolean);
-		procedure getPerfCounters(status: Status; att: Attachment; countersSet: PChar; counters: Int64Ptr);
-		function executeCreateDatabase(status: Status; stmtLength: Cardinal; creatDBstatement: PChar; dialect: Cardinal; stmtIsCreateDb: BooleanPtr): Attachment;
+		procedure loadBlob(status: Status; blobId: ISC_QUADPtr; att: Attachment; tra: Transaction; file_: PAnsiChar; txt: Boolean);
+		procedure dumpBlob(status: Status; blobId: ISC_QUADPtr; att: Attachment; tra: Transaction; file_: PAnsiChar; txt: Boolean);
+		procedure getPerfCounters(status: Status; att: Attachment; countersSet: PAnsiChar; counters: Int64Ptr);
+		function executeCreateDatabase(status: Status; stmtLength: Cardinal; creatDBstatement: PAnsiChar; dialect: Cardinal; stmtIsCreateDb: BooleanPtr): Attachment;
 		procedure decodeDate(date: ISC_DATE; year: CardinalPtr; month: CardinalPtr; day: CardinalPtr);
 		procedure decodeTime(time: ISC_TIME; hours: CardinalPtr; minutes: CardinalPtr; seconds: CardinalPtr; fractions: CardinalPtr);
 		function encodeDate(year: Cardinal; month: Cardinal; day: Cardinal): ISC_DATE;
@@ -2194,10 +2194,10 @@ end;
 		constructor create;
 
 		procedure getFbVersion(status: Status; att: Attachment; callback: VersionCallback); virtual; abstract;
-		procedure loadBlob(status: Status; blobId: ISC_QUADPtr; att: Attachment; tra: Transaction; file_: PChar; txt: Boolean); virtual; abstract;
-		procedure dumpBlob(status: Status; blobId: ISC_QUADPtr; att: Attachment; tra: Transaction; file_: PChar; txt: Boolean); virtual; abstract;
-		procedure getPerfCounters(status: Status; att: Attachment; countersSet: PChar; counters: Int64Ptr); virtual; abstract;
-		function executeCreateDatabase(status: Status; stmtLength: Cardinal; creatDBstatement: PChar; dialect: Cardinal; stmtIsCreateDb: BooleanPtr): Attachment; virtual; abstract;
+		procedure loadBlob(status: Status; blobId: ISC_QUADPtr; att: Attachment; tra: Transaction; file_: PAnsiChar; txt: Boolean); virtual; abstract;
+		procedure dumpBlob(status: Status; blobId: ISC_QUADPtr; att: Attachment; tra: Transaction; file_: PAnsiChar; txt: Boolean); virtual; abstract;
+		procedure getPerfCounters(status: Status; att: Attachment; countersSet: PAnsiChar; counters: Int64Ptr); virtual; abstract;
+		function executeCreateDatabase(status: Status; stmtLength: Cardinal; creatDBstatement: PAnsiChar; dialect: Cardinal; stmtIsCreateDb: BooleanPtr): Attachment; virtual; abstract;
 		procedure decodeDate(date: ISC_DATE; year: CardinalPtr; month: CardinalPtr; day: CardinalPtr); virtual; abstract;
 		procedure decodeTime(time: ISC_TIME; hours: CardinalPtr; minutes: CardinalPtr; seconds: CardinalPtr; fractions: CardinalPtr); virtual; abstract;
 		function encodeDate(year: Cardinal; month: Cardinal; day: Cardinal): ISC_DATE; virtual; abstract;
@@ -2223,13 +2223,13 @@ end;
 
 		function getKind(): Cardinal;
 		function getProcessID(): Integer;
-		function getUserName(): PChar;
-		function getRoleName(): PChar;
-		function getCharSet(): PChar;
-		function getRemoteProtocol(): PChar;
-		function getRemoteAddress(): PChar;
+		function getUserName(): PAnsiChar;
+		function getRoleName(): PAnsiChar;
+		function getCharSet(): PAnsiChar;
+		function getRemoteProtocol(): PAnsiChar;
+		function getRemoteAddress(): PAnsiChar;
 		function getRemoteProcessID(): Integer;
-		function getRemoteProcessName(): PChar;
+		function getRemoteProcessName(): PAnsiChar;
 	end;
 
 	TraceConnectionImpl = class(TraceConnection)
@@ -2237,13 +2237,13 @@ end;
 
 		function getKind(): Cardinal; virtual; abstract;
 		function getProcessID(): Integer; virtual; abstract;
-		function getUserName(): PChar; virtual; abstract;
-		function getRoleName(): PChar; virtual; abstract;
-		function getCharSet(): PChar; virtual; abstract;
-		function getRemoteProtocol(): PChar; virtual; abstract;
-		function getRemoteAddress(): PChar; virtual; abstract;
+		function getUserName(): PAnsiChar; virtual; abstract;
+		function getRoleName(): PAnsiChar; virtual; abstract;
+		function getCharSet(): PAnsiChar; virtual; abstract;
+		function getRemoteProtocol(): PAnsiChar; virtual; abstract;
+		function getRemoteAddress(): PAnsiChar; virtual; abstract;
 		function getRemoteProcessID(): Integer; virtual; abstract;
-		function getRemoteProcessName(): PChar; virtual; abstract;
+		function getRemoteProcessName(): PAnsiChar; virtual; abstract;
 	end;
 
 	TraceDatabaseConnectionVTable = class(TraceConnectionVTable)
@@ -2255,7 +2255,7 @@ end;
 		const VERSION = 11;
 
 		function getConnectionID(): Integer;
-		function getDatabaseName(): PChar;
+		function getDatabaseName(): PAnsiChar;
 	end;
 
 	TraceDatabaseConnectionImpl = class(TraceDatabaseConnection)
@@ -2263,15 +2263,15 @@ end;
 
 		function getKind(): Cardinal; virtual; abstract;
 		function getProcessID(): Integer; virtual; abstract;
-		function getUserName(): PChar; virtual; abstract;
-		function getRoleName(): PChar; virtual; abstract;
-		function getCharSet(): PChar; virtual; abstract;
-		function getRemoteProtocol(): PChar; virtual; abstract;
-		function getRemoteAddress(): PChar; virtual; abstract;
+		function getUserName(): PAnsiChar; virtual; abstract;
+		function getRoleName(): PAnsiChar; virtual; abstract;
+		function getCharSet(): PAnsiChar; virtual; abstract;
+		function getRemoteProtocol(): PAnsiChar; virtual; abstract;
+		function getRemoteAddress(): PAnsiChar; virtual; abstract;
 		function getRemoteProcessID(): Integer; virtual; abstract;
-		function getRemoteProcessName(): PChar; virtual; abstract;
+		function getRemoteProcessName(): PAnsiChar; virtual; abstract;
 		function getConnectionID(): Integer; virtual; abstract;
-		function getDatabaseName(): PChar; virtual; abstract;
+		function getDatabaseName(): PAnsiChar; virtual; abstract;
 	end;
 
 	TraceTransactionVTable = class(VersionedVTable)
@@ -2355,11 +2355,11 @@ end;
 	TraceSQLStatement = class(TraceStatement)
 		const VERSION = 7;
 
-		function getText(): PChar;
-		function getPlan(): PChar;
+		function getText(): PAnsiChar;
+		function getPlan(): PAnsiChar;
 		function getInputs(): TraceParams;
-		function getTextUTF8(): PChar;
-		function getExplainedPlan(): PChar;
+		function getTextUTF8(): PAnsiChar;
+		function getExplainedPlan(): PAnsiChar;
 	end;
 
 	TraceSQLStatementImpl = class(TraceSQLStatement)
@@ -2367,11 +2367,11 @@ end;
 
 		function getStmtID(): Integer; virtual; abstract;
 		function getPerf(): PerformanceInfoPtr; virtual; abstract;
-		function getText(): PChar; virtual; abstract;
-		function getPlan(): PChar; virtual; abstract;
+		function getText(): PAnsiChar; virtual; abstract;
+		function getPlan(): PAnsiChar; virtual; abstract;
 		function getInputs(): TraceParams; virtual; abstract;
-		function getTextUTF8(): PChar; virtual; abstract;
-		function getExplainedPlan(): PChar; virtual; abstract;
+		function getTextUTF8(): PAnsiChar; virtual; abstract;
+		function getExplainedPlan(): PAnsiChar; virtual; abstract;
 	end;
 
 	TraceBLRStatementVTable = class(TraceStatementVTable)
@@ -2385,7 +2385,7 @@ end;
 
 		function getData(): BytePtr;
 		function getDataLength(): Cardinal;
-		function getText(): PChar;
+		function getText(): PAnsiChar;
 	end;
 
 	TraceBLRStatementImpl = class(TraceBLRStatement)
@@ -2395,7 +2395,7 @@ end;
 		function getPerf(): PerformanceInfoPtr; virtual; abstract;
 		function getData(): BytePtr; virtual; abstract;
 		function getDataLength(): Cardinal; virtual; abstract;
-		function getText(): PChar; virtual; abstract;
+		function getText(): PAnsiChar; virtual; abstract;
 	end;
 
 	TraceDYNRequestVTable = class(VersionedVTable)
@@ -2409,7 +2409,7 @@ end;
 
 		function getData(): BytePtr;
 		function getDataLength(): Cardinal;
-		function getText(): PChar;
+		function getText(): PAnsiChar;
 	end;
 
 	TraceDYNRequestImpl = class(TraceDYNRequest)
@@ -2417,7 +2417,7 @@ end;
 
 		function getData(): BytePtr; virtual; abstract;
 		function getDataLength(): Cardinal; virtual; abstract;
-		function getText(): PChar; virtual; abstract;
+		function getText(): PAnsiChar; virtual; abstract;
 	end;
 
 	TraceContextVariableVTable = class(VersionedVTable)
@@ -2429,17 +2429,17 @@ end;
 	TraceContextVariable = class(Versioned)
 		const VERSION = 3;
 
-		function getNameSpace(): PChar;
-		function getVarName(): PChar;
-		function getVarValue(): PChar;
+		function getNameSpace(): PAnsiChar;
+		function getVarName(): PAnsiChar;
+		function getVarValue(): PAnsiChar;
 	end;
 
 	TraceContextVariableImpl = class(TraceContextVariable)
 		constructor create;
 
-		function getNameSpace(): PChar; virtual; abstract;
-		function getVarName(): PChar; virtual; abstract;
-		function getVarValue(): PChar; virtual; abstract;
+		function getNameSpace(): PAnsiChar; virtual; abstract;
+		function getVarName(): PAnsiChar; virtual; abstract;
+		function getVarValue(): PAnsiChar; virtual; abstract;
 	end;
 
 	TraceProcedureVTable = class(VersionedVTable)
@@ -2451,7 +2451,7 @@ end;
 	TraceProcedure = class(Versioned)
 		const VERSION = 3;
 
-		function getProcName(): PChar;
+		function getProcName(): PAnsiChar;
 		function getInputs(): TraceParams;
 		function getPerf(): PerformanceInfoPtr;
 	end;
@@ -2459,7 +2459,7 @@ end;
 	TraceProcedureImpl = class(TraceProcedure)
 		constructor create;
 
-		function getProcName(): PChar; virtual; abstract;
+		function getProcName(): PAnsiChar; virtual; abstract;
 		function getInputs(): TraceParams; virtual; abstract;
 		function getPerf(): PerformanceInfoPtr; virtual; abstract;
 	end;
@@ -2474,7 +2474,7 @@ end;
 	TraceFunction = class(Versioned)
 		const VERSION = 4;
 
-		function getFuncName(): PChar;
+		function getFuncName(): PAnsiChar;
 		function getInputs(): TraceParams;
 		function getResult(): TraceParams;
 		function getPerf(): PerformanceInfoPtr;
@@ -2483,7 +2483,7 @@ end;
 	TraceFunctionImpl = class(TraceFunction)
 		constructor create;
 
-		function getFuncName(): PChar; virtual; abstract;
+		function getFuncName(): PAnsiChar; virtual; abstract;
 		function getInputs(): TraceParams; virtual; abstract;
 		function getResult(): TraceParams; virtual; abstract;
 		function getPerf(): PerformanceInfoPtr; virtual; abstract;
@@ -2503,8 +2503,8 @@ end;
 		const TYPE_BEFORE = Cardinal(1);
 		const TYPE_AFTER = Cardinal(2);
 
-		function getTriggerName(): PChar;
-		function getRelationName(): PChar;
+		function getTriggerName(): PAnsiChar;
+		function getRelationName(): PAnsiChar;
 		function getAction(): Integer;
 		function getWhich(): Integer;
 		function getPerf(): PerformanceInfoPtr;
@@ -2513,8 +2513,8 @@ end;
 	TraceTriggerImpl = class(TraceTrigger)
 		constructor create;
 
-		function getTriggerName(): PChar; virtual; abstract;
-		function getRelationName(): PChar; virtual; abstract;
+		function getTriggerName(): PAnsiChar; virtual; abstract;
+		function getRelationName(): PAnsiChar; virtual; abstract;
 		function getAction(): Integer; virtual; abstract;
 		function getWhich(): Integer; virtual; abstract;
 		function getPerf(): PerformanceInfoPtr; virtual; abstract;
@@ -2530,8 +2530,8 @@ end;
 		const VERSION = 12;
 
 		function getServiceID(): Pointer;
-		function getServiceMgr(): PChar;
-		function getServiceName(): PChar;
+		function getServiceMgr(): PAnsiChar;
+		function getServiceName(): PAnsiChar;
 	end;
 
 	TraceServiceConnectionImpl = class(TraceServiceConnection)
@@ -2539,16 +2539,16 @@ end;
 
 		function getKind(): Cardinal; virtual; abstract;
 		function getProcessID(): Integer; virtual; abstract;
-		function getUserName(): PChar; virtual; abstract;
-		function getRoleName(): PChar; virtual; abstract;
-		function getCharSet(): PChar; virtual; abstract;
-		function getRemoteProtocol(): PChar; virtual; abstract;
-		function getRemoteAddress(): PChar; virtual; abstract;
+		function getUserName(): PAnsiChar; virtual; abstract;
+		function getRoleName(): PAnsiChar; virtual; abstract;
+		function getCharSet(): PAnsiChar; virtual; abstract;
+		function getRemoteProtocol(): PAnsiChar; virtual; abstract;
+		function getRemoteAddress(): PAnsiChar; virtual; abstract;
 		function getRemoteProcessID(): Integer; virtual; abstract;
-		function getRemoteProcessName(): PChar; virtual; abstract;
+		function getRemoteProcessName(): PAnsiChar; virtual; abstract;
 		function getServiceID(): Pointer; virtual; abstract;
-		function getServiceMgr(): PChar; virtual; abstract;
-		function getServiceName(): PChar; virtual; abstract;
+		function getServiceMgr(): PAnsiChar; virtual; abstract;
+		function getServiceName(): PAnsiChar; virtual; abstract;
 	end;
 
 	TraceStatusVectorVTable = class(VersionedVTable)
@@ -2564,7 +2564,7 @@ end;
 		function hasError(): Boolean;
 		function hasWarning(): Boolean;
 		function getStatus(): NativeIntPtr;
-		function getText(): PChar;
+		function getText(): PAnsiChar;
 	end;
 
 	TraceStatusVectorImpl = class(TraceStatusVector)
@@ -2573,7 +2573,7 @@ end;
 		function hasError(): Boolean; virtual; abstract;
 		function hasWarning(): Boolean; virtual; abstract;
 		function getStatus(): NativeIntPtr; virtual; abstract;
-		function getText(): PChar; virtual; abstract;
+		function getText(): PAnsiChar; virtual; abstract;
 	end;
 
 	TraceSweepInfoVTable = class(VersionedVTable)
@@ -2635,11 +2635,11 @@ end;
 	TraceInitInfo = class(Versioned)
 		const VERSION = 7;
 
-		function getConfigText(): PChar;
+		function getConfigText(): PAnsiChar;
 		function getTraceSessionID(): Integer;
-		function getTraceSessionName(): PChar;
-		function getFirebirdRootDirectory(): PChar;
-		function getDatabaseName(): PChar;
+		function getTraceSessionName(): PAnsiChar;
+		function getFirebirdRootDirectory(): PAnsiChar;
+		function getDatabaseName(): PAnsiChar;
 		function getConnection(): TraceDatabaseConnection;
 		function getLogWriter(): TraceLogWriter;
 	end;
@@ -2647,11 +2647,11 @@ end;
 	TraceInitInfoImpl = class(TraceInitInfo)
 		constructor create;
 
-		function getConfigText(): PChar; virtual; abstract;
+		function getConfigText(): PAnsiChar; virtual; abstract;
 		function getTraceSessionID(): Integer; virtual; abstract;
-		function getTraceSessionName(): PChar; virtual; abstract;
-		function getFirebirdRootDirectory(): PChar; virtual; abstract;
-		function getDatabaseName(): PChar; virtual; abstract;
+		function getTraceSessionName(): PAnsiChar; virtual; abstract;
+		function getFirebirdRootDirectory(): PAnsiChar; virtual; abstract;
+		function getDatabaseName(): PAnsiChar; virtual; abstract;
 		function getConnection(): TraceDatabaseConnection; virtual; abstract;
 		function getLogWriter(): TraceLogWriter; virtual; abstract;
 	end;
@@ -2690,7 +2690,7 @@ end;
 		const SWEEP_STATE_FAILED = Cardinal(3);
 		const SWEEP_STATE_PROGRESS = Cardinal(4);
 
-		function trace_get_error(): PChar;
+		function trace_get_error(): PAnsiChar;
 		function trace_attach(connection: TraceDatabaseConnection; create_db: Boolean; att_result: Cardinal): Boolean;
 		function trace_detach(connection: TraceDatabaseConnection; drop_db: Boolean): Boolean;
 		function trace_transaction_start(connection: TraceDatabaseConnection; transaction: TraceTransaction; tpb_length: Cardinal; tpb: BytePtr; tra_result: Cardinal): Boolean;
@@ -2705,10 +2705,10 @@ end;
 		function trace_blr_execute(connection: TraceDatabaseConnection; transaction: TraceTransaction; statement: TraceBLRStatement; req_result: Cardinal): Boolean;
 		function trace_dyn_execute(connection: TraceDatabaseConnection; transaction: TraceTransaction; request: TraceDYNRequest; time_millis: Int64; req_result: Cardinal): Boolean;
 		function trace_service_attach(service: TraceServiceConnection; att_result: Cardinal): Boolean;
-		function trace_service_start(service: TraceServiceConnection; switches_length: Cardinal; switches: PChar; start_result: Cardinal): Boolean;
+		function trace_service_start(service: TraceServiceConnection; switches_length: Cardinal; switches: PAnsiChar; start_result: Cardinal): Boolean;
 		function trace_service_query(service: TraceServiceConnection; send_item_length: Cardinal; send_items: BytePtr; recv_item_length: Cardinal; recv_items: BytePtr; query_result: Cardinal): Boolean;
 		function trace_service_detach(service: TraceServiceConnection; detach_result: Cardinal): Boolean;
-		function trace_event_error(connection: TraceConnection; status: TraceStatusVector; function_: PChar): Boolean;
+		function trace_event_error(connection: TraceConnection; status: TraceStatusVector; function_: PAnsiChar): Boolean;
 		function trace_event_sweep(connection: TraceDatabaseConnection; sweep: TraceSweepInfo; sweep_state: Cardinal): Boolean;
 		function trace_func_execute(connection: TraceDatabaseConnection; transaction: TraceTransaction; function_: TraceFunction; started: Boolean; func_result: Cardinal): Boolean;
 	end;
@@ -2718,7 +2718,7 @@ end;
 
 		procedure addRef(); virtual; abstract;
 		function release(): Integer; virtual; abstract;
-		function trace_get_error(): PChar; virtual; abstract;
+		function trace_get_error(): PAnsiChar; virtual; abstract;
 		function trace_attach(connection: TraceDatabaseConnection; create_db: Boolean; att_result: Cardinal): Boolean; virtual; abstract;
 		function trace_detach(connection: TraceDatabaseConnection; drop_db: Boolean): Boolean; virtual; abstract;
 		function trace_transaction_start(connection: TraceDatabaseConnection; transaction: TraceTransaction; tpb_length: Cardinal; tpb: BytePtr; tra_result: Cardinal): Boolean; virtual; abstract;
@@ -2733,10 +2733,10 @@ end;
 		function trace_blr_execute(connection: TraceDatabaseConnection; transaction: TraceTransaction; statement: TraceBLRStatement; req_result: Cardinal): Boolean; virtual; abstract;
 		function trace_dyn_execute(connection: TraceDatabaseConnection; transaction: TraceTransaction; request: TraceDYNRequest; time_millis: Int64; req_result: Cardinal): Boolean; virtual; abstract;
 		function trace_service_attach(service: TraceServiceConnection; att_result: Cardinal): Boolean; virtual; abstract;
-		function trace_service_start(service: TraceServiceConnection; switches_length: Cardinal; switches: PChar; start_result: Cardinal): Boolean; virtual; abstract;
+		function trace_service_start(service: TraceServiceConnection; switches_length: Cardinal; switches: PAnsiChar; start_result: Cardinal): Boolean; virtual; abstract;
 		function trace_service_query(service: TraceServiceConnection; send_item_length: Cardinal; send_items: BytePtr; recv_item_length: Cardinal; recv_items: BytePtr; query_result: Cardinal): Boolean; virtual; abstract;
 		function trace_service_detach(service: TraceServiceConnection; detach_result: Cardinal): Boolean; virtual; abstract;
-		function trace_event_error(connection: TraceConnection; status: TraceStatusVector; function_: PChar): Boolean; virtual; abstract;
+		function trace_event_error(connection: TraceConnection; status: TraceStatusVector; function_: PAnsiChar): Boolean; virtual; abstract;
 		function trace_event_sweep(connection: TraceDatabaseConnection; sweep: TraceSweepInfo; sweep_state: Cardinal): Boolean; virtual; abstract;
 		function trace_func_execute(connection: TraceDatabaseConnection; transaction: TraceTransaction; function_: TraceFunction; started: Boolean; func_result: Cardinal): Boolean; virtual; abstract;
 	end;
@@ -2856,18 +2856,18 @@ end;
 		const VERSION = 4;
 
 		function getMaster(): Master;
-		procedure registerFunction(status: Status; name: PChar; factory: UdrFunctionFactory);
-		procedure registerProcedure(status: Status; name: PChar; factory: UdrProcedureFactory);
-		procedure registerTrigger(status: Status; name: PChar; factory: UdrTriggerFactory);
+		procedure registerFunction(status: Status; name: PAnsiChar; factory: UdrFunctionFactory);
+		procedure registerProcedure(status: Status; name: PAnsiChar; factory: UdrProcedureFactory);
+		procedure registerTrigger(status: Status; name: PAnsiChar; factory: UdrTriggerFactory);
 	end;
 
 	UdrPluginImpl = class(UdrPlugin)
 		constructor create;
 
 		function getMaster(): Master; virtual; abstract;
-		procedure registerFunction(status: Status; name: PChar; factory: UdrFunctionFactory); virtual; abstract;
-		procedure registerProcedure(status: Status; name: PChar; factory: UdrProcedureFactory); virtual; abstract;
-		procedure registerTrigger(status: Status; name: PChar; factory: UdrTriggerFactory); virtual; abstract;
+		procedure registerFunction(status: Status; name: PAnsiChar; factory: UdrFunctionFactory); virtual; abstract;
+		procedure registerProcedure(status: Status; name: PAnsiChar; factory: UdrProcedureFactory); virtual; abstract;
+		procedure registerTrigger(status: Status; name: PAnsiChar; factory: UdrTriggerFactory); virtual; abstract;
 	end;
 
 implementation
@@ -2947,7 +2947,7 @@ begin
 	Result := MasterVTable(vTable).getPluginManager(Self);
 end;
 
-function Master.circularAlloc(s: PChar; len: Cardinal; thr: NativeInt): PChar;
+function Master.circularAlloc(s: PAnsiChar; len: Cardinal; thr: NativeInt): PAnsiChar;
 begin
 	Result := MasterVTable(vTable).circularAlloc(Self, s, len, thr);
 end;
@@ -3003,12 +3003,12 @@ begin
 	Result := PluginBaseVTable(vTable).getOwner(Self);
 end;
 
-function PluginSet.getName(): PChar;
+function PluginSet.getName(): PAnsiChar;
 begin
 	Result := PluginSetVTable(vTable).getName(Self);
 end;
 
-function PluginSet.getModuleName(): PChar;
+function PluginSet.getModuleName(): PAnsiChar;
 begin
 	Result := PluginSetVTable(vTable).getModuleName(Self);
 end;
@@ -3025,18 +3025,18 @@ begin
 	FbException.checkException(status);
 end;
 
-procedure PluginSet.set_(status: Status; s: PChar);
+procedure PluginSet.set_(status: Status; s: PAnsiChar);
 begin
 	PluginSetVTable(vTable).set_(Self, status, s);
 	FbException.checkException(status);
 end;
 
-function ConfigEntry.getName(): PChar;
+function ConfigEntry.getName(): PAnsiChar;
 begin
 	Result := ConfigEntryVTable(vTable).getName(Self);
 end;
 
-function ConfigEntry.getValue(): PChar;
+function ConfigEntry.getValue(): PAnsiChar;
 begin
 	Result := ConfigEntryVTable(vTable).getValue(Self);
 end;
@@ -3057,25 +3057,25 @@ begin
 	FbException.checkException(status);
 end;
 
-function Config.find(status: Status; name: PChar): ConfigEntry;
+function Config.find(status: Status; name: PAnsiChar): ConfigEntry;
 begin
 	Result := ConfigVTable(vTable).find(Self, status, name);
 	FbException.checkException(status);
 end;
 
-function Config.findValue(status: Status; name: PChar; value: PChar): ConfigEntry;
+function Config.findValue(status: Status; name: PAnsiChar; value: PAnsiChar): ConfigEntry;
 begin
 	Result := ConfigVTable(vTable).findValue(Self, status, name, value);
 	FbException.checkException(status);
 end;
 
-function Config.findPos(status: Status; name: PChar; pos: Cardinal): ConfigEntry;
+function Config.findPos(status: Status; name: PAnsiChar; pos: Cardinal): ConfigEntry;
 begin
 	Result := ConfigVTable(vTable).findPos(Self, status, name, pos);
 	FbException.checkException(status);
 end;
 
-function FirebirdConf.getKey(name: PChar): Cardinal;
+function FirebirdConf.getKey(name: PAnsiChar): Cardinal;
 begin
 	Result := FirebirdConfVTable(vTable).getKey(Self, name);
 end;
@@ -3085,7 +3085,7 @@ begin
 	Result := FirebirdConfVTable(vTable).asInteger(Self, key);
 end;
 
-function FirebirdConf.asString(key: Cardinal): PChar;
+function FirebirdConf.asString(key: Cardinal): PAnsiChar;
 begin
 	Result := FirebirdConfVTable(vTable).asString(Self, key);
 end;
@@ -3095,7 +3095,7 @@ begin
 	Result := FirebirdConfVTable(vTable).asBoolean(Self, key);
 end;
 
-function PluginConfig.getConfigFileName(): PChar;
+function PluginConfig.getConfigFileName(): PAnsiChar;
 begin
 	Result := PluginConfigVTable(vTable).getConfigFileName(Self);
 end;
@@ -3129,7 +3129,7 @@ begin
 	PluginModuleVTable(vTable).doClean(Self);
 end;
 
-procedure PluginManager.registerPluginFactory(pluginType: Cardinal; defaultName: PChar; factory: PluginFactory);
+procedure PluginManager.registerPluginFactory(pluginType: Cardinal; defaultName: PAnsiChar; factory: PluginFactory);
 begin
 	PluginManagerVTable(vTable).registerPluginFactory(Self, pluginType, defaultName, factory);
 end;
@@ -3144,13 +3144,13 @@ begin
 	PluginManagerVTable(vTable).unregisterModule(Self, cleanup);
 end;
 
-function PluginManager.getPlugins(status: Status; pluginType: Cardinal; namesList: PChar; firebirdConf: FirebirdConf): PluginSet;
+function PluginManager.getPlugins(status: Status; pluginType: Cardinal; namesList: PAnsiChar; firebirdConf: FirebirdConf): PluginSet;
 begin
 	Result := PluginManagerVTable(vTable).getPlugins(Self, status, pluginType, namesList, firebirdConf);
 	FbException.checkException(status);
 end;
 
-function PluginManager.getConfig(status: Status; filename: PChar): Config;
+function PluginManager.getConfig(status: Status; filename: PAnsiChar): Config;
 begin
 	Result := PluginManagerVTable(vTable).getConfig(Self, status, filename);
 	FbException.checkException(status);
@@ -3161,13 +3161,13 @@ begin
 	PluginManagerVTable(vTable).releasePlugin(Self, plugin);
 end;
 
-procedure CryptKey.setSymmetric(status: Status; type_: PChar; keyLength: Cardinal; key: Pointer);
+procedure CryptKey.setSymmetric(status: Status; type_: PAnsiChar; keyLength: Cardinal; key: Pointer);
 begin
 	CryptKeyVTable(vTable).setSymmetric(Self, status, type_, keyLength, key);
 	FbException.checkException(status);
 end;
 
-procedure CryptKey.setAsymmetric(status: Status; type_: PChar; encryptKeyLength: Cardinal; encryptKey: Pointer; decryptKeyLength: Cardinal; decryptKey: Pointer);
+procedure CryptKey.setAsymmetric(status: Status; type_: PAnsiChar; encryptKeyLength: Cardinal; encryptKey: Pointer; decryptKeyLength: Cardinal; decryptKey: Pointer);
 begin
 	CryptKeyVTable(vTable).setAsymmetric(Self, status, type_, encryptKeyLength, encryptKey, decryptKeyLength, decryptKey);
 	FbException.checkException(status);
@@ -3183,7 +3183,7 @@ begin
 	Result := CryptKeyVTable(vTable).getDecryptKey(Self, length);
 end;
 
-function ConfigManager.getDirectory(code: Cardinal): PChar;
+function ConfigManager.getDirectory(code: Cardinal): PAnsiChar;
 begin
 	Result := ConfigManagerVTable(vTable).getDirectory(Self, code);
 end;
@@ -3193,22 +3193,22 @@ begin
 	Result := ConfigManagerVTable(vTable).getFirebirdConf(Self);
 end;
 
-function ConfigManager.getDatabaseConf(dbName: PChar): FirebirdConf;
+function ConfigManager.getDatabaseConf(dbName: PAnsiChar): FirebirdConf;
 begin
 	Result := ConfigManagerVTable(vTable).getDatabaseConf(Self, dbName);
 end;
 
-function ConfigManager.getPluginConfig(configuredPlugin: PChar): Config;
+function ConfigManager.getPluginConfig(configuredPlugin: PAnsiChar): Config;
 begin
 	Result := ConfigManagerVTable(vTable).getPluginConfig(Self, configuredPlugin);
 end;
 
-function ConfigManager.getInstallDirectory(): PChar;
+function ConfigManager.getInstallDirectory(): PAnsiChar;
 begin
 	Result := ConfigManagerVTable(vTable).getInstallDirectory(Self);
 end;
 
-function ConfigManager.getRootDirectory(): PChar;
+function ConfigManager.getRootDirectory(): PAnsiChar;
 begin
 	Result := ConfigManagerVTable(vTable).getRootDirectory(Self);
 end;
@@ -3320,25 +3320,25 @@ begin
 	FbException.checkException(status);
 end;
 
-function MessageMetadata.getField(status: Status; index: Cardinal): PChar;
+function MessageMetadata.getField(status: Status; index: Cardinal): PAnsiChar;
 begin
 	Result := MessageMetadataVTable(vTable).getField(Self, status, index);
 	FbException.checkException(status);
 end;
 
-function MessageMetadata.getRelation(status: Status; index: Cardinal): PChar;
+function MessageMetadata.getRelation(status: Status; index: Cardinal): PAnsiChar;
 begin
 	Result := MessageMetadataVTable(vTable).getRelation(Self, status, index);
 	FbException.checkException(status);
 end;
 
-function MessageMetadata.getOwner(status: Status; index: Cardinal): PChar;
+function MessageMetadata.getOwner(status: Status; index: Cardinal): PAnsiChar;
 begin
 	Result := MessageMetadataVTable(vTable).getOwner(Self, status, index);
 	FbException.checkException(status);
 end;
 
-function MessageMetadata.getAlias(status: Status; index: Cardinal): PChar;
+function MessageMetadata.getAlias(status: Status; index: Cardinal): PAnsiChar;
 begin
 	Result := MessageMetadataVTable(vTable).getAlias(Self, status, index);
 	FbException.checkException(status);
@@ -3440,7 +3440,7 @@ begin
 	FbException.checkException(status);
 end;
 
-procedure MetadataBuilder.moveNameToIndex(status: Status; name: PChar; index: Cardinal);
+procedure MetadataBuilder.moveNameToIndex(status: Status; name: PAnsiChar; index: Cardinal);
 begin
 	MetadataBuilderVTable(vTable).moveNameToIndex(Self, status, name, index);
 	FbException.checkException(status);
@@ -3542,7 +3542,7 @@ begin
 	FbException.checkException(status);
 end;
 
-function Statement.getPlan(status: Status; detailed: Boolean): PChar;
+function Statement.getPlan(status: Status; detailed: Boolean): PAnsiChar;
 begin
 	Result := StatementVTable(vTable).getPlan(Self, status, detailed);
 	FbException.checkException(status);
@@ -3578,7 +3578,7 @@ begin
 	FbException.checkException(status);
 end;
 
-procedure Statement.setCursorName(status: Status; name: PChar);
+procedure Statement.setCursorName(status: Status; name: PAnsiChar);
 begin
 	StatementVTable(vTable).setCursorName(Self, status, name);
 	FbException.checkException(status);
@@ -3704,19 +3704,19 @@ begin
 	FbException.checkException(status);
 end;
 
-function Attachment.prepare(status: Status; tra: Transaction; stmtLength: Cardinal; sqlStmt: PChar; dialect: Cardinal; flags: Cardinal): Statement;
+function Attachment.prepare(status: Status; tra: Transaction; stmtLength: Cardinal; sqlStmt: PAnsiChar; dialect: Cardinal; flags: Cardinal): Statement;
 begin
 	Result := AttachmentVTable(vTable).prepare(Self, status, tra, stmtLength, sqlStmt, dialect, flags);
 	FbException.checkException(status);
 end;
 
-function Attachment.execute(status: Status; transaction: Transaction; stmtLength: Cardinal; sqlStmt: PChar; dialect: Cardinal; inMetadata: MessageMetadata; inBuffer: Pointer; outMetadata: MessageMetadata; outBuffer: Pointer): Transaction;
+function Attachment.execute(status: Status; transaction: Transaction; stmtLength: Cardinal; sqlStmt: PAnsiChar; dialect: Cardinal; inMetadata: MessageMetadata; inBuffer: Pointer; outMetadata: MessageMetadata; outBuffer: Pointer): Transaction;
 begin
 	Result := AttachmentVTable(vTable).execute(Self, status, transaction, stmtLength, sqlStmt, dialect, inMetadata, inBuffer, outMetadata, outBuffer);
 	FbException.checkException(status);
 end;
 
-function Attachment.openCursor(status: Status; transaction: Transaction; stmtLength: Cardinal; sqlStmt: PChar; dialect: Cardinal; inMetadata: MessageMetadata; inBuffer: Pointer; outMetadata: MessageMetadata; cursorName: PChar; cursorFlags: Cardinal): ResultSet;
+function Attachment.openCursor(status: Status; transaction: Transaction; stmtLength: Cardinal; sqlStmt: PAnsiChar; dialect: Cardinal; inMetadata: MessageMetadata; inBuffer: Pointer; outMetadata: MessageMetadata; cursorName: PAnsiChar; cursorFlags: Cardinal): ResultSet;
 begin
 	Result := AttachmentVTable(vTable).openCursor(Self, status, transaction, stmtLength, sqlStmt, dialect, inMetadata, inBuffer, outMetadata, cursorName, cursorFlags);
 	FbException.checkException(status);
@@ -3770,19 +3770,19 @@ begin
 	FbException.checkException(status);
 end;
 
-function Provider.attachDatabase(status: Status; fileName: PChar; dpbLength: Cardinal; dpb: BytePtr): Attachment;
+function Provider.attachDatabase(status: Status; fileName: PAnsiChar; dpbLength: Cardinal; dpb: BytePtr): Attachment;
 begin
 	Result := ProviderVTable(vTable).attachDatabase(Self, status, fileName, dpbLength, dpb);
 	FbException.checkException(status);
 end;
 
-function Provider.createDatabase(status: Status; fileName: PChar; dpbLength: Cardinal; dpb: BytePtr): Attachment;
+function Provider.createDatabase(status: Status; fileName: PAnsiChar; dpbLength: Cardinal; dpb: BytePtr): Attachment;
 begin
 	Result := ProviderVTable(vTable).createDatabase(Self, status, fileName, dpbLength, dpb);
 	FbException.checkException(status);
 end;
 
-function Provider.attachServiceManager(status: Status; service: PChar; spbLength: Cardinal; spb: BytePtr): Service;
+function Provider.attachServiceManager(status: Status; service: PAnsiChar; spbLength: Cardinal; spb: BytePtr): Service;
 begin
 	Result := ProviderVTable(vTable).attachServiceManager(Self, status, service, spbLength, spb);
 	FbException.checkException(status);
@@ -3835,25 +3835,25 @@ begin
 	WriterVTable(vTable).reset(Self);
 end;
 
-procedure Writer.add(status: Status; name: PChar);
+procedure Writer.add(status: Status; name: PAnsiChar);
 begin
 	WriterVTable(vTable).add(Self, status, name);
 	FbException.checkException(status);
 end;
 
-procedure Writer.setType(status: Status; value: PChar);
+procedure Writer.setType(status: Status; value: PAnsiChar);
 begin
 	WriterVTable(vTable).setType(Self, status, value);
 	FbException.checkException(status);
 end;
 
-procedure Writer.setDb(status: Status; value: PChar);
+procedure Writer.setDb(status: Status; value: PAnsiChar);
 begin
 	WriterVTable(vTable).setDb(Self, status, value);
 	FbException.checkException(status);
 end;
 
-function ServerBlock.getLogin(): PChar;
+function ServerBlock.getLogin(): PAnsiChar;
 begin
 	Result := ServerBlockVTable(vTable).getLogin(Self);
 end;
@@ -3875,12 +3875,12 @@ begin
 	FbException.checkException(status);
 end;
 
-function ClientBlock.getLogin(): PChar;
+function ClientBlock.getLogin(): PAnsiChar;
 begin
 	Result := ClientBlockVTable(vTable).getLogin(Self);
 end;
 
-function ClientBlock.getPassword(): PChar;
+function ClientBlock.getPassword(): PAnsiChar;
 begin
 	Result := ClientBlockVTable(vTable).getPassword(Self);
 end;
@@ -3930,12 +3930,12 @@ begin
 	FbException.checkException(status);
 end;
 
-function CharUserField.get(): PChar;
+function CharUserField.get(): PAnsiChar;
 begin
 	Result := CharUserFieldVTable(vTable).get(Self);
 end;
 
-procedure CharUserField.set_(status: Status; newValue: PChar);
+procedure CharUserField.set_(status: Status; newValue: PAnsiChar);
 begin
 	CharUserFieldVTable(vTable).set_(Self, status, newValue);
 	FbException.checkException(status);
@@ -4014,22 +4014,22 @@ begin
 	FbException.checkException(status);
 end;
 
-function LogonInfo.name(): PChar;
+function LogonInfo.name(): PAnsiChar;
 begin
 	Result := LogonInfoVTable(vTable).name(Self);
 end;
 
-function LogonInfo.role(): PChar;
+function LogonInfo.role(): PAnsiChar;
 begin
 	Result := LogonInfoVTable(vTable).role(Self);
 end;
 
-function LogonInfo.networkProtocol(): PChar;
+function LogonInfo.networkProtocol(): PAnsiChar;
 begin
 	Result := LogonInfoVTable(vTable).networkProtocol(Self);
 end;
 
-function LogonInfo.remoteAddress(): PChar;
+function LogonInfo.remoteAddress(): PAnsiChar;
 begin
 	Result := LogonInfoVTable(vTable).remoteAddress(Self);
 end;
@@ -4063,7 +4063,7 @@ begin
 	FbException.checkException(status);
 end;
 
-function WireCryptPlugin.getKnownTypes(status: Status): PChar;
+function WireCryptPlugin.getKnownTypes(status: Status): PAnsiChar;
 begin
 	Result := WireCryptPluginVTable(vTable).getKnownTypes(Self, status);
 	FbException.checkException(status);
@@ -4098,7 +4098,7 @@ begin
 	FbException.checkException(status);
 end;
 
-function KeyHolderPlugin.keyHandle(status: Status; keyName: PChar): CryptKeyCallback;
+function KeyHolderPlugin.keyHandle(status: Status; keyName: PAnsiChar): CryptKeyCallback;
 begin
 	Result := KeyHolderPluginVTable(vTable).keyHandle(Self, status, keyName);
 	FbException.checkException(status);
@@ -4145,17 +4145,17 @@ begin
 	FbException.checkException(status);
 end;
 
-function ExternalContext.getUserName(): PChar;
+function ExternalContext.getUserName(): PAnsiChar;
 begin
 	Result := ExternalContextVTable(vTable).getUserName(Self);
 end;
 
-function ExternalContext.getDatabaseName(): PChar;
+function ExternalContext.getDatabaseName(): PAnsiChar;
 begin
 	Result := ExternalContextVTable(vTable).getDatabaseName(Self);
 end;
 
-function ExternalContext.getClientCharSet(): PChar;
+function ExternalContext.getClientCharSet(): PAnsiChar;
 begin
 	Result := ExternalContextVTable(vTable).getClientCharSet(Self);
 end;
@@ -4181,7 +4181,7 @@ begin
 	FbException.checkException(status);
 end;
 
-procedure ExternalFunction.getCharSet(status: Status; context: ExternalContext; name: PChar; nameSize: Cardinal);
+procedure ExternalFunction.getCharSet(status: Status; context: ExternalContext; name: PAnsiChar; nameSize: Cardinal);
 begin
 	ExternalFunctionVTable(vTable).getCharSet(Self, status, context, name, nameSize);
 	FbException.checkException(status);
@@ -4193,7 +4193,7 @@ begin
 	FbException.checkException(status);
 end;
 
-procedure ExternalProcedure.getCharSet(status: Status; context: ExternalContext; name: PChar; nameSize: Cardinal);
+procedure ExternalProcedure.getCharSet(status: Status; context: ExternalContext; name: PAnsiChar; nameSize: Cardinal);
 begin
 	ExternalProcedureVTable(vTable).getCharSet(Self, status, context, name, nameSize);
 	FbException.checkException(status);
@@ -4205,7 +4205,7 @@ begin
 	FbException.checkException(status);
 end;
 
-procedure ExternalTrigger.getCharSet(status: Status; context: ExternalContext; name: PChar; nameSize: Cardinal);
+procedure ExternalTrigger.getCharSet(status: Status; context: ExternalContext; name: PAnsiChar; nameSize: Cardinal);
 begin
 	ExternalTriggerVTable(vTable).getCharSet(Self, status, context, name, nameSize);
 	FbException.checkException(status);
@@ -4217,25 +4217,25 @@ begin
 	FbException.checkException(status);
 end;
 
-function RoutineMetadata.getPackage(status: Status): PChar;
+function RoutineMetadata.getPackage(status: Status): PAnsiChar;
 begin
 	Result := RoutineMetadataVTable(vTable).getPackage(Self, status);
 	FbException.checkException(status);
 end;
 
-function RoutineMetadata.getName(status: Status): PChar;
+function RoutineMetadata.getName(status: Status): PAnsiChar;
 begin
 	Result := RoutineMetadataVTable(vTable).getName(Self, status);
 	FbException.checkException(status);
 end;
 
-function RoutineMetadata.getEntryPoint(status: Status): PChar;
+function RoutineMetadata.getEntryPoint(status: Status): PAnsiChar;
 begin
 	Result := RoutineMetadataVTable(vTable).getEntryPoint(Self, status);
 	FbException.checkException(status);
 end;
 
-function RoutineMetadata.getBody(status: Status): PChar;
+function RoutineMetadata.getBody(status: Status): PAnsiChar;
 begin
 	Result := RoutineMetadataVTable(vTable).getBody(Self, status);
 	FbException.checkException(status);
@@ -4259,7 +4259,7 @@ begin
 	FbException.checkException(status);
 end;
 
-function RoutineMetadata.getTriggerTable(status: Status): PChar;
+function RoutineMetadata.getTriggerTable(status: Status): PAnsiChar;
 begin
 	Result := RoutineMetadataVTable(vTable).getTriggerTable(Self, status);
 	FbException.checkException(status);
@@ -4271,7 +4271,7 @@ begin
 	FbException.checkException(status);
 end;
 
-procedure ExternalEngine.open(status: Status; context: ExternalContext; charSet: PChar; charSetSize: Cardinal);
+procedure ExternalEngine.open(status: Status; context: ExternalContext; charSet: PAnsiChar; charSetSize: Cardinal);
 begin
 	ExternalEngineVTable(vTable).open(Self, status, context, charSet, charSetSize);
 	FbException.checkException(status);
@@ -4324,7 +4324,7 @@ begin
 	FbException.checkException(status);
 end;
 
-procedure VersionCallback.callback(status: Status; text: PChar);
+procedure VersionCallback.callback(status: Status; text: PAnsiChar);
 begin
 	VersionCallbackVTable(vTable).callback(Self, status, text);
 	FbException.checkException(status);
@@ -4336,25 +4336,25 @@ begin
 	FbException.checkException(status);
 end;
 
-procedure Util.loadBlob(status: Status; blobId: ISC_QUADPtr; att: Attachment; tra: Transaction; file_: PChar; txt: Boolean);
+procedure Util.loadBlob(status: Status; blobId: ISC_QUADPtr; att: Attachment; tra: Transaction; file_: PAnsiChar; txt: Boolean);
 begin
 	UtilVTable(vTable).loadBlob(Self, status, blobId, att, tra, file_, txt);
 	FbException.checkException(status);
 end;
 
-procedure Util.dumpBlob(status: Status; blobId: ISC_QUADPtr; att: Attachment; tra: Transaction; file_: PChar; txt: Boolean);
+procedure Util.dumpBlob(status: Status; blobId: ISC_QUADPtr; att: Attachment; tra: Transaction; file_: PAnsiChar; txt: Boolean);
 begin
 	UtilVTable(vTable).dumpBlob(Self, status, blobId, att, tra, file_, txt);
 	FbException.checkException(status);
 end;
 
-procedure Util.getPerfCounters(status: Status; att: Attachment; countersSet: PChar; counters: Int64Ptr);
+procedure Util.getPerfCounters(status: Status; att: Attachment; countersSet: PAnsiChar; counters: Int64Ptr);
 begin
 	UtilVTable(vTable).getPerfCounters(Self, status, att, countersSet, counters);
 	FbException.checkException(status);
 end;
 
-function Util.executeCreateDatabase(status: Status; stmtLength: Cardinal; creatDBstatement: PChar; dialect: Cardinal; stmtIsCreateDb: BooleanPtr): Attachment;
+function Util.executeCreateDatabase(status: Status; stmtLength: Cardinal; creatDBstatement: PAnsiChar; dialect: Cardinal; stmtIsCreateDb: BooleanPtr): Attachment;
 begin
 	Result := UtilVTable(vTable).executeCreateDatabase(Self, status, stmtLength, creatDBstatement, dialect, stmtIsCreateDb);
 	FbException.checkException(status);
@@ -4390,27 +4390,27 @@ begin
 	Result := TraceConnectionVTable(vTable).getProcessID(Self);
 end;
 
-function TraceConnection.getUserName(): PChar;
+function TraceConnection.getUserName(): PAnsiChar;
 begin
 	Result := TraceConnectionVTable(vTable).getUserName(Self);
 end;
 
-function TraceConnection.getRoleName(): PChar;
+function TraceConnection.getRoleName(): PAnsiChar;
 begin
 	Result := TraceConnectionVTable(vTable).getRoleName(Self);
 end;
 
-function TraceConnection.getCharSet(): PChar;
+function TraceConnection.getCharSet(): PAnsiChar;
 begin
 	Result := TraceConnectionVTable(vTable).getCharSet(Self);
 end;
 
-function TraceConnection.getRemoteProtocol(): PChar;
+function TraceConnection.getRemoteProtocol(): PAnsiChar;
 begin
 	Result := TraceConnectionVTable(vTable).getRemoteProtocol(Self);
 end;
 
-function TraceConnection.getRemoteAddress(): PChar;
+function TraceConnection.getRemoteAddress(): PAnsiChar;
 begin
 	Result := TraceConnectionVTable(vTable).getRemoteAddress(Self);
 end;
@@ -4420,7 +4420,7 @@ begin
 	Result := TraceConnectionVTable(vTable).getRemoteProcessID(Self);
 end;
 
-function TraceConnection.getRemoteProcessName(): PChar;
+function TraceConnection.getRemoteProcessName(): PAnsiChar;
 begin
 	Result := TraceConnectionVTable(vTable).getRemoteProcessName(Self);
 end;
@@ -4430,7 +4430,7 @@ begin
 	Result := TraceDatabaseConnectionVTable(vTable).getConnectionID(Self);
 end;
 
-function TraceDatabaseConnection.getDatabaseName(): PChar;
+function TraceDatabaseConnection.getDatabaseName(): PAnsiChar;
 begin
 	Result := TraceDatabaseConnectionVTable(vTable).getDatabaseName(Self);
 end;
@@ -4480,12 +4480,12 @@ begin
 	Result := TraceStatementVTable(vTable).getPerf(Self);
 end;
 
-function TraceSQLStatement.getText(): PChar;
+function TraceSQLStatement.getText(): PAnsiChar;
 begin
 	Result := TraceSQLStatementVTable(vTable).getText(Self);
 end;
 
-function TraceSQLStatement.getPlan(): PChar;
+function TraceSQLStatement.getPlan(): PAnsiChar;
 begin
 	Result := TraceSQLStatementVTable(vTable).getPlan(Self);
 end;
@@ -4495,12 +4495,12 @@ begin
 	Result := TraceSQLStatementVTable(vTable).getInputs(Self);
 end;
 
-function TraceSQLStatement.getTextUTF8(): PChar;
+function TraceSQLStatement.getTextUTF8(): PAnsiChar;
 begin
 	Result := TraceSQLStatementVTable(vTable).getTextUTF8(Self);
 end;
 
-function TraceSQLStatement.getExplainedPlan(): PChar;
+function TraceSQLStatement.getExplainedPlan(): PAnsiChar;
 begin
 	Result := TraceSQLStatementVTable(vTable).getExplainedPlan(Self);
 end;
@@ -4515,7 +4515,7 @@ begin
 	Result := TraceBLRStatementVTable(vTable).getDataLength(Self);
 end;
 
-function TraceBLRStatement.getText(): PChar;
+function TraceBLRStatement.getText(): PAnsiChar;
 begin
 	Result := TraceBLRStatementVTable(vTable).getText(Self);
 end;
@@ -4530,27 +4530,27 @@ begin
 	Result := TraceDYNRequestVTable(vTable).getDataLength(Self);
 end;
 
-function TraceDYNRequest.getText(): PChar;
+function TraceDYNRequest.getText(): PAnsiChar;
 begin
 	Result := TraceDYNRequestVTable(vTable).getText(Self);
 end;
 
-function TraceContextVariable.getNameSpace(): PChar;
+function TraceContextVariable.getNameSpace(): PAnsiChar;
 begin
 	Result := TraceContextVariableVTable(vTable).getNameSpace(Self);
 end;
 
-function TraceContextVariable.getVarName(): PChar;
+function TraceContextVariable.getVarName(): PAnsiChar;
 begin
 	Result := TraceContextVariableVTable(vTable).getVarName(Self);
 end;
 
-function TraceContextVariable.getVarValue(): PChar;
+function TraceContextVariable.getVarValue(): PAnsiChar;
 begin
 	Result := TraceContextVariableVTable(vTable).getVarValue(Self);
 end;
 
-function TraceProcedure.getProcName(): PChar;
+function TraceProcedure.getProcName(): PAnsiChar;
 begin
 	Result := TraceProcedureVTable(vTable).getProcName(Self);
 end;
@@ -4565,7 +4565,7 @@ begin
 	Result := TraceProcedureVTable(vTable).getPerf(Self);
 end;
 
-function TraceFunction.getFuncName(): PChar;
+function TraceFunction.getFuncName(): PAnsiChar;
 begin
 	Result := TraceFunctionVTable(vTable).getFuncName(Self);
 end;
@@ -4585,12 +4585,12 @@ begin
 	Result := TraceFunctionVTable(vTable).getPerf(Self);
 end;
 
-function TraceTrigger.getTriggerName(): PChar;
+function TraceTrigger.getTriggerName(): PAnsiChar;
 begin
 	Result := TraceTriggerVTable(vTable).getTriggerName(Self);
 end;
 
-function TraceTrigger.getRelationName(): PChar;
+function TraceTrigger.getRelationName(): PAnsiChar;
 begin
 	Result := TraceTriggerVTable(vTable).getRelationName(Self);
 end;
@@ -4615,12 +4615,12 @@ begin
 	Result := TraceServiceConnectionVTable(vTable).getServiceID(Self);
 end;
 
-function TraceServiceConnection.getServiceMgr(): PChar;
+function TraceServiceConnection.getServiceMgr(): PAnsiChar;
 begin
 	Result := TraceServiceConnectionVTable(vTable).getServiceMgr(Self);
 end;
 
-function TraceServiceConnection.getServiceName(): PChar;
+function TraceServiceConnection.getServiceName(): PAnsiChar;
 begin
 	Result := TraceServiceConnectionVTable(vTable).getServiceName(Self);
 end;
@@ -4640,7 +4640,7 @@ begin
 	Result := TraceStatusVectorVTable(vTable).getStatus(Self);
 end;
 
-function TraceStatusVector.getText(): PChar;
+function TraceStatusVector.getText(): PAnsiChar;
 begin
 	Result := TraceStatusVectorVTable(vTable).getText(Self);
 end;
@@ -4675,7 +4675,7 @@ begin
 	Result := TraceLogWriterVTable(vTable).write(Self, buf, size);
 end;
 
-function TraceInitInfo.getConfigText(): PChar;
+function TraceInitInfo.getConfigText(): PAnsiChar;
 begin
 	Result := TraceInitInfoVTable(vTable).getConfigText(Self);
 end;
@@ -4685,17 +4685,17 @@ begin
 	Result := TraceInitInfoVTable(vTable).getTraceSessionID(Self);
 end;
 
-function TraceInitInfo.getTraceSessionName(): PChar;
+function TraceInitInfo.getTraceSessionName(): PAnsiChar;
 begin
 	Result := TraceInitInfoVTable(vTable).getTraceSessionName(Self);
 end;
 
-function TraceInitInfo.getFirebirdRootDirectory(): PChar;
+function TraceInitInfo.getFirebirdRootDirectory(): PAnsiChar;
 begin
 	Result := TraceInitInfoVTable(vTable).getFirebirdRootDirectory(Self);
 end;
 
-function TraceInitInfo.getDatabaseName(): PChar;
+function TraceInitInfo.getDatabaseName(): PAnsiChar;
 begin
 	Result := TraceInitInfoVTable(vTable).getDatabaseName(Self);
 end;
@@ -4710,7 +4710,7 @@ begin
 	Result := TraceInitInfoVTable(vTable).getLogWriter(Self);
 end;
 
-function TracePlugin.trace_get_error(): PChar;
+function TracePlugin.trace_get_error(): PAnsiChar;
 begin
 	Result := TracePluginVTable(vTable).trace_get_error(Self);
 end;
@@ -4785,7 +4785,7 @@ begin
 	Result := TracePluginVTable(vTable).trace_service_attach(Self, service, att_result);
 end;
 
-function TracePlugin.trace_service_start(service: TraceServiceConnection; switches_length: Cardinal; switches: PChar; start_result: Cardinal): Boolean;
+function TracePlugin.trace_service_start(service: TraceServiceConnection; switches_length: Cardinal; switches: PAnsiChar; start_result: Cardinal): Boolean;
 begin
 	Result := TracePluginVTable(vTable).trace_service_start(Self, service, switches_length, switches, start_result);
 end;
@@ -4800,7 +4800,7 @@ begin
 	Result := TracePluginVTable(vTable).trace_service_detach(Self, service, detach_result);
 end;
 
-function TracePlugin.trace_event_error(connection: TraceConnection; status: TraceStatusVector; function_: PChar): Boolean;
+function TracePlugin.trace_event_error(connection: TraceConnection; status: TraceStatusVector; function_: PAnsiChar): Boolean;
 begin
 	Result := TracePluginVTable(vTable).trace_event_error(Self, connection, status, function_);
 end;
@@ -4867,19 +4867,19 @@ begin
 	Result := UdrPluginVTable(vTable).getMaster(Self);
 end;
 
-procedure UdrPlugin.registerFunction(status: Status; name: PChar; factory: UdrFunctionFactory);
+procedure UdrPlugin.registerFunction(status: Status; name: PAnsiChar; factory: UdrFunctionFactory);
 begin
 	UdrPluginVTable(vTable).registerFunction(Self, status, name, factory);
 	FbException.checkException(status);
 end;
 
-procedure UdrPlugin.registerProcedure(status: Status; name: PChar; factory: UdrProcedureFactory);
+procedure UdrPlugin.registerProcedure(status: Status; name: PAnsiChar; factory: UdrProcedureFactory);
 begin
 	UdrPluginVTable(vTable).registerProcedure(Self, status, name, factory);
 	FbException.checkException(status);
 end;
 
-procedure UdrPlugin.registerTrigger(status: Status; name: PChar; factory: UdrTriggerFactory);
+procedure UdrPlugin.registerTrigger(status: Status; name: PAnsiChar; factory: UdrTriggerFactory);
 begin
 	UdrPluginVTable(vTable).registerTrigger(Self, status, name, factory);
 	FbException.checkException(status);
@@ -5061,7 +5061,7 @@ begin
 	end
 end;
 
-function MasterImpl_circularAllocDispatcher(this: Master; s: PChar; len: Cardinal; thr: NativeInt): PChar; cdecl;
+function MasterImpl_circularAllocDispatcher(this: Master; s: PAnsiChar; len: Cardinal; thr: NativeInt): PAnsiChar; cdecl;
 begin
 	try
 		Result := MasterImpl(this).circularAlloc(s, len, thr);
@@ -5212,7 +5212,7 @@ begin
 	end
 end;
 
-function PluginSetImpl_getNameDispatcher(this: PluginSet): PChar; cdecl;
+function PluginSetImpl_getNameDispatcher(this: PluginSet): PAnsiChar; cdecl;
 begin
 	try
 		Result := PluginSetImpl(this).getName();
@@ -5221,7 +5221,7 @@ begin
 	end
 end;
 
-function PluginSetImpl_getModuleNameDispatcher(this: PluginSet): PChar; cdecl;
+function PluginSetImpl_getModuleNameDispatcher(this: PluginSet): PAnsiChar; cdecl;
 begin
 	try
 		Result := PluginSetImpl(this).getModuleName();
@@ -5248,7 +5248,7 @@ begin
 	end
 end;
 
-procedure PluginSetImpl_set_Dispatcher(this: PluginSet; status: Status; s: PChar); cdecl;
+procedure PluginSetImpl_set_Dispatcher(this: PluginSet; status: Status; s: PAnsiChar); cdecl;
 begin
 	try
 		PluginSetImpl(this).set_(status, s);
@@ -5283,7 +5283,7 @@ begin
 	end
 end;
 
-function ConfigEntryImpl_getNameDispatcher(this: ConfigEntry): PChar; cdecl;
+function ConfigEntryImpl_getNameDispatcher(this: ConfigEntry): PAnsiChar; cdecl;
 begin
 	try
 		Result := ConfigEntryImpl(this).getName();
@@ -5292,7 +5292,7 @@ begin
 	end
 end;
 
-function ConfigEntryImpl_getValueDispatcher(this: ConfigEntry): PChar; cdecl;
+function ConfigEntryImpl_getValueDispatcher(this: ConfigEntry): PAnsiChar; cdecl;
 begin
 	try
 		Result := ConfigEntryImpl(this).getValue();
@@ -5354,7 +5354,7 @@ begin
 	end
 end;
 
-function ConfigImpl_findDispatcher(this: Config; status: Status; name: PChar): ConfigEntry; cdecl;
+function ConfigImpl_findDispatcher(this: Config; status: Status; name: PAnsiChar): ConfigEntry; cdecl;
 begin
 	try
 		Result := ConfigImpl(this).find(status, name);
@@ -5363,7 +5363,7 @@ begin
 	end
 end;
 
-function ConfigImpl_findValueDispatcher(this: Config; status: Status; name: PChar; value: PChar): ConfigEntry; cdecl;
+function ConfigImpl_findValueDispatcher(this: Config; status: Status; name: PAnsiChar; value: PAnsiChar): ConfigEntry; cdecl;
 begin
 	try
 		Result := ConfigImpl(this).findValue(status, name, value);
@@ -5372,7 +5372,7 @@ begin
 	end
 end;
 
-function ConfigImpl_findPosDispatcher(this: Config; status: Status; name: PChar; pos: Cardinal): ConfigEntry; cdecl;
+function ConfigImpl_findPosDispatcher(this: Config; status: Status; name: PAnsiChar; pos: Cardinal): ConfigEntry; cdecl;
 begin
 	try
 		Result := ConfigImpl(this).findPos(status, name, pos);
@@ -5407,7 +5407,7 @@ begin
 	end
 end;
 
-function FirebirdConfImpl_getKeyDispatcher(this: FirebirdConf; name: PChar): Cardinal; cdecl;
+function FirebirdConfImpl_getKeyDispatcher(this: FirebirdConf; name: PAnsiChar): Cardinal; cdecl;
 begin
 	try
 		Result := FirebirdConfImpl(this).getKey(name);
@@ -5425,7 +5425,7 @@ begin
 	end
 end;
 
-function FirebirdConfImpl_asStringDispatcher(this: FirebirdConf; key: Cardinal): PChar; cdecl;
+function FirebirdConfImpl_asStringDispatcher(this: FirebirdConf; key: Cardinal): PAnsiChar; cdecl;
 begin
 	try
 		Result := FirebirdConfImpl(this).asString(key);
@@ -5469,7 +5469,7 @@ begin
 	end
 end;
 
-function PluginConfigImpl_getConfigFileNameDispatcher(this: PluginConfig): PChar; cdecl;
+function PluginConfigImpl_getConfigFileNameDispatcher(this: PluginConfig): PAnsiChar; cdecl;
 begin
 	try
 		Result := PluginConfigImpl(this).getConfigFileName();
@@ -5547,7 +5547,7 @@ begin
 	vTable := PluginModuleImpl_vTable;
 end;
 
-procedure PluginManagerImpl_registerPluginFactoryDispatcher(this: PluginManager; pluginType: Cardinal; defaultName: PChar; factory: PluginFactory); cdecl;
+procedure PluginManagerImpl_registerPluginFactoryDispatcher(this: PluginManager; pluginType: Cardinal; defaultName: PAnsiChar; factory: PluginFactory); cdecl;
 begin
 	try
 		PluginManagerImpl(this).registerPluginFactory(pluginType, defaultName, factory);
@@ -5574,7 +5574,7 @@ begin
 	end
 end;
 
-function PluginManagerImpl_getPluginsDispatcher(this: PluginManager; status: Status; pluginType: Cardinal; namesList: PChar; firebirdConf: FirebirdConf): PluginSet; cdecl;
+function PluginManagerImpl_getPluginsDispatcher(this: PluginManager; status: Status; pluginType: Cardinal; namesList: PAnsiChar; firebirdConf: FirebirdConf): PluginSet; cdecl;
 begin
 	try
 		Result := PluginManagerImpl(this).getPlugins(status, pluginType, namesList, firebirdConf);
@@ -5583,7 +5583,7 @@ begin
 	end
 end;
 
-function PluginManagerImpl_getConfigDispatcher(this: PluginManager; status: Status; filename: PChar): Config; cdecl;
+function PluginManagerImpl_getConfigDispatcher(this: PluginManager; status: Status; filename: PAnsiChar): Config; cdecl;
 begin
 	try
 		Result := PluginManagerImpl(this).getConfig(status, filename);
@@ -5609,7 +5609,7 @@ begin
 	vTable := PluginManagerImpl_vTable;
 end;
 
-procedure CryptKeyImpl_setSymmetricDispatcher(this: CryptKey; status: Status; type_: PChar; keyLength: Cardinal; key: Pointer); cdecl;
+procedure CryptKeyImpl_setSymmetricDispatcher(this: CryptKey; status: Status; type_: PAnsiChar; keyLength: Cardinal; key: Pointer); cdecl;
 begin
 	try
 		CryptKeyImpl(this).setSymmetric(status, type_, keyLength, key);
@@ -5618,7 +5618,7 @@ begin
 	end
 end;
 
-procedure CryptKeyImpl_setAsymmetricDispatcher(this: CryptKey; status: Status; type_: PChar; encryptKeyLength: Cardinal; encryptKey: Pointer; decryptKeyLength: Cardinal; decryptKey: Pointer); cdecl;
+procedure CryptKeyImpl_setAsymmetricDispatcher(this: CryptKey; status: Status; type_: PAnsiChar; encryptKeyLength: Cardinal; encryptKey: Pointer; decryptKeyLength: Cardinal; decryptKey: Pointer); cdecl;
 begin
 	try
 		CryptKeyImpl(this).setAsymmetric(status, type_, encryptKeyLength, encryptKey, decryptKeyLength, decryptKey);
@@ -5653,7 +5653,7 @@ begin
 	vTable := CryptKeyImpl_vTable;
 end;
 
-function ConfigManagerImpl_getDirectoryDispatcher(this: ConfigManager; code: Cardinal): PChar; cdecl;
+function ConfigManagerImpl_getDirectoryDispatcher(this: ConfigManager; code: Cardinal): PAnsiChar; cdecl;
 begin
 	try
 		Result := ConfigManagerImpl(this).getDirectory(code);
@@ -5671,7 +5671,7 @@ begin
 	end
 end;
 
-function ConfigManagerImpl_getDatabaseConfDispatcher(this: ConfigManager; dbName: PChar): FirebirdConf; cdecl;
+function ConfigManagerImpl_getDatabaseConfDispatcher(this: ConfigManager; dbName: PAnsiChar): FirebirdConf; cdecl;
 begin
 	try
 		Result := ConfigManagerImpl(this).getDatabaseConf(dbName);
@@ -5680,7 +5680,7 @@ begin
 	end
 end;
 
-function ConfigManagerImpl_getPluginConfigDispatcher(this: ConfigManager; configuredPlugin: PChar): Config; cdecl;
+function ConfigManagerImpl_getPluginConfigDispatcher(this: ConfigManager; configuredPlugin: PAnsiChar): Config; cdecl;
 begin
 	try
 		Result := ConfigManagerImpl(this).getPluginConfig(configuredPlugin);
@@ -5689,7 +5689,7 @@ begin
 	end
 end;
 
-function ConfigManagerImpl_getInstallDirectoryDispatcher(this: ConfigManager): PChar; cdecl;
+function ConfigManagerImpl_getInstallDirectoryDispatcher(this: ConfigManager): PAnsiChar; cdecl;
 begin
 	try
 		Result := ConfigManagerImpl(this).getInstallDirectory();
@@ -5698,7 +5698,7 @@ begin
 	end
 end;
 
-function ConfigManagerImpl_getRootDirectoryDispatcher(this: ConfigManager): PChar; cdecl;
+function ConfigManagerImpl_getRootDirectoryDispatcher(this: ConfigManager): PAnsiChar; cdecl;
 begin
 	try
 		Result := ConfigManagerImpl(this).getRootDirectory();
@@ -5973,7 +5973,7 @@ begin
 	end
 end;
 
-function MessageMetadataImpl_getFieldDispatcher(this: MessageMetadata; status: Status; index: Cardinal): PChar; cdecl;
+function MessageMetadataImpl_getFieldDispatcher(this: MessageMetadata; status: Status; index: Cardinal): PAnsiChar; cdecl;
 begin
 	try
 		Result := MessageMetadataImpl(this).getField(status, index);
@@ -5982,7 +5982,7 @@ begin
 	end
 end;
 
-function MessageMetadataImpl_getRelationDispatcher(this: MessageMetadata; status: Status; index: Cardinal): PChar; cdecl;
+function MessageMetadataImpl_getRelationDispatcher(this: MessageMetadata; status: Status; index: Cardinal): PAnsiChar; cdecl;
 begin
 	try
 		Result := MessageMetadataImpl(this).getRelation(status, index);
@@ -5991,7 +5991,7 @@ begin
 	end
 end;
 
-function MessageMetadataImpl_getOwnerDispatcher(this: MessageMetadata; status: Status; index: Cardinal): PChar; cdecl;
+function MessageMetadataImpl_getOwnerDispatcher(this: MessageMetadata; status: Status; index: Cardinal): PAnsiChar; cdecl;
 begin
 	try
 		Result := MessageMetadataImpl(this).getOwner(status, index);
@@ -6000,7 +6000,7 @@ begin
 	end
 end;
 
-function MessageMetadataImpl_getAliasDispatcher(this: MessageMetadata; status: Status; index: Cardinal): PChar; cdecl;
+function MessageMetadataImpl_getAliasDispatcher(this: MessageMetadata; status: Status; index: Cardinal): PAnsiChar; cdecl;
 begin
 	try
 		Result := MessageMetadataImpl(this).getAlias(status, index);
@@ -6179,7 +6179,7 @@ begin
 	end
 end;
 
-procedure MetadataBuilderImpl_moveNameToIndexDispatcher(this: MetadataBuilder; status: Status; name: PChar; index: Cardinal); cdecl;
+procedure MetadataBuilderImpl_moveNameToIndexDispatcher(this: MetadataBuilder; status: Status; name: PAnsiChar; index: Cardinal); cdecl;
 begin
 	try
 		MetadataBuilderImpl(this).moveNameToIndex(status, name, index);
@@ -6384,7 +6384,7 @@ begin
 	end
 end;
 
-function StatementImpl_getPlanDispatcher(this: Statement; status: Status; detailed: Boolean): PChar; cdecl;
+function StatementImpl_getPlanDispatcher(this: Statement; status: Status; detailed: Boolean): PAnsiChar; cdecl;
 begin
 	try
 		Result := StatementImpl(this).getPlan(status, detailed);
@@ -6438,7 +6438,7 @@ begin
 	end
 end;
 
-procedure StatementImpl_setCursorNameDispatcher(this: Statement; status: Status; name: PChar); cdecl;
+procedure StatementImpl_setCursorNameDispatcher(this: Statement; status: Status; name: PAnsiChar); cdecl;
 begin
 	try
 		StatementImpl(this).setCursorName(status, name);
@@ -6705,7 +6705,7 @@ begin
 	end
 end;
 
-function AttachmentImpl_prepareDispatcher(this: Attachment; status: Status; tra: Transaction; stmtLength: Cardinal; sqlStmt: PChar; dialect: Cardinal; flags: Cardinal): Statement; cdecl;
+function AttachmentImpl_prepareDispatcher(this: Attachment; status: Status; tra: Transaction; stmtLength: Cardinal; sqlStmt: PAnsiChar; dialect: Cardinal; flags: Cardinal): Statement; cdecl;
 begin
 	try
 		Result := AttachmentImpl(this).prepare(status, tra, stmtLength, sqlStmt, dialect, flags);
@@ -6714,7 +6714,7 @@ begin
 	end
 end;
 
-function AttachmentImpl_executeDispatcher(this: Attachment; status: Status; transaction: Transaction; stmtLength: Cardinal; sqlStmt: PChar; dialect: Cardinal; inMetadata: MessageMetadata; inBuffer: Pointer; outMetadata: MessageMetadata; outBuffer: Pointer): Transaction; cdecl;
+function AttachmentImpl_executeDispatcher(this: Attachment; status: Status; transaction: Transaction; stmtLength: Cardinal; sqlStmt: PAnsiChar; dialect: Cardinal; inMetadata: MessageMetadata; inBuffer: Pointer; outMetadata: MessageMetadata; outBuffer: Pointer): Transaction; cdecl;
 begin
 	try
 		Result := AttachmentImpl(this).execute(status, transaction, stmtLength, sqlStmt, dialect, inMetadata, inBuffer, outMetadata, outBuffer);
@@ -6723,7 +6723,7 @@ begin
 	end
 end;
 
-function AttachmentImpl_openCursorDispatcher(this: Attachment; status: Status; transaction: Transaction; stmtLength: Cardinal; sqlStmt: PChar; dialect: Cardinal; inMetadata: MessageMetadata; inBuffer: Pointer; outMetadata: MessageMetadata; cursorName: PChar; cursorFlags: Cardinal): ResultSet; cdecl;
+function AttachmentImpl_openCursorDispatcher(this: Attachment; status: Status; transaction: Transaction; stmtLength: Cardinal; sqlStmt: PAnsiChar; dialect: Cardinal; inMetadata: MessageMetadata; inBuffer: Pointer; outMetadata: MessageMetadata; cursorName: PAnsiChar; cursorFlags: Cardinal): ResultSet; cdecl;
 begin
 	try
 		Result := AttachmentImpl(this).openCursor(status, transaction, stmtLength, sqlStmt, dialect, inMetadata, inBuffer, outMetadata, cursorName, cursorFlags);
@@ -6874,7 +6874,7 @@ begin
 	end
 end;
 
-function ProviderImpl_attachDatabaseDispatcher(this: Provider; status: Status; fileName: PChar; dpbLength: Cardinal; dpb: BytePtr): Attachment; cdecl;
+function ProviderImpl_attachDatabaseDispatcher(this: Provider; status: Status; fileName: PAnsiChar; dpbLength: Cardinal; dpb: BytePtr): Attachment; cdecl;
 begin
 	try
 		Result := ProviderImpl(this).attachDatabase(status, fileName, dpbLength, dpb);
@@ -6883,7 +6883,7 @@ begin
 	end
 end;
 
-function ProviderImpl_createDatabaseDispatcher(this: Provider; status: Status; fileName: PChar; dpbLength: Cardinal; dpb: BytePtr): Attachment; cdecl;
+function ProviderImpl_createDatabaseDispatcher(this: Provider; status: Status; fileName: PAnsiChar; dpbLength: Cardinal; dpb: BytePtr): Attachment; cdecl;
 begin
 	try
 		Result := ProviderImpl(this).createDatabase(status, fileName, dpbLength, dpb);
@@ -6892,7 +6892,7 @@ begin
 	end
 end;
 
-function ProviderImpl_attachServiceManagerDispatcher(this: Provider; status: Status; service: PChar; spbLength: Cardinal; spb: BytePtr): Service; cdecl;
+function ProviderImpl_attachServiceManagerDispatcher(this: Provider; status: Status; service: PAnsiChar; spbLength: Cardinal; spb: BytePtr): Service; cdecl;
 begin
 	try
 		Result := ProviderImpl(this).attachServiceManager(status, service, spbLength, spb);
@@ -7050,7 +7050,7 @@ begin
 	end
 end;
 
-procedure WriterImpl_addDispatcher(this: Writer; status: Status; name: PChar); cdecl;
+procedure WriterImpl_addDispatcher(this: Writer; status: Status; name: PAnsiChar); cdecl;
 begin
 	try
 		WriterImpl(this).add(status, name);
@@ -7059,7 +7059,7 @@ begin
 	end
 end;
 
-procedure WriterImpl_setTypeDispatcher(this: Writer; status: Status; value: PChar); cdecl;
+procedure WriterImpl_setTypeDispatcher(this: Writer; status: Status; value: PAnsiChar); cdecl;
 begin
 	try
 		WriterImpl(this).setType(status, value);
@@ -7068,7 +7068,7 @@ begin
 	end
 end;
 
-procedure WriterImpl_setDbDispatcher(this: Writer; status: Status; value: PChar); cdecl;
+procedure WriterImpl_setDbDispatcher(this: Writer; status: Status; value: PAnsiChar); cdecl;
 begin
 	try
 		WriterImpl(this).setDb(status, value);
@@ -7085,7 +7085,7 @@ begin
 	vTable := WriterImpl_vTable;
 end;
 
-function ServerBlockImpl_getLoginDispatcher(this: ServerBlock): PChar; cdecl;
+function ServerBlockImpl_getLoginDispatcher(this: ServerBlock): PAnsiChar; cdecl;
 begin
 	try
 		Result := ServerBlockImpl(this).getLogin();
@@ -7147,7 +7147,7 @@ begin
 	end
 end;
 
-function ClientBlockImpl_getLoginDispatcher(this: ClientBlock): PChar; cdecl;
+function ClientBlockImpl_getLoginDispatcher(this: ClientBlock): PAnsiChar; cdecl;
 begin
 	try
 		Result := ClientBlockImpl(this).getLogin();
@@ -7156,7 +7156,7 @@ begin
 	end
 end;
 
-function ClientBlockImpl_getPasswordDispatcher(this: ClientBlock): PChar; cdecl;
+function ClientBlockImpl_getPasswordDispatcher(this: ClientBlock): PAnsiChar; cdecl;
 begin
 	try
 		Result := ClientBlockImpl(this).getPassword();
@@ -7368,7 +7368,7 @@ begin
 	end
 end;
 
-function CharUserFieldImpl_getDispatcher(this: CharUserField): PChar; cdecl;
+function CharUserFieldImpl_getDispatcher(this: CharUserField): PAnsiChar; cdecl;
 begin
 	try
 		Result := CharUserFieldImpl(this).get();
@@ -7377,7 +7377,7 @@ begin
 	end
 end;
 
-procedure CharUserFieldImpl_set_Dispatcher(this: CharUserField; status: Status; newValue: PChar); cdecl;
+procedure CharUserFieldImpl_set_Dispatcher(this: CharUserField; status: Status; newValue: PAnsiChar); cdecl;
 begin
 	try
 		CharUserFieldImpl(this).set_(status, newValue);
@@ -7571,7 +7571,7 @@ begin
 	vTable := ListUsersImpl_vTable;
 end;
 
-function LogonInfoImpl_nameDispatcher(this: LogonInfo): PChar; cdecl;
+function LogonInfoImpl_nameDispatcher(this: LogonInfo): PAnsiChar; cdecl;
 begin
 	try
 		Result := LogonInfoImpl(this).name();
@@ -7580,7 +7580,7 @@ begin
 	end
 end;
 
-function LogonInfoImpl_roleDispatcher(this: LogonInfo): PChar; cdecl;
+function LogonInfoImpl_roleDispatcher(this: LogonInfo): PAnsiChar; cdecl;
 begin
 	try
 		Result := LogonInfoImpl(this).role();
@@ -7589,7 +7589,7 @@ begin
 	end
 end;
 
-function LogonInfoImpl_networkProtocolDispatcher(this: LogonInfo): PChar; cdecl;
+function LogonInfoImpl_networkProtocolDispatcher(this: LogonInfo): PAnsiChar; cdecl;
 begin
 	try
 		Result := LogonInfoImpl(this).networkProtocol();
@@ -7598,7 +7598,7 @@ begin
 	end
 end;
 
-function LogonInfoImpl_remoteAddressDispatcher(this: LogonInfo): PChar; cdecl;
+function LogonInfoImpl_remoteAddressDispatcher(this: LogonInfo): PAnsiChar; cdecl;
 begin
 	try
 		Result := LogonInfoImpl(this).remoteAddress();
@@ -7740,7 +7740,7 @@ begin
 	end
 end;
 
-function WireCryptPluginImpl_getKnownTypesDispatcher(this: WireCryptPlugin; status: Status): PChar; cdecl;
+function WireCryptPluginImpl_getKnownTypesDispatcher(this: WireCryptPlugin; status: Status): PAnsiChar; cdecl;
 begin
 	try
 		Result := WireCryptPluginImpl(this).getKnownTypes(status);
@@ -7846,7 +7846,7 @@ begin
 	end
 end;
 
-function KeyHolderPluginImpl_keyHandleDispatcher(this: KeyHolderPlugin; status: Status; keyName: PChar): CryptKeyCallback; cdecl;
+function KeyHolderPluginImpl_keyHandleDispatcher(this: KeyHolderPlugin; status: Status; keyName: PAnsiChar): CryptKeyCallback; cdecl;
 begin
 	try
 		Result := KeyHolderPluginImpl(this).keyHandle(status, keyName);
@@ -7970,7 +7970,7 @@ begin
 	end
 end;
 
-function ExternalContextImpl_getUserNameDispatcher(this: ExternalContext): PChar; cdecl;
+function ExternalContextImpl_getUserNameDispatcher(this: ExternalContext): PAnsiChar; cdecl;
 begin
 	try
 		Result := ExternalContextImpl(this).getUserName();
@@ -7979,7 +7979,7 @@ begin
 	end
 end;
 
-function ExternalContextImpl_getDatabaseNameDispatcher(this: ExternalContext): PChar; cdecl;
+function ExternalContextImpl_getDatabaseNameDispatcher(this: ExternalContext): PAnsiChar; cdecl;
 begin
 	try
 		Result := ExternalContextImpl(this).getDatabaseName();
@@ -7988,7 +7988,7 @@ begin
 	end
 end;
 
-function ExternalContextImpl_getClientCharSetDispatcher(this: ExternalContext): PChar; cdecl;
+function ExternalContextImpl_getClientCharSetDispatcher(this: ExternalContext): PAnsiChar; cdecl;
 begin
 	try
 		Result := ExternalContextImpl(this).getClientCharSet();
@@ -8067,7 +8067,7 @@ begin
 	end
 end;
 
-procedure ExternalFunctionImpl_getCharSetDispatcher(this: ExternalFunction; status: Status; context: ExternalContext; name: PChar; nameSize: Cardinal); cdecl;
+procedure ExternalFunctionImpl_getCharSetDispatcher(this: ExternalFunction; status: Status; context: ExternalContext; name: PAnsiChar; nameSize: Cardinal); cdecl;
 begin
 	try
 		ExternalFunctionImpl(this).getCharSet(status, context, name, nameSize);
@@ -8102,7 +8102,7 @@ begin
 	end
 end;
 
-procedure ExternalProcedureImpl_getCharSetDispatcher(this: ExternalProcedure; status: Status; context: ExternalContext; name: PChar; nameSize: Cardinal); cdecl;
+procedure ExternalProcedureImpl_getCharSetDispatcher(this: ExternalProcedure; status: Status; context: ExternalContext; name: PAnsiChar; nameSize: Cardinal); cdecl;
 begin
 	try
 		ExternalProcedureImpl(this).getCharSet(status, context, name, nameSize);
@@ -8137,7 +8137,7 @@ begin
 	end
 end;
 
-procedure ExternalTriggerImpl_getCharSetDispatcher(this: ExternalTrigger; status: Status; context: ExternalContext; name: PChar; nameSize: Cardinal); cdecl;
+procedure ExternalTriggerImpl_getCharSetDispatcher(this: ExternalTrigger; status: Status; context: ExternalContext; name: PAnsiChar; nameSize: Cardinal); cdecl;
 begin
 	try
 		ExternalTriggerImpl(this).getCharSet(status, context, name, nameSize);
@@ -8163,7 +8163,7 @@ begin
 	vTable := ExternalTriggerImpl_vTable;
 end;
 
-function RoutineMetadataImpl_getPackageDispatcher(this: RoutineMetadata; status: Status): PChar; cdecl;
+function RoutineMetadataImpl_getPackageDispatcher(this: RoutineMetadata; status: Status): PAnsiChar; cdecl;
 begin
 	try
 		Result := RoutineMetadataImpl(this).getPackage(status);
@@ -8172,7 +8172,7 @@ begin
 	end
 end;
 
-function RoutineMetadataImpl_getNameDispatcher(this: RoutineMetadata; status: Status): PChar; cdecl;
+function RoutineMetadataImpl_getNameDispatcher(this: RoutineMetadata; status: Status): PAnsiChar; cdecl;
 begin
 	try
 		Result := RoutineMetadataImpl(this).getName(status);
@@ -8181,7 +8181,7 @@ begin
 	end
 end;
 
-function RoutineMetadataImpl_getEntryPointDispatcher(this: RoutineMetadata; status: Status): PChar; cdecl;
+function RoutineMetadataImpl_getEntryPointDispatcher(this: RoutineMetadata; status: Status): PAnsiChar; cdecl;
 begin
 	try
 		Result := RoutineMetadataImpl(this).getEntryPoint(status);
@@ -8190,7 +8190,7 @@ begin
 	end
 end;
 
-function RoutineMetadataImpl_getBodyDispatcher(this: RoutineMetadata; status: Status): PChar; cdecl;
+function RoutineMetadataImpl_getBodyDispatcher(this: RoutineMetadata; status: Status): PAnsiChar; cdecl;
 begin
 	try
 		Result := RoutineMetadataImpl(this).getBody(status);
@@ -8226,7 +8226,7 @@ begin
 	end
 end;
 
-function RoutineMetadataImpl_getTriggerTableDispatcher(this: RoutineMetadata; status: Status): PChar; cdecl;
+function RoutineMetadataImpl_getTriggerTableDispatcher(this: RoutineMetadata; status: Status): PAnsiChar; cdecl;
 begin
 	try
 		Result := RoutineMetadataImpl(this).getTriggerTable(status);
@@ -8288,7 +8288,7 @@ begin
 	end
 end;
 
-procedure ExternalEngineImpl_openDispatcher(this: ExternalEngine; status: Status; context: ExternalContext; charSet: PChar; charSetSize: Cardinal); cdecl;
+procedure ExternalEngineImpl_openDispatcher(this: ExternalEngine; status: Status; context: ExternalContext; charSet: PAnsiChar; charSetSize: Cardinal); cdecl;
 begin
 	try
 		ExternalEngineImpl(this).open(status, context, charSet, charSetSize);
@@ -8411,7 +8411,7 @@ begin
 	vTable := TimerControlImpl_vTable;
 end;
 
-procedure VersionCallbackImpl_callbackDispatcher(this: VersionCallback; status: Status; text: PChar); cdecl;
+procedure VersionCallbackImpl_callbackDispatcher(this: VersionCallback; status: Status; text: PAnsiChar); cdecl;
 begin
 	try
 		VersionCallbackImpl(this).callback(status, text);
@@ -8437,7 +8437,7 @@ begin
 	end
 end;
 
-procedure UtilImpl_loadBlobDispatcher(this: Util; status: Status; blobId: ISC_QUADPtr; att: Attachment; tra: Transaction; file_: PChar; txt: Boolean); cdecl;
+procedure UtilImpl_loadBlobDispatcher(this: Util; status: Status; blobId: ISC_QUADPtr; att: Attachment; tra: Transaction; file_: PAnsiChar; txt: Boolean); cdecl;
 begin
 	try
 		UtilImpl(this).loadBlob(status, blobId, att, tra, file_, txt);
@@ -8446,7 +8446,7 @@ begin
 	end
 end;
 
-procedure UtilImpl_dumpBlobDispatcher(this: Util; status: Status; blobId: ISC_QUADPtr; att: Attachment; tra: Transaction; file_: PChar; txt: Boolean); cdecl;
+procedure UtilImpl_dumpBlobDispatcher(this: Util; status: Status; blobId: ISC_QUADPtr; att: Attachment; tra: Transaction; file_: PAnsiChar; txt: Boolean); cdecl;
 begin
 	try
 		UtilImpl(this).dumpBlob(status, blobId, att, tra, file_, txt);
@@ -8455,7 +8455,7 @@ begin
 	end
 end;
 
-procedure UtilImpl_getPerfCountersDispatcher(this: Util; status: Status; att: Attachment; countersSet: PChar; counters: Int64Ptr); cdecl;
+procedure UtilImpl_getPerfCountersDispatcher(this: Util; status: Status; att: Attachment; countersSet: PAnsiChar; counters: Int64Ptr); cdecl;
 begin
 	try
 		UtilImpl(this).getPerfCounters(status, att, countersSet, counters);
@@ -8464,7 +8464,7 @@ begin
 	end
 end;
 
-function UtilImpl_executeCreateDatabaseDispatcher(this: Util; status: Status; stmtLength: Cardinal; creatDBstatement: PChar; dialect: Cardinal; stmtIsCreateDb: BooleanPtr): Attachment; cdecl;
+function UtilImpl_executeCreateDatabaseDispatcher(this: Util; status: Status; stmtLength: Cardinal; creatDBstatement: PAnsiChar; dialect: Cardinal; stmtIsCreateDb: BooleanPtr): Attachment; cdecl;
 begin
 	try
 		Result := UtilImpl(this).executeCreateDatabase(status, stmtLength, creatDBstatement, dialect, stmtIsCreateDb);
@@ -8535,7 +8535,7 @@ begin
 	end
 end;
 
-function TraceConnectionImpl_getUserNameDispatcher(this: TraceConnection): PChar; cdecl;
+function TraceConnectionImpl_getUserNameDispatcher(this: TraceConnection): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceConnectionImpl(this).getUserName();
@@ -8544,7 +8544,7 @@ begin
 	end
 end;
 
-function TraceConnectionImpl_getRoleNameDispatcher(this: TraceConnection): PChar; cdecl;
+function TraceConnectionImpl_getRoleNameDispatcher(this: TraceConnection): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceConnectionImpl(this).getRoleName();
@@ -8553,7 +8553,7 @@ begin
 	end
 end;
 
-function TraceConnectionImpl_getCharSetDispatcher(this: TraceConnection): PChar; cdecl;
+function TraceConnectionImpl_getCharSetDispatcher(this: TraceConnection): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceConnectionImpl(this).getCharSet();
@@ -8562,7 +8562,7 @@ begin
 	end
 end;
 
-function TraceConnectionImpl_getRemoteProtocolDispatcher(this: TraceConnection): PChar; cdecl;
+function TraceConnectionImpl_getRemoteProtocolDispatcher(this: TraceConnection): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceConnectionImpl(this).getRemoteProtocol();
@@ -8571,7 +8571,7 @@ begin
 	end
 end;
 
-function TraceConnectionImpl_getRemoteAddressDispatcher(this: TraceConnection): PChar; cdecl;
+function TraceConnectionImpl_getRemoteAddressDispatcher(this: TraceConnection): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceConnectionImpl(this).getRemoteAddress();
@@ -8589,7 +8589,7 @@ begin
 	end
 end;
 
-function TraceConnectionImpl_getRemoteProcessNameDispatcher(this: TraceConnection): PChar; cdecl;
+function TraceConnectionImpl_getRemoteProcessNameDispatcher(this: TraceConnection): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceConnectionImpl(this).getRemoteProcessName();
@@ -8624,7 +8624,7 @@ begin
 	end
 end;
 
-function TraceDatabaseConnectionImpl_getUserNameDispatcher(this: TraceDatabaseConnection): PChar; cdecl;
+function TraceDatabaseConnectionImpl_getUserNameDispatcher(this: TraceDatabaseConnection): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceDatabaseConnectionImpl(this).getUserName();
@@ -8633,7 +8633,7 @@ begin
 	end
 end;
 
-function TraceDatabaseConnectionImpl_getRoleNameDispatcher(this: TraceDatabaseConnection): PChar; cdecl;
+function TraceDatabaseConnectionImpl_getRoleNameDispatcher(this: TraceDatabaseConnection): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceDatabaseConnectionImpl(this).getRoleName();
@@ -8642,7 +8642,7 @@ begin
 	end
 end;
 
-function TraceDatabaseConnectionImpl_getCharSetDispatcher(this: TraceDatabaseConnection): PChar; cdecl;
+function TraceDatabaseConnectionImpl_getCharSetDispatcher(this: TraceDatabaseConnection): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceDatabaseConnectionImpl(this).getCharSet();
@@ -8651,7 +8651,7 @@ begin
 	end
 end;
 
-function TraceDatabaseConnectionImpl_getRemoteProtocolDispatcher(this: TraceDatabaseConnection): PChar; cdecl;
+function TraceDatabaseConnectionImpl_getRemoteProtocolDispatcher(this: TraceDatabaseConnection): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceDatabaseConnectionImpl(this).getRemoteProtocol();
@@ -8660,7 +8660,7 @@ begin
 	end
 end;
 
-function TraceDatabaseConnectionImpl_getRemoteAddressDispatcher(this: TraceDatabaseConnection): PChar; cdecl;
+function TraceDatabaseConnectionImpl_getRemoteAddressDispatcher(this: TraceDatabaseConnection): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceDatabaseConnectionImpl(this).getRemoteAddress();
@@ -8678,7 +8678,7 @@ begin
 	end
 end;
 
-function TraceDatabaseConnectionImpl_getRemoteProcessNameDispatcher(this: TraceDatabaseConnection): PChar; cdecl;
+function TraceDatabaseConnectionImpl_getRemoteProcessNameDispatcher(this: TraceDatabaseConnection): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceDatabaseConnectionImpl(this).getRemoteProcessName();
@@ -8696,7 +8696,7 @@ begin
 	end
 end;
 
-function TraceDatabaseConnectionImpl_getDatabaseNameDispatcher(this: TraceDatabaseConnection): PChar; cdecl;
+function TraceDatabaseConnectionImpl_getDatabaseNameDispatcher(this: TraceDatabaseConnection): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceDatabaseConnectionImpl(this).getDatabaseName();
@@ -8836,7 +8836,7 @@ begin
 	end
 end;
 
-function TraceSQLStatementImpl_getTextDispatcher(this: TraceSQLStatement): PChar; cdecl;
+function TraceSQLStatementImpl_getTextDispatcher(this: TraceSQLStatement): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceSQLStatementImpl(this).getText();
@@ -8845,7 +8845,7 @@ begin
 	end
 end;
 
-function TraceSQLStatementImpl_getPlanDispatcher(this: TraceSQLStatement): PChar; cdecl;
+function TraceSQLStatementImpl_getPlanDispatcher(this: TraceSQLStatement): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceSQLStatementImpl(this).getPlan();
@@ -8863,7 +8863,7 @@ begin
 	end
 end;
 
-function TraceSQLStatementImpl_getTextUTF8Dispatcher(this: TraceSQLStatement): PChar; cdecl;
+function TraceSQLStatementImpl_getTextUTF8Dispatcher(this: TraceSQLStatement): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceSQLStatementImpl(this).getTextUTF8();
@@ -8872,7 +8872,7 @@ begin
 	end
 end;
 
-function TraceSQLStatementImpl_getExplainedPlanDispatcher(this: TraceSQLStatement): PChar; cdecl;
+function TraceSQLStatementImpl_getExplainedPlanDispatcher(this: TraceSQLStatement): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceSQLStatementImpl(this).getExplainedPlan();
@@ -8925,7 +8925,7 @@ begin
 	end
 end;
 
-function TraceBLRStatementImpl_getTextDispatcher(this: TraceBLRStatement): PChar; cdecl;
+function TraceBLRStatementImpl_getTextDispatcher(this: TraceBLRStatement): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceBLRStatementImpl(this).getText();
@@ -8960,7 +8960,7 @@ begin
 	end
 end;
 
-function TraceDYNRequestImpl_getTextDispatcher(this: TraceDYNRequest): PChar; cdecl;
+function TraceDYNRequestImpl_getTextDispatcher(this: TraceDYNRequest): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceDYNRequestImpl(this).getText();
@@ -8977,7 +8977,7 @@ begin
 	vTable := TraceDYNRequestImpl_vTable;
 end;
 
-function TraceContextVariableImpl_getNameSpaceDispatcher(this: TraceContextVariable): PChar; cdecl;
+function TraceContextVariableImpl_getNameSpaceDispatcher(this: TraceContextVariable): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceContextVariableImpl(this).getNameSpace();
@@ -8986,7 +8986,7 @@ begin
 	end
 end;
 
-function TraceContextVariableImpl_getVarNameDispatcher(this: TraceContextVariable): PChar; cdecl;
+function TraceContextVariableImpl_getVarNameDispatcher(this: TraceContextVariable): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceContextVariableImpl(this).getVarName();
@@ -8995,7 +8995,7 @@ begin
 	end
 end;
 
-function TraceContextVariableImpl_getVarValueDispatcher(this: TraceContextVariable): PChar; cdecl;
+function TraceContextVariableImpl_getVarValueDispatcher(this: TraceContextVariable): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceContextVariableImpl(this).getVarValue();
@@ -9012,7 +9012,7 @@ begin
 	vTable := TraceContextVariableImpl_vTable;
 end;
 
-function TraceProcedureImpl_getProcNameDispatcher(this: TraceProcedure): PChar; cdecl;
+function TraceProcedureImpl_getProcNameDispatcher(this: TraceProcedure): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceProcedureImpl(this).getProcName();
@@ -9047,7 +9047,7 @@ begin
 	vTable := TraceProcedureImpl_vTable;
 end;
 
-function TraceFunctionImpl_getFuncNameDispatcher(this: TraceFunction): PChar; cdecl;
+function TraceFunctionImpl_getFuncNameDispatcher(this: TraceFunction): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceFunctionImpl(this).getFuncName();
@@ -9091,7 +9091,7 @@ begin
 	vTable := TraceFunctionImpl_vTable;
 end;
 
-function TraceTriggerImpl_getTriggerNameDispatcher(this: TraceTrigger): PChar; cdecl;
+function TraceTriggerImpl_getTriggerNameDispatcher(this: TraceTrigger): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceTriggerImpl(this).getTriggerName();
@@ -9100,7 +9100,7 @@ begin
 	end
 end;
 
-function TraceTriggerImpl_getRelationNameDispatcher(this: TraceTrigger): PChar; cdecl;
+function TraceTriggerImpl_getRelationNameDispatcher(this: TraceTrigger): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceTriggerImpl(this).getRelationName();
@@ -9162,7 +9162,7 @@ begin
 	end
 end;
 
-function TraceServiceConnectionImpl_getUserNameDispatcher(this: TraceServiceConnection): PChar; cdecl;
+function TraceServiceConnectionImpl_getUserNameDispatcher(this: TraceServiceConnection): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceServiceConnectionImpl(this).getUserName();
@@ -9171,7 +9171,7 @@ begin
 	end
 end;
 
-function TraceServiceConnectionImpl_getRoleNameDispatcher(this: TraceServiceConnection): PChar; cdecl;
+function TraceServiceConnectionImpl_getRoleNameDispatcher(this: TraceServiceConnection): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceServiceConnectionImpl(this).getRoleName();
@@ -9180,7 +9180,7 @@ begin
 	end
 end;
 
-function TraceServiceConnectionImpl_getCharSetDispatcher(this: TraceServiceConnection): PChar; cdecl;
+function TraceServiceConnectionImpl_getCharSetDispatcher(this: TraceServiceConnection): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceServiceConnectionImpl(this).getCharSet();
@@ -9189,7 +9189,7 @@ begin
 	end
 end;
 
-function TraceServiceConnectionImpl_getRemoteProtocolDispatcher(this: TraceServiceConnection): PChar; cdecl;
+function TraceServiceConnectionImpl_getRemoteProtocolDispatcher(this: TraceServiceConnection): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceServiceConnectionImpl(this).getRemoteProtocol();
@@ -9198,7 +9198,7 @@ begin
 	end
 end;
 
-function TraceServiceConnectionImpl_getRemoteAddressDispatcher(this: TraceServiceConnection): PChar; cdecl;
+function TraceServiceConnectionImpl_getRemoteAddressDispatcher(this: TraceServiceConnection): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceServiceConnectionImpl(this).getRemoteAddress();
@@ -9216,7 +9216,7 @@ begin
 	end
 end;
 
-function TraceServiceConnectionImpl_getRemoteProcessNameDispatcher(this: TraceServiceConnection): PChar; cdecl;
+function TraceServiceConnectionImpl_getRemoteProcessNameDispatcher(this: TraceServiceConnection): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceServiceConnectionImpl(this).getRemoteProcessName();
@@ -9234,7 +9234,7 @@ begin
 	end
 end;
 
-function TraceServiceConnectionImpl_getServiceMgrDispatcher(this: TraceServiceConnection): PChar; cdecl;
+function TraceServiceConnectionImpl_getServiceMgrDispatcher(this: TraceServiceConnection): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceServiceConnectionImpl(this).getServiceMgr();
@@ -9243,7 +9243,7 @@ begin
 	end
 end;
 
-function TraceServiceConnectionImpl_getServiceNameDispatcher(this: TraceServiceConnection): PChar; cdecl;
+function TraceServiceConnectionImpl_getServiceNameDispatcher(this: TraceServiceConnection): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceServiceConnectionImpl(this).getServiceName();
@@ -9287,7 +9287,7 @@ begin
 	end
 end;
 
-function TraceStatusVectorImpl_getTextDispatcher(this: TraceStatusVector): PChar; cdecl;
+function TraceStatusVectorImpl_getTextDispatcher(this: TraceStatusVector): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceStatusVectorImpl(this).getText();
@@ -9392,7 +9392,7 @@ begin
 	vTable := TraceLogWriterImpl_vTable;
 end;
 
-function TraceInitInfoImpl_getConfigTextDispatcher(this: TraceInitInfo): PChar; cdecl;
+function TraceInitInfoImpl_getConfigTextDispatcher(this: TraceInitInfo): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceInitInfoImpl(this).getConfigText();
@@ -9410,7 +9410,7 @@ begin
 	end
 end;
 
-function TraceInitInfoImpl_getTraceSessionNameDispatcher(this: TraceInitInfo): PChar; cdecl;
+function TraceInitInfoImpl_getTraceSessionNameDispatcher(this: TraceInitInfo): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceInitInfoImpl(this).getTraceSessionName();
@@ -9419,7 +9419,7 @@ begin
 	end
 end;
 
-function TraceInitInfoImpl_getFirebirdRootDirectoryDispatcher(this: TraceInitInfo): PChar; cdecl;
+function TraceInitInfoImpl_getFirebirdRootDirectoryDispatcher(this: TraceInitInfo): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceInitInfoImpl(this).getFirebirdRootDirectory();
@@ -9428,7 +9428,7 @@ begin
 	end
 end;
 
-function TraceInitInfoImpl_getDatabaseNameDispatcher(this: TraceInitInfo): PChar; cdecl;
+function TraceInitInfoImpl_getDatabaseNameDispatcher(this: TraceInitInfo): PAnsiChar; cdecl;
 begin
 	try
 		Result := TraceInitInfoImpl(this).getDatabaseName();
@@ -9481,7 +9481,7 @@ begin
 	end
 end;
 
-function TracePluginImpl_trace_get_errorDispatcher(this: TracePlugin): PChar; cdecl;
+function TracePluginImpl_trace_get_errorDispatcher(this: TracePlugin): PAnsiChar; cdecl;
 begin
 	try
 		Result := TracePluginImpl(this).trace_get_error();
@@ -9616,7 +9616,7 @@ begin
 	end
 end;
 
-function TracePluginImpl_trace_service_startDispatcher(this: TracePlugin; service: TraceServiceConnection; switches_length: Cardinal; switches: PChar; start_result: Cardinal): Boolean; cdecl;
+function TracePluginImpl_trace_service_startDispatcher(this: TracePlugin; service: TraceServiceConnection; switches_length: Cardinal; switches: PAnsiChar; start_result: Cardinal): Boolean; cdecl;
 begin
 	try
 		Result := TracePluginImpl(this).trace_service_start(service, switches_length, switches, start_result);
@@ -9643,7 +9643,7 @@ begin
 	end
 end;
 
-function TracePluginImpl_trace_event_errorDispatcher(this: TracePlugin; connection: TraceConnection; status: TraceStatusVector; function_: PChar): Boolean; cdecl;
+function TracePluginImpl_trace_event_errorDispatcher(this: TracePlugin; connection: TraceConnection; status: TraceStatusVector; function_: PAnsiChar): Boolean; cdecl;
 begin
 	try
 		Result := TracePluginImpl(this).trace_event_error(connection, status, function_);
@@ -9854,7 +9854,7 @@ begin
 	end
 end;
 
-procedure UdrPluginImpl_registerFunctionDispatcher(this: UdrPlugin; status: Status; name: PChar; factory: UdrFunctionFactory); cdecl;
+procedure UdrPluginImpl_registerFunctionDispatcher(this: UdrPlugin; status: Status; name: PAnsiChar; factory: UdrFunctionFactory); cdecl;
 begin
 	try
 		UdrPluginImpl(this).registerFunction(status, name, factory);
@@ -9863,7 +9863,7 @@ begin
 	end
 end;
 
-procedure UdrPluginImpl_registerProcedureDispatcher(this: UdrPlugin; status: Status; name: PChar; factory: UdrProcedureFactory); cdecl;
+procedure UdrPluginImpl_registerProcedureDispatcher(this: UdrPlugin; status: Status; name: PAnsiChar; factory: UdrProcedureFactory); cdecl;
 begin
 	try
 		UdrPluginImpl(this).registerProcedure(status, name, factory);
@@ -9872,7 +9872,7 @@ begin
 	end
 end;
 
-procedure UdrPluginImpl_registerTriggerDispatcher(this: UdrPlugin; status: Status; name: PChar; factory: UdrTriggerFactory); cdecl;
+procedure UdrPluginImpl_registerTriggerDispatcher(this: UdrPlugin; status: Status; name: PAnsiChar; factory: UdrTriggerFactory); cdecl;
 begin
 	try
 		UdrPluginImpl(this).registerTrigger(status, name, factory);
@@ -9913,7 +9913,7 @@ end;
 class procedure FbException.catchException(status: Status; e: Exception);
 var
 	statusVector: array[0..4] of NativeIntPtr;
-	msg: string;
+	msg: AnsiString;
 begin
 	if (e.inheritsFrom(FbException)) then
 		status.setErrors(FbException(e).getStatus().getErrors())
@@ -9924,7 +9924,7 @@ begin
 		statusVector[0] := NativeIntPtr(1);			// isc_arg_gds
 		statusVector[1] := NativeIntPtr(335544382);	// isc_random
 		statusVector[2] := NativeIntPtr(2);			// isc_arg_string
-		statusVector[3] := NativeIntPtr(PChar(msg));
+		statusVector[3] := NativeIntPtr(PAnsiChar(msg));
 		statusVector[4] := NativeIntPtr(0);			// isc_arg_end
 
 		status.setErrors(@statusVector);
