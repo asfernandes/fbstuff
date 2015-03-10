@@ -114,7 +114,7 @@ begin
 			SetLength(s, 2000);
 			statusVector := e.getStatus().getErrors();
 			SetLength(s, fb_interpret(PAnsiChar(s), 2000, statusVector));
-			WriteLn('Exception: ', string(s));
+			WriteLn('Exception: ', AnsiString(s));
 		end
 	end
 end.
