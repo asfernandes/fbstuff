@@ -32,14 +32,14 @@ function fb_interpret(s: PAnsiChar; n: Cardinal; var statusVector: NativeIntPtr)
 type
 	InMessage = record
 		n: SmallInt;
-		nNull: SmallInt;
+		nNull: WordBool;
 	end;
 
 	OutMessage = record
 		relationId: SmallInt;
-		relationIdNull: SmallInt;
+		relationIdNull: WordBool;
 		relationName: array[0..93] of AnsiChar;
-		relationNameNull: SmallInt;
+		relationNameNull: WordBool;
 	end;
 
 var
@@ -85,7 +85,7 @@ begin
 		// - assume metadata descriptions matches our buffer types
 		// - work with CHAR (SQL_TEXT) descriptors
 
-		inBuffer.nNull := 0;
+		inBuffer.nNull := false;
 		inBuffer.n := 10;
 		rs := stmt.openCursor(status, transaction, inMetadata, @inBuffer, outMetadata, 0);
 
