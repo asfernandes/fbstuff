@@ -46,6 +46,7 @@ all: mkdirs \
 	$(BIN_DIR)/fbtest	\
 	$(LIB_DIR)/libperfudr.$(SHRLIB_EXT) \
 	$(BIN_DIR)/FbApiPascalTest	\
+	$(LIB_DIR)/libpascaludr.$(SHRLIB_EXT)	\
 
 mkdirs: $(OBJ_DIRS) $(BIN_DIR) $(LIB_DIR)
 
@@ -91,3 +92,9 @@ $(BIN_DIR)/FbApiPascalTest: \
 	$(SRC_DIR)/gen/FbApi.pas \
 
 	fpc $(FPC_FLAGS) -fPIC -Fu$(SRC_DIR)/gen -FU$(OBJ_DIR)/pascal -Fl$$FIREBIRD/lib -o$@ $(SRC_DIR)/pascal/FbApiTest.dpr
+
+$(LIB_DIR)/libpascaludr.$(SHRLIB_EXT): \
+	$(SRC_DIR)/pascal/Udr.dpr \
+	$(SRC_DIR)/gen/FbApi.pas \
+
+	fpc $(FPC_FLAGS) -fPIC -Fu$(SRC_DIR)/gen -FU$(OBJ_DIR)/pascal -Fl$$FIREBIRD/lib -o$@ $(SRC_DIR)/pascal/Udr.dpr
