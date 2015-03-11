@@ -41,7 +41,7 @@ type
 	OutMessage = record
 		relationId: SmallInt;
 		relationIdNull: SmallInt;
-		relationName: array[0..93] of char;
+		relationName: array[0..93] of AnsiChar;
 		relationNameNull: SmallInt;
 	end;
 
