@@ -16,10 +16,39 @@
  * Contributor(s):
 }
 
-library Udr;
+unit UdrInit;
 
-uses UdrInit;
+interface
 
-exports firebird_udr_plugin;
+uses FbApi;
+
+function firebird_udr_plugin(status: Status; theirUnloadFlagLocal: BooleanPtr;
+	udrPlugin: UdrPlugin): BooleanPtr; cdecl;
+
+implementation
+
+uses UdrGenRows;
+
+var
+	myUnloadFlag: Boolean;
+	theirUnloadFlag: BooleanPtr;
+
+
+function firebird_udr_plugin(status: Status; theirUnloadFlagLocal: BooleanPtr;
+	udrPlugin: UdrPlugin): BooleanPtr; cdecl;
+begin
+	udrPlugin.registerProcedure(status, 'gen_rows', GenRowsFactory.create());
+
+	theirUnloadFlag := theirUnloadFlagLocal;
+	Result := @myUnloadFlag;
+end;
+
+
+initialization
+	myUnloadFlag := false;
+
+finalization
+	if ((theirUnloadFlag <> nil) and not myUnloadFlag) then
+		theirUnloadFlag^ := true;
 
 end.
