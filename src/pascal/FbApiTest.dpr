@@ -26,9 +26,6 @@ uses FbApi;
 
 function fb_get_master_interface: Master; cdecl; external 'fbclient';
 
-function fb_interpret(s: PAnsiChar; n: Cardinal; var statusVector: NativeIntPtr): Integer; cdecl;
-	external 'fbclient';
-
 type
 	InMessage = record
 		n: SmallInt;
@@ -44,6 +41,7 @@ type
 
 var
 	master: FbApi.Master;
+	util: FbApi.Util;
 	status: FbApi.Status;
 	dispatcher: Provider;
 	attachment: FbApi.Attachment;
@@ -53,11 +51,11 @@ var
 	inBuffer: InMessage;
 	outBuffer: OutMessage;
 	rs: ResultSet;
-	statusVector: NativeIntPtr;
 	s: AnsiString;
 begin
 	try
 		master := fb_get_master_interface();
+		util := master.getUtilInterface();
 		status := master.getStatus();
 		dispatcher := master.getDispatcher();
 
@@ -109,8 +107,7 @@ begin
 		on e: FbException do
 		begin
 			SetLength(s, 2000);
-			statusVector := e.getStatus().getErrors();
-			SetLength(s, fb_interpret(PAnsiChar(s), 2000, statusVector));
+			SetLength(s, util.formatStatus(PAnsiChar(s), 2000, e.getStatus()));
 			WriteLn('Exception: ', AnsiString(s));
 		end
 	end
