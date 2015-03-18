@@ -399,6 +399,7 @@ end;
 	Util_decodeTimePtr = procedure(this: Util; time: ISC_TIME; hours: CardinalPtr; minutes: CardinalPtr; seconds: CardinalPtr; fractions: CardinalPtr); cdecl;
 	Util_encodeDatePtr = function(this: Util; year: Cardinal; month: Cardinal; day: Cardinal): ISC_DATE; cdecl;
 	Util_encodeTimePtr = function(this: Util; hours: Cardinal; minutes: Cardinal; seconds: Cardinal; fractions: Cardinal): ISC_TIME; cdecl;
+	Util_formatStatusPtr = function(this: Util; buffer: PAnsiChar; bufferSize: Cardinal; status: Status): Cardinal; cdecl;
 	TraceConnection_getKindPtr = function(this: TraceConnection): Cardinal; cdecl;
 	TraceConnection_getProcessIDPtr = function(this: TraceConnection): Integer; cdecl;
 	TraceConnection_getUserNamePtr = function(this: TraceConnection): PAnsiChar; cdecl;
@@ -2174,10 +2175,11 @@ end;
 		decodeTime: Util_decodeTimePtr;
 		encodeDate: Util_encodeDatePtr;
 		encodeTime: Util_encodeTimePtr;
+		formatStatus: Util_formatStatusPtr;
 	end;
 
 	Util = class(Versioned)
-		const VERSION = 9;
+		const VERSION = 10;
 
 		procedure getFbVersion(status: Status; att: Attachment; callback: VersionCallback);
 		procedure loadBlob(status: Status; blobId: ISC_QUADPtr; att: Attachment; tra: Transaction; file_: PAnsiChar; txt: Boolean);
@@ -2188,6 +2190,7 @@ end;
 		procedure decodeTime(time: ISC_TIME; hours: CardinalPtr; minutes: CardinalPtr; seconds: CardinalPtr; fractions: CardinalPtr);
 		function encodeDate(year: Cardinal; month: Cardinal; day: Cardinal): ISC_DATE;
 		function encodeTime(hours: Cardinal; minutes: Cardinal; seconds: Cardinal; fractions: Cardinal): ISC_TIME;
+		function formatStatus(buffer: PAnsiChar; bufferSize: Cardinal; status: Status): Cardinal;
 	end;
 
 	UtilImpl = class(Util)
@@ -2202,6 +2205,7 @@ end;
 		procedure decodeTime(time: ISC_TIME; hours: CardinalPtr; minutes: CardinalPtr; seconds: CardinalPtr; fractions: CardinalPtr); virtual; abstract;
 		function encodeDate(year: Cardinal; month: Cardinal; day: Cardinal): ISC_DATE; virtual; abstract;
 		function encodeTime(hours: Cardinal; minutes: Cardinal; seconds: Cardinal; fractions: Cardinal): ISC_TIME; virtual; abstract;
+		function formatStatus(buffer: PAnsiChar; bufferSize: Cardinal; status: Status): Cardinal; virtual; abstract;
 	end;
 
 	TraceConnectionVTable = class(VersionedVTable)
@@ -4378,6 +4382,11 @@ end;
 function Util.encodeTime(hours: Cardinal; minutes: Cardinal; seconds: Cardinal; fractions: Cardinal): ISC_TIME;
 begin
 	Result := UtilVTable(vTable).encodeTime(Self, hours, minutes, seconds, fractions);
+end;
+
+function Util.formatStatus(buffer: PAnsiChar; bufferSize: Cardinal; status: Status): Cardinal;
+begin
+	Result := UtilVTable(vTable).formatStatus(Self, buffer, bufferSize, status);
 end;
 
 function TraceConnection.getKind(): Cardinal;
@@ -8509,6 +8518,15 @@ begin
 	end
 end;
 
+function UtilImpl_formatStatusDispatcher(this: Util; buffer: PAnsiChar; bufferSize: Cardinal; status: Status): Cardinal; cdecl;
+begin
+	try
+		Result := UtilImpl(this).formatStatus(buffer, bufferSize, status);
+	except
+		on e: Exception do FbException.catchException(nil, e);
+	end
+end;
+
 var
 	UtilImpl_vTable: UtilVTable;
 
@@ -10446,7 +10464,7 @@ initialization
 	VersionCallbackImpl_vTable.callback := @VersionCallbackImpl_callbackDispatcher;
 
 	UtilImpl_vTable := UtilVTable.create;
-	UtilImpl_vTable.version := 9;
+	UtilImpl_vTable.version := 10;
 	UtilImpl_vTable.getFbVersion := @UtilImpl_getFbVersionDispatcher;
 	UtilImpl_vTable.loadBlob := @UtilImpl_loadBlobDispatcher;
 	UtilImpl_vTable.dumpBlob := @UtilImpl_dumpBlobDispatcher;
@@ -10456,6 +10474,7 @@ initialization
 	UtilImpl_vTable.decodeTime := @UtilImpl_decodeTimeDispatcher;
 	UtilImpl_vTable.encodeDate := @UtilImpl_encodeDateDispatcher;
 	UtilImpl_vTable.encodeTime := @UtilImpl_encodeTimeDispatcher;
+	UtilImpl_vTable.formatStatus := @UtilImpl_formatStatusDispatcher;
 
 	TraceConnectionImpl_vTable := TraceConnectionVTable.create;
 	TraceConnectionImpl_vTable.version := 9;

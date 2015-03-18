@@ -1763,6 +1763,11 @@ CLOOP_EXTERN_C ISC_TIME FB_IUtil_encodeTime(struct FB_IUtil* self, unsigned hour
 	return self->vtable->encodeTime(self, hours, minutes, seconds, fractions);
 }
 
+CLOOP_EXTERN_C unsigned FB_IUtil_formatStatus(struct FB_IUtil* self, char* buffer, unsigned bufferSize, struct FB_IStatus* status)
+{
+	return self->vtable->formatStatus(self, buffer, bufferSize, status);
+}
+
 CLOOP_EXTERN_C unsigned FB_ITraceConnection_getKind(struct FB_ITraceConnection* self)
 {
 	return self->vtable->getKind(self);

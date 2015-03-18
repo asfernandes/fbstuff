@@ -1822,7 +1822,7 @@ struct FB_IVersionCallback
 
 CLOOP_EXTERN_C void FB_IVersionCallback_callback(struct FB_IVersionCallback* self, struct FB_IStatus* status, const char* text);
 
-#define FB_IUtil_VERSION 9
+#define FB_IUtil_VERSION 10
 
 struct FB_IUtil;
 
@@ -1839,6 +1839,7 @@ struct FB_IUtilVTable
 	void (*decodeTime)(struct FB_IUtil* self, ISC_TIME time, unsigned* hours, unsigned* minutes, unsigned* seconds, unsigned* fractions);
 	ISC_DATE (*encodeDate)(struct FB_IUtil* self, unsigned year, unsigned month, unsigned day);
 	ISC_TIME (*encodeTime)(struct FB_IUtil* self, unsigned hours, unsigned minutes, unsigned seconds, unsigned fractions);
+	unsigned (*formatStatus)(struct FB_IUtil* self, char* buffer, unsigned bufferSize, struct FB_IStatus* status);
 };
 
 struct FB_IUtil
@@ -1856,6 +1857,7 @@ CLOOP_EXTERN_C void FB_IUtil_decodeDate(struct FB_IUtil* self, ISC_DATE date, un
 CLOOP_EXTERN_C void FB_IUtil_decodeTime(struct FB_IUtil* self, ISC_TIME time, unsigned* hours, unsigned* minutes, unsigned* seconds, unsigned* fractions);
 CLOOP_EXTERN_C ISC_DATE FB_IUtil_encodeDate(struct FB_IUtil* self, unsigned year, unsigned month, unsigned day);
 CLOOP_EXTERN_C ISC_TIME FB_IUtil_encodeTime(struct FB_IUtil* self, unsigned hours, unsigned minutes, unsigned seconds, unsigned fractions);
+CLOOP_EXTERN_C unsigned FB_IUtil_formatStatus(struct FB_IUtil* self, char* buffer, unsigned bufferSize, struct FB_IStatus* status);
 
 #define FB_ITraceConnection_VERSION 9
 
