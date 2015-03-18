@@ -81,6 +81,7 @@ $(BIN_DIR)/fbtest: \
 	$(OBJ_DIR)/test/v3api/EventsTest.o \
 	$(OBJ_DIR)/test/v3api/MultiDbTransTest.o \
 	$(OBJ_DIR)/test/v3api/StaticMessageTest.o \
+	$(OBJ_DIR)/test/v3api/StatusTest.o \
 
 	$(LD) $^ -o $@ -lboost_unit_test_framework -lboost_system -lboost_thread -lfbclient
 
