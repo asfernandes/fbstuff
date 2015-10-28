@@ -94,19 +94,19 @@ type
 	UdrTriggerFactory = class;
 	UdrPlugin = class;
 
-FbException = class(Exception)
-public
-	constructor create(status: Status);
-	destructor destroy; override;
+	FbException = class(Exception)
+	public
+		constructor create(status: Status);
+		destructor Destroy; override;
 
-	function getStatus: Status;
+		function getStatus: Status;
 
-	class procedure checkException(status: Status);
-	class procedure catchException(status: Status; e: Exception);
+		class procedure checkException(status: Status);
+		class procedure catchException(status: Status; e: Exception);
 
-private
-	status: Status;
-end;
+	private
+		status: Status;
+	end;
 
 ISC_DATE = Integer;
 ISC_TIME = Integer;
@@ -10365,9 +10365,10 @@ begin
 	self.status := status.clone();
 end;
 
-destructor FbException.destroy;
+destructor FbException.Destroy;
 begin
 	status.dispose();
+	inherited;
 end;
 
 function FbException.getStatus: Status;
