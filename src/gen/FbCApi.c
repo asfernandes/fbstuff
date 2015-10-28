@@ -83,11 +83,6 @@ CLOOP_EXTERN_C struct FB_IPluginManager* FB_IMaster_getPluginManager(struct FB_I
 	return self->vtable->getPluginManager(self);
 }
 
-CLOOP_EXTERN_C const char* FB_IMaster_circularAlloc(struct FB_IMaster* self, const char* s, unsigned len, intptr_t thr)
-{
-	return self->vtable->circularAlloc(self, s, len, thr);
-}
-
 CLOOP_EXTERN_C struct FB_ITimerControl* FB_IMaster_getTimerControl(struct FB_IMaster* self)
 {
 	return self->vtable->getTimerControl(self);
@@ -126,6 +121,11 @@ CLOOP_EXTERN_C struct FB_IUtil* FB_IMaster_getUtilInterface(struct FB_IMaster* s
 CLOOP_EXTERN_C struct FB_IConfigManager* FB_IMaster_getConfigManager(struct FB_IMaster* self)
 {
 	return self->vtable->getConfigManager(self);
+}
+
+CLOOP_EXTERN_C FB_BOOLEAN FB_IMaster_getProcessExiting(struct FB_IMaster* self)
+{
+	return self->vtable->getProcessExiting(self);
 }
 
 CLOOP_EXTERN_C void FB_IPluginBase_addRef(struct FB_IPluginBase* self)
@@ -1768,6 +1768,121 @@ CLOOP_EXTERN_C unsigned FB_IUtil_formatStatus(struct FB_IUtil* self, char* buffe
 	return self->vtable->formatStatus(self, buffer, bufferSize, status);
 }
 
+CLOOP_EXTERN_C unsigned FB_IUtil_getClientVersion(struct FB_IUtil* self)
+{
+	return self->vtable->getClientVersion(self);
+}
+
+CLOOP_EXTERN_C struct FB_IXpbBuilder* FB_IUtil_getXpbBuilder(struct FB_IUtil* self, struct FB_IStatus* status, unsigned kind, const unsigned char* buf, unsigned len)
+{
+	return self->vtable->getXpbBuilder(self, status, kind, buf, len);
+}
+
+CLOOP_EXTERN_C void FB_IXpbBuilder_dispose(struct FB_IXpbBuilder* self)
+{
+	self->vtable->dispose(self);
+}
+
+CLOOP_EXTERN_C void FB_IXpbBuilder_clear(struct FB_IXpbBuilder* self, struct FB_IStatus* status)
+{
+	self->vtable->clear(self, status);
+}
+
+CLOOP_EXTERN_C void FB_IXpbBuilder_removeCurrent(struct FB_IXpbBuilder* self, struct FB_IStatus* status)
+{
+	self->vtable->removeCurrent(self, status);
+}
+
+CLOOP_EXTERN_C void FB_IXpbBuilder_insertInt(struct FB_IXpbBuilder* self, struct FB_IStatus* status, unsigned char tag, int value)
+{
+	self->vtable->insertInt(self, status, tag, value);
+}
+
+CLOOP_EXTERN_C void FB_IXpbBuilder_insertBigInt(struct FB_IXpbBuilder* self, struct FB_IStatus* status, unsigned char tag, ISC_INT64 value)
+{
+	self->vtable->insertBigInt(self, status, tag, value);
+}
+
+CLOOP_EXTERN_C void FB_IXpbBuilder_insertBytes(struct FB_IXpbBuilder* self, struct FB_IStatus* status, unsigned char tag, const void* bytes, unsigned length)
+{
+	self->vtable->insertBytes(self, status, tag, bytes, length);
+}
+
+CLOOP_EXTERN_C void FB_IXpbBuilder_insertString(struct FB_IXpbBuilder* self, struct FB_IStatus* status, unsigned char tag, const char* str)
+{
+	self->vtable->insertString(self, status, tag, str);
+}
+
+CLOOP_EXTERN_C void FB_IXpbBuilder_insertTag(struct FB_IXpbBuilder* self, struct FB_IStatus* status, unsigned char tag)
+{
+	self->vtable->insertTag(self, status, tag);
+}
+
+CLOOP_EXTERN_C FB_BOOLEAN FB_IXpbBuilder_isEof(struct FB_IXpbBuilder* self, struct FB_IStatus* status)
+{
+	return self->vtable->isEof(self, status);
+}
+
+CLOOP_EXTERN_C void FB_IXpbBuilder_moveNext(struct FB_IXpbBuilder* self, struct FB_IStatus* status)
+{
+	self->vtable->moveNext(self, status);
+}
+
+CLOOP_EXTERN_C void FB_IXpbBuilder_rewind(struct FB_IXpbBuilder* self, struct FB_IStatus* status)
+{
+	self->vtable->rewind(self, status);
+}
+
+CLOOP_EXTERN_C FB_BOOLEAN FB_IXpbBuilder_findFirst(struct FB_IXpbBuilder* self, struct FB_IStatus* status, unsigned char tag)
+{
+	return self->vtable->findFirst(self, status, tag);
+}
+
+CLOOP_EXTERN_C FB_BOOLEAN FB_IXpbBuilder_findNext(struct FB_IXpbBuilder* self, struct FB_IStatus* status)
+{
+	return self->vtable->findNext(self, status);
+}
+
+CLOOP_EXTERN_C unsigned char FB_IXpbBuilder_getTag(struct FB_IXpbBuilder* self, struct FB_IStatus* status)
+{
+	return self->vtable->getTag(self, status);
+}
+
+CLOOP_EXTERN_C unsigned FB_IXpbBuilder_getLength(struct FB_IXpbBuilder* self, struct FB_IStatus* status)
+{
+	return self->vtable->getLength(self, status);
+}
+
+CLOOP_EXTERN_C int FB_IXpbBuilder_getInt(struct FB_IXpbBuilder* self, struct FB_IStatus* status)
+{
+	return self->vtable->getInt(self, status);
+}
+
+CLOOP_EXTERN_C ISC_INT64 FB_IXpbBuilder_getBigInt(struct FB_IXpbBuilder* self, struct FB_IStatus* status)
+{
+	return self->vtable->getBigInt(self, status);
+}
+
+CLOOP_EXTERN_C const char* FB_IXpbBuilder_getString(struct FB_IXpbBuilder* self, struct FB_IStatus* status)
+{
+	return self->vtable->getString(self, status);
+}
+
+CLOOP_EXTERN_C const unsigned char* FB_IXpbBuilder_getBytes(struct FB_IXpbBuilder* self, struct FB_IStatus* status)
+{
+	return self->vtable->getBytes(self, status);
+}
+
+CLOOP_EXTERN_C unsigned FB_IXpbBuilder_getBufferLength(struct FB_IXpbBuilder* self, struct FB_IStatus* status)
+{
+	return self->vtable->getBufferLength(self, status);
+}
+
+CLOOP_EXTERN_C const unsigned char* FB_IXpbBuilder_getBuffer(struct FB_IXpbBuilder* self, struct FB_IStatus* status)
+{
+	return self->vtable->getBuffer(self, status);
+}
+
 CLOOP_EXTERN_C unsigned FB_ITraceConnection_getKind(struct FB_ITraceConnection* self)
 {
 	return self->vtable->getKind(self);
@@ -2133,7 +2248,7 @@ CLOOP_EXTERN_C FB_BOOLEAN FB_ITraceStatusVector_hasWarning(struct FB_ITraceStatu
 	return self->vtable->hasWarning(self);
 }
 
-CLOOP_EXTERN_C const intptr_t* FB_ITraceStatusVector_getStatus(struct FB_ITraceStatusVector* self)
+CLOOP_EXTERN_C struct FB_IStatus* FB_ITraceStatusVector_getStatus(struct FB_ITraceStatusVector* self)
 {
 	return self->vtable->getStatus(self);
 }

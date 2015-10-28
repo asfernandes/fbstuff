@@ -69,6 +69,7 @@ type
 	TimerControl = class;
 	VersionCallback = class;
 	Util = class;
+	XpbBuilder = class;
 	TraceConnection = class;
 	TraceDatabaseConnection = class;
 	TraceTransaction = class;
@@ -148,7 +149,6 @@ end;
 	Master_getStatusPtr = function(this: Master): Status; cdecl;
 	Master_getDispatcherPtr = function(this: Master): Provider; cdecl;
 	Master_getPluginManagerPtr = function(this: Master): PluginManager; cdecl;
-	Master_circularAllocPtr = function(this: Master; s: PAnsiChar; len: Cardinal; thr: NativeInt): PAnsiChar; cdecl;
 	Master_getTimerControlPtr = function(this: Master): TimerControl; cdecl;
 	Master_getDtcPtr = function(this: Master): Dtc; cdecl;
 	Master_registerAttachmentPtr = function(this: Master; provider: Provider; attachment: Attachment): Attachment; cdecl;
@@ -157,6 +157,7 @@ end;
 	Master_serverModePtr = function(this: Master; mode: Integer): Integer; cdecl;
 	Master_getUtilInterfacePtr = function(this: Master): Util; cdecl;
 	Master_getConfigManagerPtr = function(this: Master): ConfigManager; cdecl;
+	Master_getProcessExitingPtr = function(this: Master): Boolean; cdecl;
 	PluginBase_setOwnerPtr = procedure(this: PluginBase; r: ReferenceCounted); cdecl;
 	PluginBase_getOwnerPtr = function(this: PluginBase): ReferenceCounted; cdecl;
 	PluginSet_getNamePtr = function(this: PluginSet): PAnsiChar; cdecl;
@@ -400,6 +401,28 @@ end;
 	Util_encodeDatePtr = function(this: Util; year: Cardinal; month: Cardinal; day: Cardinal): ISC_DATE; cdecl;
 	Util_encodeTimePtr = function(this: Util; hours: Cardinal; minutes: Cardinal; seconds: Cardinal; fractions: Cardinal): ISC_TIME; cdecl;
 	Util_formatStatusPtr = function(this: Util; buffer: PAnsiChar; bufferSize: Cardinal; status: Status): Cardinal; cdecl;
+	Util_getClientVersionPtr = function(this: Util): Cardinal; cdecl;
+	Util_getXpbBuilderPtr = function(this: Util; status: Status; kind: Cardinal; buf: BytePtr; len: Cardinal): XpbBuilder; cdecl;
+	XpbBuilder_clearPtr = procedure(this: XpbBuilder; status: Status); cdecl;
+	XpbBuilder_removeCurrentPtr = procedure(this: XpbBuilder; status: Status); cdecl;
+	XpbBuilder_insertIntPtr = procedure(this: XpbBuilder; status: Status; tag: Byte; value: Integer); cdecl;
+	XpbBuilder_insertBigIntPtr = procedure(this: XpbBuilder; status: Status; tag: Byte; value: Int64); cdecl;
+	XpbBuilder_insertBytesPtr = procedure(this: XpbBuilder; status: Status; tag: Byte; bytes: Pointer; length: Cardinal); cdecl;
+	XpbBuilder_insertStringPtr = procedure(this: XpbBuilder; status: Status; tag: Byte; str: PAnsiChar); cdecl;
+	XpbBuilder_insertTagPtr = procedure(this: XpbBuilder; status: Status; tag: Byte); cdecl;
+	XpbBuilder_isEofPtr = function(this: XpbBuilder; status: Status): Boolean; cdecl;
+	XpbBuilder_moveNextPtr = procedure(this: XpbBuilder; status: Status); cdecl;
+	XpbBuilder_rewindPtr = procedure(this: XpbBuilder; status: Status); cdecl;
+	XpbBuilder_findFirstPtr = function(this: XpbBuilder; status: Status; tag: Byte): Boolean; cdecl;
+	XpbBuilder_findNextPtr = function(this: XpbBuilder; status: Status): Boolean; cdecl;
+	XpbBuilder_getTagPtr = function(this: XpbBuilder; status: Status): Byte; cdecl;
+	XpbBuilder_getLengthPtr = function(this: XpbBuilder; status: Status): Cardinal; cdecl;
+	XpbBuilder_getIntPtr = function(this: XpbBuilder; status: Status): Integer; cdecl;
+	XpbBuilder_getBigIntPtr = function(this: XpbBuilder; status: Status): Int64; cdecl;
+	XpbBuilder_getStringPtr = function(this: XpbBuilder; status: Status): PAnsiChar; cdecl;
+	XpbBuilder_getBytesPtr = function(this: XpbBuilder; status: Status): BytePtr; cdecl;
+	XpbBuilder_getBufferLengthPtr = function(this: XpbBuilder; status: Status): Cardinal; cdecl;
+	XpbBuilder_getBufferPtr = function(this: XpbBuilder; status: Status): BytePtr; cdecl;
 	TraceConnection_getKindPtr = function(this: TraceConnection): Cardinal; cdecl;
 	TraceConnection_getProcessIDPtr = function(this: TraceConnection): Integer; cdecl;
 	TraceConnection_getUserNamePtr = function(this: TraceConnection): PAnsiChar; cdecl;
@@ -451,7 +474,7 @@ end;
 	TraceServiceConnection_getServiceNamePtr = function(this: TraceServiceConnection): PAnsiChar; cdecl;
 	TraceStatusVector_hasErrorPtr = function(this: TraceStatusVector): Boolean; cdecl;
 	TraceStatusVector_hasWarningPtr = function(this: TraceStatusVector): Boolean; cdecl;
-	TraceStatusVector_getStatusPtr = function(this: TraceStatusVector): NativeIntPtr; cdecl;
+	TraceStatusVector_getStatusPtr = function(this: TraceStatusVector): Status; cdecl;
 	TraceStatusVector_getTextPtr = function(this: TraceStatusVector): PAnsiChar; cdecl;
 	TraceSweepInfo_getOITPtr = function(this: TraceSweepInfo): QWord; cdecl;
 	TraceSweepInfo_getOSTPtr = function(this: TraceSweepInfo): QWord; cdecl;
@@ -602,7 +625,6 @@ end;
 		getStatus: Master_getStatusPtr;
 		getDispatcher: Master_getDispatcherPtr;
 		getPluginManager: Master_getPluginManagerPtr;
-		circularAlloc: Master_circularAllocPtr;
 		getTimerControl: Master_getTimerControlPtr;
 		getDtc: Master_getDtcPtr;
 		registerAttachment: Master_registerAttachmentPtr;
@@ -611,6 +633,7 @@ end;
 		serverMode: Master_serverModePtr;
 		getUtilInterface: Master_getUtilInterfacePtr;
 		getConfigManager: Master_getConfigManagerPtr;
+		getProcessExiting: Master_getProcessExitingPtr;
 	end;
 
 	Master = class(Versioned)
@@ -619,7 +642,6 @@ end;
 		function getStatus(): Status;
 		function getDispatcher(): Provider;
 		function getPluginManager(): PluginManager;
-		function circularAlloc(s: PAnsiChar; len: Cardinal; thr: NativeInt): PAnsiChar;
 		function getTimerControl(): TimerControl;
 		function getDtc(): Dtc;
 		function registerAttachment(provider: Provider; attachment: Attachment): Attachment;
@@ -628,6 +650,7 @@ end;
 		function serverMode(mode: Integer): Integer;
 		function getUtilInterface(): Util;
 		function getConfigManager(): ConfigManager;
+		function getProcessExiting(): Boolean;
 	end;
 
 	MasterImpl = class(Master)
@@ -636,7 +659,6 @@ end;
 		function getStatus(): Status; virtual; abstract;
 		function getDispatcher(): Provider; virtual; abstract;
 		function getPluginManager(): PluginManager; virtual; abstract;
-		function circularAlloc(s: PAnsiChar; len: Cardinal; thr: NativeInt): PAnsiChar; virtual; abstract;
 		function getTimerControl(): TimerControl; virtual; abstract;
 		function getDtc(): Dtc; virtual; abstract;
 		function registerAttachment(provider: Provider; attachment: Attachment): Attachment; virtual; abstract;
@@ -645,6 +667,7 @@ end;
 		function serverMode(mode: Integer): Integer; virtual; abstract;
 		function getUtilInterface(): Util; virtual; abstract;
 		function getConfigManager(): ConfigManager; virtual; abstract;
+		function getProcessExiting(): Boolean; virtual; abstract;
 	end;
 
 	PluginBaseVTable = class(ReferenceCountedVTable)
@@ -2176,10 +2199,12 @@ end;
 		encodeDate: Util_encodeDatePtr;
 		encodeTime: Util_encodeTimePtr;
 		formatStatus: Util_formatStatusPtr;
+		getClientVersion: Util_getClientVersionPtr;
+		getXpbBuilder: Util_getXpbBuilderPtr;
 	end;
 
 	Util = class(Versioned)
-		const VERSION = 10;
+		const VERSION = 12;
 
 		procedure getFbVersion(status: Status; att: Attachment; callback: VersionCallback);
 		procedure loadBlob(status: Status; blobId: ISC_QUADPtr; att: Attachment; tra: Transaction; file_: PAnsiChar; txt: Boolean);
@@ -2191,6 +2216,8 @@ end;
 		function encodeDate(year: Cardinal; month: Cardinal; day: Cardinal): ISC_DATE;
 		function encodeTime(hours: Cardinal; minutes: Cardinal; seconds: Cardinal; fractions: Cardinal): ISC_TIME;
 		function formatStatus(buffer: PAnsiChar; bufferSize: Cardinal; status: Status): Cardinal;
+		function getClientVersion(): Cardinal;
+		function getXpbBuilder(status: Status; kind: Cardinal; buf: BytePtr; len: Cardinal): XpbBuilder;
 	end;
 
 	UtilImpl = class(Util)
@@ -2206,6 +2233,86 @@ end;
 		function encodeDate(year: Cardinal; month: Cardinal; day: Cardinal): ISC_DATE; virtual; abstract;
 		function encodeTime(hours: Cardinal; minutes: Cardinal; seconds: Cardinal; fractions: Cardinal): ISC_TIME; virtual; abstract;
 		function formatStatus(buffer: PAnsiChar; bufferSize: Cardinal; status: Status): Cardinal; virtual; abstract;
+		function getClientVersion(): Cardinal; virtual; abstract;
+		function getXpbBuilder(status: Status; kind: Cardinal; buf: BytePtr; len: Cardinal): XpbBuilder; virtual; abstract;
+	end;
+
+	XpbBuilderVTable = class(DisposableVTable)
+		clear: XpbBuilder_clearPtr;
+		removeCurrent: XpbBuilder_removeCurrentPtr;
+		insertInt: XpbBuilder_insertIntPtr;
+		insertBigInt: XpbBuilder_insertBigIntPtr;
+		insertBytes: XpbBuilder_insertBytesPtr;
+		insertString: XpbBuilder_insertStringPtr;
+		insertTag: XpbBuilder_insertTagPtr;
+		isEof: XpbBuilder_isEofPtr;
+		moveNext: XpbBuilder_moveNextPtr;
+		rewind: XpbBuilder_rewindPtr;
+		findFirst: XpbBuilder_findFirstPtr;
+		findNext: XpbBuilder_findNextPtr;
+		getTag: XpbBuilder_getTagPtr;
+		getLength: XpbBuilder_getLengthPtr;
+		getInt: XpbBuilder_getIntPtr;
+		getBigInt: XpbBuilder_getBigIntPtr;
+		getString: XpbBuilder_getStringPtr;
+		getBytes: XpbBuilder_getBytesPtr;
+		getBufferLength: XpbBuilder_getBufferLengthPtr;
+		getBuffer: XpbBuilder_getBufferPtr;
+	end;
+
+	XpbBuilder = class(Disposable)
+		const VERSION = 21;
+		const DPB = Cardinal(1);
+		const SPB_ATTACH = Cardinal(2);
+		const SPB_START = Cardinal(3);
+		const TPB = Cardinal(4);
+
+		procedure clear(status: Status);
+		procedure removeCurrent(status: Status);
+		procedure insertInt(status: Status; tag: Byte; value: Integer);
+		procedure insertBigInt(status: Status; tag: Byte; value: Int64);
+		procedure insertBytes(status: Status; tag: Byte; bytes: Pointer; length: Cardinal);
+		procedure insertString(status: Status; tag: Byte; str: PAnsiChar);
+		procedure insertTag(status: Status; tag: Byte);
+		function isEof(status: Status): Boolean;
+		procedure moveNext(status: Status);
+		procedure rewind(status: Status);
+		function findFirst(status: Status; tag: Byte): Boolean;
+		function findNext(status: Status): Boolean;
+		function getTag(status: Status): Byte;
+		function getLength(status: Status): Cardinal;
+		function getInt(status: Status): Integer;
+		function getBigInt(status: Status): Int64;
+		function getString(status: Status): PAnsiChar;
+		function getBytes(status: Status): BytePtr;
+		function getBufferLength(status: Status): Cardinal;
+		function getBuffer(status: Status): BytePtr;
+	end;
+
+	XpbBuilderImpl = class(XpbBuilder)
+		constructor create;
+
+		procedure dispose(); virtual; abstract;
+		procedure clear(status: Status); virtual; abstract;
+		procedure removeCurrent(status: Status); virtual; abstract;
+		procedure insertInt(status: Status; tag: Byte; value: Integer); virtual; abstract;
+		procedure insertBigInt(status: Status; tag: Byte; value: Int64); virtual; abstract;
+		procedure insertBytes(status: Status; tag: Byte; bytes: Pointer; length: Cardinal); virtual; abstract;
+		procedure insertString(status: Status; tag: Byte; str: PAnsiChar); virtual; abstract;
+		procedure insertTag(status: Status; tag: Byte); virtual; abstract;
+		function isEof(status: Status): Boolean; virtual; abstract;
+		procedure moveNext(status: Status); virtual; abstract;
+		procedure rewind(status: Status); virtual; abstract;
+		function findFirst(status: Status; tag: Byte): Boolean; virtual; abstract;
+		function findNext(status: Status): Boolean; virtual; abstract;
+		function getTag(status: Status): Byte; virtual; abstract;
+		function getLength(status: Status): Cardinal; virtual; abstract;
+		function getInt(status: Status): Integer; virtual; abstract;
+		function getBigInt(status: Status): Int64; virtual; abstract;
+		function getString(status: Status): PAnsiChar; virtual; abstract;
+		function getBytes(status: Status): BytePtr; virtual; abstract;
+		function getBufferLength(status: Status): Cardinal; virtual; abstract;
+		function getBuffer(status: Status): BytePtr; virtual; abstract;
 	end;
 
 	TraceConnectionVTable = class(VersionedVTable)
@@ -2567,7 +2674,7 @@ end;
 
 		function hasError(): Boolean;
 		function hasWarning(): Boolean;
-		function getStatus(): NativeIntPtr;
+		function getStatus(): Status;
 		function getText(): PAnsiChar;
 	end;
 
@@ -2576,7 +2683,7 @@ end;
 
 		function hasError(): Boolean; virtual; abstract;
 		function hasWarning(): Boolean; virtual; abstract;
-		function getStatus(): NativeIntPtr; virtual; abstract;
+		function getStatus(): Status; virtual; abstract;
 		function getText(): PAnsiChar; virtual; abstract;
 	end;
 
@@ -2951,11 +3058,6 @@ begin
 	Result := MasterVTable(vTable).getPluginManager(Self);
 end;
 
-function Master.circularAlloc(s: PAnsiChar; len: Cardinal; thr: NativeInt): PAnsiChar;
-begin
-	Result := MasterVTable(vTable).circularAlloc(Self, s, len, thr);
-end;
-
 function Master.getTimerControl(): TimerControl;
 begin
 	Result := MasterVTable(vTable).getTimerControl(Self);
@@ -2995,6 +3097,11 @@ end;
 function Master.getConfigManager(): ConfigManager;
 begin
 	Result := MasterVTable(vTable).getConfigManager(Self);
+end;
+
+function Master.getProcessExiting(): Boolean;
+begin
+	Result := MasterVTable(vTable).getProcessExiting(Self);
 end;
 
 procedure PluginBase.setOwner(r: ReferenceCounted);
@@ -4389,6 +4496,137 @@ begin
 	Result := UtilVTable(vTable).formatStatus(Self, buffer, bufferSize, status);
 end;
 
+function Util.getClientVersion(): Cardinal;
+begin
+	Result := UtilVTable(vTable).getClientVersion(Self);
+end;
+
+function Util.getXpbBuilder(status: Status; kind: Cardinal; buf: BytePtr; len: Cardinal): XpbBuilder;
+begin
+	Result := UtilVTable(vTable).getXpbBuilder(Self, status, kind, buf, len);
+	FbException.checkException(status);
+end;
+
+procedure XpbBuilder.clear(status: Status);
+begin
+	XpbBuilderVTable(vTable).clear(Self, status);
+	FbException.checkException(status);
+end;
+
+procedure XpbBuilder.removeCurrent(status: Status);
+begin
+	XpbBuilderVTable(vTable).removeCurrent(Self, status);
+	FbException.checkException(status);
+end;
+
+procedure XpbBuilder.insertInt(status: Status; tag: Byte; value: Integer);
+begin
+	XpbBuilderVTable(vTable).insertInt(Self, status, tag, value);
+	FbException.checkException(status);
+end;
+
+procedure XpbBuilder.insertBigInt(status: Status; tag: Byte; value: Int64);
+begin
+	XpbBuilderVTable(vTable).insertBigInt(Self, status, tag, value);
+	FbException.checkException(status);
+end;
+
+procedure XpbBuilder.insertBytes(status: Status; tag: Byte; bytes: Pointer; length: Cardinal);
+begin
+	XpbBuilderVTable(vTable).insertBytes(Self, status, tag, bytes, length);
+	FbException.checkException(status);
+end;
+
+procedure XpbBuilder.insertString(status: Status; tag: Byte; str: PAnsiChar);
+begin
+	XpbBuilderVTable(vTable).insertString(Self, status, tag, str);
+	FbException.checkException(status);
+end;
+
+procedure XpbBuilder.insertTag(status: Status; tag: Byte);
+begin
+	XpbBuilderVTable(vTable).insertTag(Self, status, tag);
+	FbException.checkException(status);
+end;
+
+function XpbBuilder.isEof(status: Status): Boolean;
+begin
+	Result := XpbBuilderVTable(vTable).isEof(Self, status);
+	FbException.checkException(status);
+end;
+
+procedure XpbBuilder.moveNext(status: Status);
+begin
+	XpbBuilderVTable(vTable).moveNext(Self, status);
+	FbException.checkException(status);
+end;
+
+procedure XpbBuilder.rewind(status: Status);
+begin
+	XpbBuilderVTable(vTable).rewind(Self, status);
+	FbException.checkException(status);
+end;
+
+function XpbBuilder.findFirst(status: Status; tag: Byte): Boolean;
+begin
+	Result := XpbBuilderVTable(vTable).findFirst(Self, status, tag);
+	FbException.checkException(status);
+end;
+
+function XpbBuilder.findNext(status: Status): Boolean;
+begin
+	Result := XpbBuilderVTable(vTable).findNext(Self, status);
+	FbException.checkException(status);
+end;
+
+function XpbBuilder.getTag(status: Status): Byte;
+begin
+	Result := XpbBuilderVTable(vTable).getTag(Self, status);
+	FbException.checkException(status);
+end;
+
+function XpbBuilder.getLength(status: Status): Cardinal;
+begin
+	Result := XpbBuilderVTable(vTable).getLength(Self, status);
+	FbException.checkException(status);
+end;
+
+function XpbBuilder.getInt(status: Status): Integer;
+begin
+	Result := XpbBuilderVTable(vTable).getInt(Self, status);
+	FbException.checkException(status);
+end;
+
+function XpbBuilder.getBigInt(status: Status): Int64;
+begin
+	Result := XpbBuilderVTable(vTable).getBigInt(Self, status);
+	FbException.checkException(status);
+end;
+
+function XpbBuilder.getString(status: Status): PAnsiChar;
+begin
+	Result := XpbBuilderVTable(vTable).getString(Self, status);
+	FbException.checkException(status);
+end;
+
+function XpbBuilder.getBytes(status: Status): BytePtr;
+begin
+	Result := XpbBuilderVTable(vTable).getBytes(Self, status);
+	FbException.checkException(status);
+end;
+
+function XpbBuilder.getBufferLength(status: Status): Cardinal;
+begin
+	Result := XpbBuilderVTable(vTable).getBufferLength(Self, status);
+	FbException.checkException(status);
+end;
+
+function XpbBuilder.getBuffer(status: Status): BytePtr;
+begin
+	Result := XpbBuilderVTable(vTable).getBuffer(Self, status);
+	FbException.checkException(status);
+end;
+
 function TraceConnection.getKind(): Cardinal;
 begin
 	Result := TraceConnectionVTable(vTable).getKind(Self);
@@ -4644,7 +4882,7 @@ begin
 	Result := TraceStatusVectorVTable(vTable).hasWarning(Self);
 end;
 
-function TraceStatusVector.getStatus(): NativeIntPtr;
+function TraceStatusVector.getStatus(): Status;
 begin
 	Result := TraceStatusVectorVTable(vTable).getStatus(Self);
 end;
@@ -5070,15 +5308,6 @@ begin
 	end
 end;
 
-function MasterImpl_circularAllocDispatcher(this: Master; s: PAnsiChar; len: Cardinal; thr: NativeInt): PAnsiChar; cdecl;
-begin
-	try
-		Result := MasterImpl(this).circularAlloc(s, len, thr);
-	except
-		on e: Exception do FbException.catchException(nil, e);
-	end
-end;
-
 function MasterImpl_getTimerControlDispatcher(this: Master): TimerControl; cdecl;
 begin
 	try
@@ -5146,6 +5375,15 @@ function MasterImpl_getConfigManagerDispatcher(this: Master): ConfigManager; cde
 begin
 	try
 		Result := MasterImpl(this).getConfigManager();
+	except
+		on e: Exception do FbException.catchException(nil, e);
+	end
+end;
+
+function MasterImpl_getProcessExitingDispatcher(this: Master): Boolean; cdecl;
+begin
+	try
+		Result := MasterImpl(this).getProcessExiting();
 	except
 		on e: Exception do FbException.catchException(nil, e);
 	end
@@ -8527,12 +8765,227 @@ begin
 	end
 end;
 
+function UtilImpl_getClientVersionDispatcher(this: Util): Cardinal; cdecl;
+begin
+	try
+		Result := UtilImpl(this).getClientVersion();
+	except
+		on e: Exception do FbException.catchException(nil, e);
+	end
+end;
+
+function UtilImpl_getXpbBuilderDispatcher(this: Util; status: Status; kind: Cardinal; buf: BytePtr; len: Cardinal): XpbBuilder; cdecl;
+begin
+	try
+		Result := UtilImpl(this).getXpbBuilder(status, kind, buf, len);
+	except
+		on e: Exception do FbException.catchException(status, e);
+	end
+end;
+
 var
 	UtilImpl_vTable: UtilVTable;
 
 constructor UtilImpl.create;
 begin
 	vTable := UtilImpl_vTable;
+end;
+
+procedure XpbBuilderImpl_disposeDispatcher(this: XpbBuilder); cdecl;
+begin
+	try
+		XpbBuilderImpl(this).dispose();
+	except
+		on e: Exception do FbException.catchException(nil, e);
+	end
+end;
+
+procedure XpbBuilderImpl_clearDispatcher(this: XpbBuilder; status: Status); cdecl;
+begin
+	try
+		XpbBuilderImpl(this).clear(status);
+	except
+		on e: Exception do FbException.catchException(status, e);
+	end
+end;
+
+procedure XpbBuilderImpl_removeCurrentDispatcher(this: XpbBuilder; status: Status); cdecl;
+begin
+	try
+		XpbBuilderImpl(this).removeCurrent(status);
+	except
+		on e: Exception do FbException.catchException(status, e);
+	end
+end;
+
+procedure XpbBuilderImpl_insertIntDispatcher(this: XpbBuilder; status: Status; tag: Byte; value: Integer); cdecl;
+begin
+	try
+		XpbBuilderImpl(this).insertInt(status, tag, value);
+	except
+		on e: Exception do FbException.catchException(status, e);
+	end
+end;
+
+procedure XpbBuilderImpl_insertBigIntDispatcher(this: XpbBuilder; status: Status; tag: Byte; value: Int64); cdecl;
+begin
+	try
+		XpbBuilderImpl(this).insertBigInt(status, tag, value);
+	except
+		on e: Exception do FbException.catchException(status, e);
+	end
+end;
+
+procedure XpbBuilderImpl_insertBytesDispatcher(this: XpbBuilder; status: Status; tag: Byte; bytes: Pointer; length: Cardinal); cdecl;
+begin
+	try
+		XpbBuilderImpl(this).insertBytes(status, tag, bytes, length);
+	except
+		on e: Exception do FbException.catchException(status, e);
+	end
+end;
+
+procedure XpbBuilderImpl_insertStringDispatcher(this: XpbBuilder; status: Status; tag: Byte; str: PAnsiChar); cdecl;
+begin
+	try
+		XpbBuilderImpl(this).insertString(status, tag, str);
+	except
+		on e: Exception do FbException.catchException(status, e);
+	end
+end;
+
+procedure XpbBuilderImpl_insertTagDispatcher(this: XpbBuilder; status: Status; tag: Byte); cdecl;
+begin
+	try
+		XpbBuilderImpl(this).insertTag(status, tag);
+	except
+		on e: Exception do FbException.catchException(status, e);
+	end
+end;
+
+function XpbBuilderImpl_isEofDispatcher(this: XpbBuilder; status: Status): Boolean; cdecl;
+begin
+	try
+		Result := XpbBuilderImpl(this).isEof(status);
+	except
+		on e: Exception do FbException.catchException(status, e);
+	end
+end;
+
+procedure XpbBuilderImpl_moveNextDispatcher(this: XpbBuilder; status: Status); cdecl;
+begin
+	try
+		XpbBuilderImpl(this).moveNext(status);
+	except
+		on e: Exception do FbException.catchException(status, e);
+	end
+end;
+
+procedure XpbBuilderImpl_rewindDispatcher(this: XpbBuilder; status: Status); cdecl;
+begin
+	try
+		XpbBuilderImpl(this).rewind(status);
+	except
+		on e: Exception do FbException.catchException(status, e);
+	end
+end;
+
+function XpbBuilderImpl_findFirstDispatcher(this: XpbBuilder; status: Status; tag: Byte): Boolean; cdecl;
+begin
+	try
+		Result := XpbBuilderImpl(this).findFirst(status, tag);
+	except
+		on e: Exception do FbException.catchException(status, e);
+	end
+end;
+
+function XpbBuilderImpl_findNextDispatcher(this: XpbBuilder; status: Status): Boolean; cdecl;
+begin
+	try
+		Result := XpbBuilderImpl(this).findNext(status);
+	except
+		on e: Exception do FbException.catchException(status, e);
+	end
+end;
+
+function XpbBuilderImpl_getTagDispatcher(this: XpbBuilder; status: Status): Byte; cdecl;
+begin
+	try
+		Result := XpbBuilderImpl(this).getTag(status);
+	except
+		on e: Exception do FbException.catchException(status, e);
+	end
+end;
+
+function XpbBuilderImpl_getLengthDispatcher(this: XpbBuilder; status: Status): Cardinal; cdecl;
+begin
+	try
+		Result := XpbBuilderImpl(this).getLength(status);
+	except
+		on e: Exception do FbException.catchException(status, e);
+	end
+end;
+
+function XpbBuilderImpl_getIntDispatcher(this: XpbBuilder; status: Status): Integer; cdecl;
+begin
+	try
+		Result := XpbBuilderImpl(this).getInt(status);
+	except
+		on e: Exception do FbException.catchException(status, e);
+	end
+end;
+
+function XpbBuilderImpl_getBigIntDispatcher(this: XpbBuilder; status: Status): Int64; cdecl;
+begin
+	try
+		Result := XpbBuilderImpl(this).getBigInt(status);
+	except
+		on e: Exception do FbException.catchException(status, e);
+	end
+end;
+
+function XpbBuilderImpl_getStringDispatcher(this: XpbBuilder; status: Status): PAnsiChar; cdecl;
+begin
+	try
+		Result := XpbBuilderImpl(this).getString(status);
+	except
+		on e: Exception do FbException.catchException(status, e);
+	end
+end;
+
+function XpbBuilderImpl_getBytesDispatcher(this: XpbBuilder; status: Status): BytePtr; cdecl;
+begin
+	try
+		Result := XpbBuilderImpl(this).getBytes(status);
+	except
+		on e: Exception do FbException.catchException(status, e);
+	end
+end;
+
+function XpbBuilderImpl_getBufferLengthDispatcher(this: XpbBuilder; status: Status): Cardinal; cdecl;
+begin
+	try
+		Result := XpbBuilderImpl(this).getBufferLength(status);
+	except
+		on e: Exception do FbException.catchException(status, e);
+	end
+end;
+
+function XpbBuilderImpl_getBufferDispatcher(this: XpbBuilder; status: Status): BytePtr; cdecl;
+begin
+	try
+		Result := XpbBuilderImpl(this).getBuffer(status);
+	except
+		on e: Exception do FbException.catchException(status, e);
+	end
+end;
+
+var
+	XpbBuilderImpl_vTable: XpbBuilderVTable;
+
+constructor XpbBuilderImpl.create;
+begin
+	vTable := XpbBuilderImpl_vTable;
 end;
 
 function TraceConnectionImpl_getKindDispatcher(this: TraceConnection): Cardinal; cdecl;
@@ -9296,7 +9749,7 @@ begin
 	end
 end;
 
-function TraceStatusVectorImpl_getStatusDispatcher(this: TraceStatusVector): NativeIntPtr; cdecl;
+function TraceStatusVectorImpl_getStatusDispatcher(this: TraceStatusVector): Status; cdecl;
 begin
 	try
 		Result := TraceStatusVectorImpl(this).getStatus();
@@ -9979,7 +10432,6 @@ initialization
 	MasterImpl_vTable.getStatus := @MasterImpl_getStatusDispatcher;
 	MasterImpl_vTable.getDispatcher := @MasterImpl_getDispatcherDispatcher;
 	MasterImpl_vTable.getPluginManager := @MasterImpl_getPluginManagerDispatcher;
-	MasterImpl_vTable.circularAlloc := @MasterImpl_circularAllocDispatcher;
 	MasterImpl_vTable.getTimerControl := @MasterImpl_getTimerControlDispatcher;
 	MasterImpl_vTable.getDtc := @MasterImpl_getDtcDispatcher;
 	MasterImpl_vTable.registerAttachment := @MasterImpl_registerAttachmentDispatcher;
@@ -9988,6 +10440,7 @@ initialization
 	MasterImpl_vTable.serverMode := @MasterImpl_serverModeDispatcher;
 	MasterImpl_vTable.getUtilInterface := @MasterImpl_getUtilInterfaceDispatcher;
 	MasterImpl_vTable.getConfigManager := @MasterImpl_getConfigManagerDispatcher;
+	MasterImpl_vTable.getProcessExiting := @MasterImpl_getProcessExitingDispatcher;
 
 	PluginBaseImpl_vTable := PluginBaseVTable.create;
 	PluginBaseImpl_vTable.version := 4;
@@ -10464,7 +10917,7 @@ initialization
 	VersionCallbackImpl_vTable.callback := @VersionCallbackImpl_callbackDispatcher;
 
 	UtilImpl_vTable := UtilVTable.create;
-	UtilImpl_vTable.version := 10;
+	UtilImpl_vTable.version := 12;
 	UtilImpl_vTable.getFbVersion := @UtilImpl_getFbVersionDispatcher;
 	UtilImpl_vTable.loadBlob := @UtilImpl_loadBlobDispatcher;
 	UtilImpl_vTable.dumpBlob := @UtilImpl_dumpBlobDispatcher;
@@ -10475,6 +10928,32 @@ initialization
 	UtilImpl_vTable.encodeDate := @UtilImpl_encodeDateDispatcher;
 	UtilImpl_vTable.encodeTime := @UtilImpl_encodeTimeDispatcher;
 	UtilImpl_vTable.formatStatus := @UtilImpl_formatStatusDispatcher;
+	UtilImpl_vTable.getClientVersion := @UtilImpl_getClientVersionDispatcher;
+	UtilImpl_vTable.getXpbBuilder := @UtilImpl_getXpbBuilderDispatcher;
+
+	XpbBuilderImpl_vTable := XpbBuilderVTable.create;
+	XpbBuilderImpl_vTable.version := 21;
+	XpbBuilderImpl_vTable.dispose := @XpbBuilderImpl_disposeDispatcher;
+	XpbBuilderImpl_vTable.clear := @XpbBuilderImpl_clearDispatcher;
+	XpbBuilderImpl_vTable.removeCurrent := @XpbBuilderImpl_removeCurrentDispatcher;
+	XpbBuilderImpl_vTable.insertInt := @XpbBuilderImpl_insertIntDispatcher;
+	XpbBuilderImpl_vTable.insertBigInt := @XpbBuilderImpl_insertBigIntDispatcher;
+	XpbBuilderImpl_vTable.insertBytes := @XpbBuilderImpl_insertBytesDispatcher;
+	XpbBuilderImpl_vTable.insertString := @XpbBuilderImpl_insertStringDispatcher;
+	XpbBuilderImpl_vTable.insertTag := @XpbBuilderImpl_insertTagDispatcher;
+	XpbBuilderImpl_vTable.isEof := @XpbBuilderImpl_isEofDispatcher;
+	XpbBuilderImpl_vTable.moveNext := @XpbBuilderImpl_moveNextDispatcher;
+	XpbBuilderImpl_vTable.rewind := @XpbBuilderImpl_rewindDispatcher;
+	XpbBuilderImpl_vTable.findFirst := @XpbBuilderImpl_findFirstDispatcher;
+	XpbBuilderImpl_vTable.findNext := @XpbBuilderImpl_findNextDispatcher;
+	XpbBuilderImpl_vTable.getTag := @XpbBuilderImpl_getTagDispatcher;
+	XpbBuilderImpl_vTable.getLength := @XpbBuilderImpl_getLengthDispatcher;
+	XpbBuilderImpl_vTable.getInt := @XpbBuilderImpl_getIntDispatcher;
+	XpbBuilderImpl_vTable.getBigInt := @XpbBuilderImpl_getBigIntDispatcher;
+	XpbBuilderImpl_vTable.getString := @XpbBuilderImpl_getStringDispatcher;
+	XpbBuilderImpl_vTable.getBytes := @XpbBuilderImpl_getBytesDispatcher;
+	XpbBuilderImpl_vTable.getBufferLength := @XpbBuilderImpl_getBufferLengthDispatcher;
+	XpbBuilderImpl_vTable.getBuffer := @XpbBuilderImpl_getBufferDispatcher;
 
 	TraceConnectionImpl_vTable := TraceConnectionVTable.create;
 	TraceConnectionImpl_vTable.version := 9;
@@ -10736,6 +11215,7 @@ finalization
 	TimerControlImpl_vTable.destroy;
 	VersionCallbackImpl_vTable.destroy;
 	UtilImpl_vTable.destroy;
+	XpbBuilderImpl_vTable.destroy;
 	TraceConnectionImpl_vTable.destroy;
 	TraceDatabaseConnectionImpl_vTable.destroy;
 	TraceTransactionImpl_vTable.destroy;
